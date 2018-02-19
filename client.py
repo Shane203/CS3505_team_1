@@ -6,7 +6,6 @@ import pygame
 from piece import Piece
 from pygame.locals import MOUSEMOTION, KEYUP, MOUSEBUTTONUP, QUIT
 from player import Player
-from score import ScoreBoard
 from constants import BOARD_WIDTH, BOARD_HEIGHT, INDENT_BOARD, BG, CURRENT_DICE
 from constants import WHITE, BLACK, RED, GREEN, BLUE, YELLOW
 from constants import FPS, FLASH_RATE, COLOUR_CHECK
@@ -16,16 +15,17 @@ from setup import SCREEN, create_dicts, coOrds
 from board import Board
 from constants import CURRENT_PLAYER
 from connection import Connection
+from box_and_button import Box
 
 class Ludo(object):
     def __init__(self):
         self.my_player = connection.my_player
-        self.score = ScoreBoard()
+        #self.score = ScoreBoard()
         self.current_player = CURRENT_PLAYER
         self.my_player = MY_PLAYER
         self.ALL_PIECES = ALL_PIECES
         
-    def setup(self):
+    def setup():
         show_start_screen()
 
 pygame.init()
@@ -35,6 +35,8 @@ COLOUR_TO_IMG = {"red": RED_PIECE, "green": GREEN_PIECE, "yellow": YELLOW_PIECE,
 STARTING_POINT = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
 CS = ["red", "green", "yellow", "blue"]
 ALL_PIECES = [Piece(CS[c], num, COLOUR_TO_IMG[CS[c]], STARTING_POINT[CS[c]]) for c in range(4) for num in range(1, 5)]
+# Global variable holding names of all the players.
+NAMES = []
 
 genie_owner = None
 MY_PLAYER = None
@@ -42,10 +44,11 @@ board = Board(genie_owner, MY_PLAYER, ALL_PIECES, COLOUR_TO_IMG)
 create_dicts()
 #connection.my_player = Player("green", "Joe")
 #connection.my_player.turn_token = True
-SCORE_BOARD = ScoreBoard()
+#SCORE_BOARD = ScoreBoard()
 connection = Connection(board, MY_PLAYER, CURRENT_PLAYER, ALL_PIECES)
 board.add_connection(connection)
 connection.connect_to_server()
+
 
 def terminate():
     pygame.quit()
@@ -84,6 +87,59 @@ def show_start_screen():
         index = (index + 1) % 4
         pygame.display.update()
         FPSCLOCK.tick(5)
+
+def get_score(list_of_pieces):
+    #Returns a list of the scores in order: red, green, yellow, blue
+    red_score = 0
+    blue_score = 0
+    green_score = 0
+    yellow_score = 0
+    for piece in list_of_pieces:
+        if piece.colour == "red":
+            red_score += piece.get_steps_from_start()
+        elif piece.colour == "blue":
+            blue_score += piece.get_steps_from_start()
+        elif piece.colour == "green":
+            green_score += piece.get_steps_from_start()
+        elif piece.colour == "yellow":
+            yellow_score += piece.get_steps_from_start()
+    return [red_score, blue_score, green_score, yellow_score]
+
+def draw_scoreboard(list_of_pieces):
+    w = 100
+    h = 30
+    y = 500
+    x = 900
+    name = Box("Name", x, y, w, h, BLACK, 1)
+    x += w
+    score = Box("Score", x, y, w, h, BLACK, 1)
+    x += w
+    name.draw()
+    score.draw()
+    #Returns a list of the scores in order: red, green, yellow, blue
+    scores = get_score(list_of_pieces)
+    list_of_scores = [(scores[0], "red"), (scores[1], "green"),
+                     (scores[2], "yellow"), (scores[3], "blue")]
+    list_of_scores = sorted(list_of_scores)[::-1]
+    color_to_color = { "red" : RED, "green" :  GREEN, "yellow" : YELLOW, "blue" : BLUE}
+    for i in list_of_scores:
+        #Access each player, sort them by score and draw the 4 players on the scoreboard.
+        color = color_to_color[i[1]]
+        y += h
+        x = 900
+        if NAMES != []:
+            nameField = Box( NAMES[list_of_scores.index(i)], x, y, w, h, color)
+        else:
+            nameField = Box("", x, y, w, h, color)
+        nameField.draw()
+        outlineBox = Box("", x, y, w, h, BLACK, 1)
+        outlineBox.draw()
+        x += w
+        scoreField = Box(str(i[0]), x, y, w, h, color)
+        scoreField.draw()
+        outlineBox = Box("", x, y, w, h, BLACK, 1)
+        outlineBox.draw()
+        x += w
         
 show_start_screen()
 pygame.event.set_blocked([MOUSEMOTION, KEYUP, MOUSEBUTTONUP])
@@ -94,7 +150,7 @@ while True:
         SCREEN.blit(BG, (INDENT_BOARD, INDENT_BOARD))
         board.draw_board(COLOUR_CHECK)
         COLOUR_CHECK = (COLOUR_CHECK + 1) % FLASH_RATE
-        SCORE_BOARD.draw(ALL_PIECES)
+        draw_scoreboard(ALL_PIECES)
         board.PLAYER_FIELD.draw()
         OUTPUT = board.ROLL_BUTTON.click()
         if OUTPUT is not None:
