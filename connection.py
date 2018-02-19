@@ -54,15 +54,17 @@ class Connection:
             # It comes in the form {"dicenum":<number between 1-6>,"Colour":<colour>}
             if "dicenum" in msg: 
                 roll = msg["dicenum"]
-                genie_status = msg["genie_result"]
+                genie_status = msg["genie_result"] # genie_status is either "take", "return" or None
                 if genie_status == "take" and self.board.genie_owner is None:
-                    SCREEN.blit(GENIE_BIG, (900,50))
-                    self.board.genie_owner = msg["Colour"]
+                # If you roll to take the genie and no one currently has it
+                    SCREEN.blit(GENIE_BIG, (950,50))
+                    self.board.genie_owner = msg["Colour"] # Take the genie
                     for num in range((LOW_RANGES[msg["Colour"]]), (LOW_RANGES[msg["Colour"]])+4):
                         self.ALL_PIECES[num].genie = True
                 elif genie_status == "return" and self.board.genie_owner == msg["Colour"]:
-                    SCREEN.blit(LAMP_BIG, (900,50))
-                    self.board.genie_owner = None
+                # If you roll to give back the genie and you own it
+                    SCREEN.blit(LAMP_BIG, (950,50))
+                    self.board.genie_owner = None # The genie goes back to the centre
                     for num in range((LOW_RANGES[msg["Colour"]]), (LOW_RANGES[msg["Colour"]])+4):
                         self.ALL_PIECES[num].genie = False
                 self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
