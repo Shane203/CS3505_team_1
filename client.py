@@ -25,7 +25,7 @@ class Ludo(object):
         self.my_player = MY_PLAYER
         self.ALL_PIECES = ALL_PIECES
         
-    def setup():
+    def setup(self):
         show_start_screen()
 
 pygame.init()
