@@ -1,4 +1,6 @@
 #Team 1
+#This is the same as server.py except it works with only one client file.
+#The only changes are the turntoken no longer moves, and all
 """A simple server program that acts as half a chat program with a client.
 
 The server listens for any connections to any clients. The server then waits for the client to send
@@ -13,7 +15,6 @@ from queue import Queue
 import time
 
 q = Queue()  # a method for communication within different threading
-p = Queue()  # another communication betweeen time clock and timeout function
 
 #Objective: Send colour +
 class Conns: #A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.
@@ -36,10 +37,11 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
     print(cons.isfull())
     if cons.isfull(): #If there are 4 players connected, start a game
         StartGame()
-        _thread.start_new_thread(print_time, (q, p))
+        _thread.start_new_thread(print_time, (q, cons))
     while True:
         data = connection.recv(4096) #Get data from client
         print(data.decode())
+        q.put("have received a data")# tell the thread that we need to reset the timer
         msg = json.loads(data.decode()) #decode and create dict from data
         if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
             num = rolldice()
@@ -93,31 +95,28 @@ def roll_genie():
         print("GENIE RETURN")
     return genie_status
 
-time_limited = 20
-def print_time(q, p):
+time_limited = 15  #15 second to wait
+#the time out function
+def print_time(q, cons):
     j = time_limited+1
     while (1):
         j -= 1
         print(j)
-        if j == 0:  # call the time out function which is in the other thread
-            p.put("time is running out")
+        if j == 0:  # send message to all client that "time is running out"
+            data = json.dumps("time is running out")
+            for i in range(4):
+                cons.clients()[i].sendall(data.encode())
+                print(data)
             j = time_limited+1
             continue
         time.sleep(1)
-        if q.empty() == False:
+        if q.empty() == False: # to reset the timer
             data = q.get()  # receive a data and reset the timer
             if data == "have received a data":
                 j = time_limited+1
 
-def TimeOut(p, cons):
-    while (1):
-        if p.empty() == False:
-            Queuedata = p.get()
-            if Queuedata == "time is running out":
-                data = json.dumps(Queuedata)
-                for i in range(4):
-                    cons.clients()[i].sendall(data.encode())
-                    print(data)
+
+
 
 if __name__ == "__main__":#If this file is being executed as the top layer, start the server.
     try:
@@ -136,7 +135,6 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
                 cons.add(connection)
                 try:
                     _thread.start_new_thread ( ConnectionHandler, (connection, client_address,cons) ) #Starts a new thread for each connection.
-                    _thread.start_new_thread(TimeOut, (p, cons))#Start a new thread which send time out message to client
                 except InterruptedError:
                     print("Error! The signal has been interrupted.")
                     connection.close()
@@ -148,3 +146,6 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
             print("Error! An error has occured. Please try again later.")
             sys.exit()
     sock.close();
+
+
+
