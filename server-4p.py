@@ -11,6 +11,11 @@ from time import sleep
 import _thread, sys
 import json
 from random import randint
+from queue import Queue
+import time
+
+q = Queue()  # a method for communication within different threading
+p = Queue()  # another communication betweeen time clock and timeout function
 
 #Objective: Send colour +
 class Conns: #A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.
@@ -33,6 +38,7 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
     print(cons.isfull())
     if cons.isfull(): #If there are 4 players connected, start a game
         StartGame()
+        _thread.start_new_thread(print_time, (q, p))
     while True:
         data = connection.recv(4096) #Get data from client
         print(data.decode())
@@ -89,7 +95,32 @@ def roll_genie():
         print("GENIE RETURN")
     return genie_status
 
-    
+time_limited = 20
+def print_time(q, p):
+    j = time_limited+1
+    while (1):
+        j -= 1
+        print(j)
+        if j == 0:  # call the time out function which is in the other thread
+            p.put("time is running out")
+            j = time_limited+1
+            continue
+        time.sleep(1)
+        if q.empty() == False:
+            data = q.get()  # receive a data and reset the timer
+            if data == "have received a data":
+                j = time_limited+1
+
+def TimeOut(p, cons):
+    while (1):
+        if p.empty() == False:
+            Queuedata = p.get()
+            if Queuedata == "time is running out":
+                data = json.dumps(Queuedata)
+                for i in range(4):
+                    cons.clients()[i].sendall(data.encode())
+                    print(data)
+
 
 if __name__ == "__main__":#If this file is being executed as the top layer, start the server.
     try:
@@ -108,6 +139,7 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
                 cons.add(connection)
                 try:
                     _thread.start_new_thread ( ConnectionHandler, (connection, client_address,cons) ) #Starts a new thread for each connection.
+                    _thread.start_new_thread(TimeOut, (p, cons))#Start a new thread which send time out message to client
                 except InterruptedError:
                     print("Error! The signal has been interrupted.")
                     connection.close()
