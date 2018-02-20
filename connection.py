@@ -1,6 +1,7 @@
 from socket import socket, AF_INET, SOCK_STREAM, gethostbyname, gethostname
 from constants import ROLL_TO_IMG, LOW_RANGES, GENIE_BIG, LAMP_BIG
 from setup import SCREEN
+from random import randint
 import json
 import pygame
 import _thread
