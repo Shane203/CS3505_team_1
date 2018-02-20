@@ -1,6 +1,4 @@
 #Team 1
-#This is the same as server.py except it works with only one client file.
-#The only changes are the turntoken no longer moves, and all
 """A simple server program that acts as half a chat program with a client.
 
 The server listens for any connections to any clients. The server then waits for the client to send
@@ -121,7 +119,6 @@ def TimeOut(p, cons):
                     cons.clients()[i].sendall(data.encode())
                     print(data)
 
-
 if __name__ == "__main__":#If this file is being executed as the top layer, start the server.
     try:
         sock = socket(AF_INET, SOCK_STREAM) #Creates TCP server socket.
@@ -151,6 +148,3 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
             print("Error! An error has occured. Please try again later.")
             sys.exit()
     sock.close();
-
-
-
