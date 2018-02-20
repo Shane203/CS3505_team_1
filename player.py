@@ -9,6 +9,7 @@ class Player(object):
         # Piece moves but it is incremented if you kill a piece/roll a 6.
         self.rollsleft = 0
         self.ALL_PIECES = all_pieces
+        self.movable_pieces_array = []
         if self.colour == "red":
             self.start = 0
             self.end = 51
