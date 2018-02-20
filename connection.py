@@ -6,6 +6,7 @@ import pygame
 import _thread
 from player import Player
 import time
+from queue import Queue
 
 
 class Connection:
