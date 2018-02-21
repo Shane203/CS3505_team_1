@@ -118,6 +118,7 @@ class Connection:
                         self.board.move_piece(num, self.my_player.roll)
                         print("from board")
                         self.send_movement(num, self.my_player.roll)
+                    self.end_roll()
                 else:
                     self.end_turn()
 
