@@ -32,7 +32,7 @@ class Dice():
             return True
         else:
             print("No more turns")
-            self.end_turn()
+            self.connection.end_turn()
             return False
 
     def dice_roll(self):

@@ -98,7 +98,8 @@ class Connection:
                 self.board.move_piece(num, steps)
                 if roll == 6:
                     self.my_player.rollsleft += 1
-
+            if "Player_Won" in msg:
+                print(msg)
             if msg == "time is running out" and self.my_player.turn_token == True:
                 # this is the time out function
                 # either randomly pick a pieces or roll a
@@ -231,8 +232,9 @@ class Connection:
 
     def win_condition(self):
         print("*****************WON THE GAME!*******************")
-        self.end_turn()
         time.sleep(0.1)
         data = {"Player_Won": self.my_player.colour}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
+        time.sleep(0.1)
+        self.end_turn()

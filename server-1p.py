@@ -57,6 +57,11 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
             print("iT is now the turn of   ",cons.colours[cons.token])
         elif "Sendout" in msg or "Movement" in msg: #If the JSON message is Sendout or Movement, simply forward it unchanged to all other clients.
             data = json.dumps(msg)
+        elif "Player_Won" in msg:
+            # TODO: remove player in linked list
+            # TODO: Possible conflict with turnover
+            print("Player ", msg["Player_Won"], "Won")
+            data = json.dumps(msg)
         for i in range(1):
             cons.clients()[i].sendall(data.encode())
             print(data)
