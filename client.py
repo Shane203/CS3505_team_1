@@ -36,7 +36,7 @@ class Ludo(object):
         self.score = ScoreBoard()
         self.IN = 1
         self.colour_check = 0
-        self.time_limited = 15
+        self.time_limited = 3 #15
         self.p = Queue()
         self.font = pygame.font.SysFont("Arial", 72)
         self.text = self.font.render("time", True, (0, 128, 0))
@@ -84,7 +84,6 @@ class Ludo(object):
         to the server.
         """
         self.board.move_piece(num, self.connection.my_player.roll)
-        print("piece moved. rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
         self.connection.my_player.turnstaken += 1 #Player moved piece, increase turnstaken
         print("piece moved after update rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
         self.connection.send_movement(num, self.connection.my_player.roll)
