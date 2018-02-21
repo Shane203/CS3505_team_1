@@ -1,29 +1,33 @@
 import sys
 import time
-from socket import socket, AF_INET, SOCK_STREAM, gethostbyname, gethostname
 import _thread
 import pygame
 from piece import Piece
-from pygame.locals import MOUSEMOTION, KEYUP, MOUSEBUTTONUP, QUIT
 from player import Player
 from score import ScoreBoard
-from constants import BOARD_WIDTH, BOARD_HEIGHT, INDENT_BOARD, BG, CURRENT_DICE
-from constants import WHITE, BLACK, RED, GREEN, BLUE, YELLOW
-from constants import FPS, FLASH_RATE
-from constants import GENIE_BIG, LAMP_BIG, LOW_RANGES
-from constants import RED_PIECE, GREEN_PIECE, YELLOW_PIECE, BLUE_PIECE
+import constants as c
 from setup import SCREEN, create_dicts, coOrds
 from board import Board
 from connection import Connection
 from queue import Queue
 
 class Ludo(object):
+    """This is the main Ludo class.
+
+    It initilaises my_player, genie_owner, all_pieces, board, connection,
+    the score board and the timer.
+
+    It also holds the main run function which runs the game.
+    """
     def __init__(self):
+        """
+        Initiliases the main attributes but does not take in any arguements.
+        """
         self.my_player = None
         self.genie_owner = None
         self.starting_point = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
         self.cs = ["red", "green", "yellow", "blue"]
-        self.colour_to_img = {"red": RED_PIECE, "green": GREEN_PIECE, "yellow": YELLOW_PIECE, "blue": BLUE_PIECE}
+        self.colour_to_img = {"red": c.RED_PIECE, "green": c.GREEN_PIECE, "yellow": c.YELLOW_PIECE, "blue": c.BLUE_PIECE}
         self.all_pieces = [Piece(self.cs[c], num, self.colour_to_img[self.cs[c]], self.starting_point[self.cs[c]]) for c in range(4) for num in range(1, 5)]
         self.board = Board(self.genie_owner, self.my_player, self.all_pieces, self.colour_to_img)
         self.connection = Connection(self.board, self.my_player, None, self.all_pieces)
@@ -32,21 +36,30 @@ class Ludo(object):
         self.score = ScoreBoard()
         self.IN = 1
         self.colour_check = 0
-        self.time_limited=15
+        self.time_limited = 15
         self.p = Queue()
         self.font = pygame.font.SysFont("Arial", 72)
         self.text = self.font.render("time", True, (0, 128, 0))
 
 
     def setup(self):
+        """Creates the coo-rdinate dictionary for the board, initiliases
+        pygame. It also blocks out some pygame events so the queue doesn't
+        overflow from unneeded events such as MOUSEMOTION. It also setups
+        attributes in board, connects to the server and shows the start
+        screen.
+        """
         create_dicts()
         pygame.init()
-        pygame.event.set_blocked([MOUSEMOTION, KEYUP, MOUSEBUTTONUP])
+        pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
         self.board.add_connection(self.connection)
         self.connection.connect_to_server()
         self.show_start_screen()
 
     def draw_Time_Out(self):  # time out function on the client side
+        """Draws the timer which counts down until it reaches 0. When this
+        happens it goes back to its original number and counts down again.
+        """
             while True:
                 j = self.time_limited + 1
                 while j != 0:
@@ -60,10 +73,16 @@ class Ludo(object):
                     time.sleep(1)
 
     def terminate(self):
+        """Quit game if user closes window."""
         pygame.quit()
         sys.exit()
 
     def click_piece(self, num, piece):
+        """After a dice is roller, if the player clicks a movable piece,
+        call click_piece.
+
+        It calls the move_piece function, it also sends what piece was moved
+        to the server."""
         self.board.move_piece(num, self.connection.my_player.roll)
         print("piece moved. rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
         if self.connection.my_player.roll != 0:
@@ -77,33 +96,42 @@ class Ludo(object):
         print("Outside", piece.get_steps_from_start())
 
     def show_start_screen(self):
+        """Shows the start screen whent game first starts.
+
+        It shows the word LUDO in flashing colours. Once the player
+        connects to the server, the screen goes away."""
         FPSCLOCK = pygame.time.Clock()
         title_font = pygame.font.SysFont("Arial", 100)
-        colours = [RED, GREEN, YELLOW, BLUE]
+        colours = [c.RED, c.GREEN, c.YELLOW, c.BLUE]
         index = 0
         while True:
-            SCREEN.fill(WHITE)
+            SCREEN.fill(c.WHITE)
             title_surf = title_font.render('Ludo!', True, colours[index])
             title_surf_rect = title_surf.get_rect()
-            title_surf_rect.center = (BOARD_WIDTH / 2, BOARD_HEIGHT / 2)
+            title_surf_rect.center = (c.BOARD_WIDTH / 2, c.BOARD_HEIGHT / 2)
             SCREEN.blit(title_surf, title_surf_rect)
 
             if self.connection.my_player is not None:
                 pygame.event.get()
                 return
-            if pygame.event.get(QUIT):
+            if pygame.event.get(pygame.QUIT):
                 self.terminate()
             index = (index + 1) % 4
             pygame.display.update()
             FPSCLOCK.tick(5)
 
     def run(self):
+        """This is the main game method.
+
+        It draws the board, pieces and the buttons. It also shows the dice
+        rolling animation.
+        """
         while True:
             try:
-                SCREEN.fill(WHITE)
-                SCREEN.blit(BG, (INDENT_BOARD, INDENT_BOARD))
+                SCREEN.fill(c.WHITE)
+                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
                 self.board.draw_board(self.colour_check)
-                self.colour_check = (self.colour_check + 1) % FLASH_RATE
+                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
                 self.score.draw(self.all_pieces)
                 self.board.PLAYER_FIELD.draw()
                 OUTPUT = self.board.ROLL_BUTTON.click()
@@ -120,7 +148,7 @@ class Ludo(object):
                 pygame.display.update()
 
                 for event in pygame.event.get():
-                    if event.type == QUIT:
+                    if event.type == pygame.QUIT:
                         self.terminate()
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_a:
@@ -160,10 +188,9 @@ class Ludo(object):
                                     if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
                                         self.click_piece(num, piece)
                                         break
-                    self.clock.tick(FPS)
+                    self.clock.tick(c.FPS)
             except pygame.error:
                 continue
-
 
 
 ludo = Ludo()
