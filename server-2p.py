@@ -28,7 +28,7 @@ class Conns: #A simple class that keeps a list of current client connections. Th
         if len(self.clients()) < 2:
             self._clients += [connection]
     def isfull(self):
-        return len(self.clients()) ==2
+        return len(self.clients()) == 2
 
 cons = Conns() #Creates instance of class
 def ConnectionHandler(connection,client_address,cons): #Handles threads created for each connection to the server.
@@ -116,7 +116,7 @@ def TimeOut(p, cons):
             Queuedata = p.get()
             if Queuedata == "time is running out":
                 data = json.dumps(Queuedata)
-                for i in range(4):
+                for i in range(2):
                     cons.clients()[i].sendall(data.encode())
                     print(data)
 

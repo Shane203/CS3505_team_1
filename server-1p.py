@@ -116,7 +116,7 @@ def TimeOut(p, cons):
             Queuedata = p.get()
             if Queuedata == "time is running out":
                 data = json.dumps(Queuedata)
-                for i in range(4):
+                for i in range(1):
                     cons.clients()[i].sendall(data.encode())
                     print(data)
 
