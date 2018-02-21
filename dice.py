@@ -10,13 +10,12 @@ class Dice():
 
     def dice_rule(self, dice):
         """
-        TODO: MOVE to server
         Checks which roll player is rolling and sets current roll value to dice roll
         :param dice: random int value between 1-6
         :var MY_PLAYER.roll: Checks previous value of dice/roll
         :var MY_PLAYER.specialmove: Checks if player had piece land on opposing player's piece
         :var MY_PLAYER.rollstaken: Counts number of rolls player has rolled
-        :return: True = Player can make a legal move, Else(Failsafe) = Ends turn if no legal dice
+        :return: True = Player can make a legal move, Else(Fail-safe) = Ends turn if no legal dice
         """
         if self.connection.my_player.specialmove is True and self.connection.my_player.rollstaken != 3:
             self.connection.my_player.rollstaken += 1
