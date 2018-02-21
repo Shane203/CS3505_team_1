@@ -78,21 +78,17 @@ class Ludo(object):
         sys.exit()
 
     def click_piece(self, num, piece):
-        """After a dice is roller, if the player clicks a movable piece,
-        call click_piece.
-
+        """
+        After a dice is roller, if the player clicks a movable piece, call click_piece.
         It calls the move_piece function, it also sends what piece was moved
-        to the server."""
+        to the server.
+        """
         self.board.move_piece(num, self.connection.my_player.roll)
         print("piece moved. rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
-        if self.connection.my_player.roll != 0:
-            self.connection.my_player.turnstaken += 1 #Player moved piece, increase turnstaken
-            print("piece moved after update rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
-            self.connection.send_movement(num, self.connection.my_player.roll)
-        if self.connection.my_player.turnstaken == 3 or self.connection.my_player.rollsleft == 0: #End turn if player has no rolls left, or they've already taken 3 turns.
-            _thread.start_new_thread(self.connection.end_turn, ())
-        else:
-            self.connection.my_player.roll = 0
+        self.connection.my_player.turnstaken += 1 #Player moved piece, increase turnstaken
+        print("piece moved after update rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
+        self.connection.send_movement(num, self.connection.my_player.roll)
+        self.connection.end_roll()
         print("Outside", piece.get_steps_from_start())
 
     def show_start_screen(self):
@@ -164,30 +160,28 @@ class Ludo(object):
                         if event.key == pygame.K_h:
                             self.board.move_piece(3, 1)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
-                        if self.connection.my_player.turn_token:
+                        if self.connection.my_player.turn_token is True and self.connection.my_player.diceroll_token is False:
                             x, y = event.pos
                             print(x, y)
                             for num in range(self.connection.my_player.low_range, self.connection.my_player.low_range + 4): #e.g for "red" - range(0, 4), for "green" - range(4, 8)
                                 piece = self.connection.my_player.my_pieces[num - self.connection.my_player.low_range] #gets index 0-3 to use my_pieces.
                                 pos = piece.get_position()
-                                if piece.image.get_width() == 64:
-                                    if pos is not None and piece.image.get_rect(topleft=(coOrds[pos][0]-7, coOrds[pos][1]-25)).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
-                                        self.click_piece(num, piece)
-                                        break
-                                    elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
-                                        self.board.move_piece(num, self.connection.my_player.roll)
-                                        self.connection.send_out(num, self.connection.my_player.start)
-                                        self.connection.my_player.turnstaken += 1 #Player sent piece out, increase turnstaken
-                                        self.connection.my_player.roll = 0 #reset the dice so it can't be reused
-                                        print("piece sent out - rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
-                                        if self.connection.my_player.turnstaken >= 3:
-                                            _thread.start_new_thread(self.connection.end_turn, ())
-                                        print("Home", piece.get_steps_from_start())
-                                        break
-                                else:
-                                    if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
-                                        self.click_piece(num, piece)
-                                        break
+                                if piece.movable:
+                                    if piece.image.get_width() == 64:
+                                        if pos is not None and piece.image.get_rect(topleft=(coOrds[pos][0]-7, coOrds[pos][1]-25)).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
+                                            self.click_piece(num, piece)
+                                            break
+                                        elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
+                                            self.board.move_piece(num, self.connection.my_player.roll)
+                                            self.connection.send_out(num, self.connection.my_player.start)
+                                            self.connection.end_roll()
+                                            #print("piece sent out - rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
+                                            print("Home", piece.get_steps_from_start())
+                                            break
+                                    else:
+                                        if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
+                                            self.click_piece(num, piece)
+                                            break
                     self.clock.tick(c.FPS)
             except pygame.error:
                 continue

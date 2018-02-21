@@ -296,6 +296,7 @@ class Board:
         piece.set_position(None)
         piece.set_steps_from_start(0)
         #MY_PLAYER.specialmove = True  # Allows roll if player's piece lands on opposing piece
+        self.connection.my_player.specialmove = True
         
     def all_pool(self):
         for piece in self.my_player.my_pieces:

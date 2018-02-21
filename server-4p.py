@@ -44,7 +44,8 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
         q.put("have received a data")# tell the thread that we need to reset the timer
         msg = json.loads(data.decode()) #decode and create dict from data
         if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
-            num = rolldice()
+            # num = rolldice()
+            num = msg["dicevalue"]
             genie_status = roll_genie()
             data = {"Colour":msg["Colour"],"dicenum":num, "genie_result":genie_status} 
             data = json.dumps(data)

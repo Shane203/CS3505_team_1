@@ -49,6 +49,7 @@ class Connection:
                 if msg["Colour"] == self.my_player.colour:
                     self.board.PLAYER_FIELD.set_msg("MY TURN")
                     self.my_player.turn_token = True
+                    self.my_player.diceroll_token = True
                     self.my_player.rollsleft = 1
                     print("rolls:", self.my_player.rollsleft,
                           "-turnstaken:", self.my_player.turnstaken)
@@ -76,13 +77,6 @@ class Connection:
                 self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
                 # If the dicenum is for this player, then react accordingly.
                 if msg["Colour"] == self.my_player.colour:
-                    self.my_player.rollsleft -= 1
-                    if self.board.all_pool() and roll != 6:
-                        self.end_turn()
-                    else:
-                        self.my_player.roll = roll
-                        time.sleep(0.25)
-                        print(roll)
                     self.pieces_playable()
             # This message is broadcast by the server if a player sends out a piece from their home.
             # It comes in the form {"Sendout":<piece-number>,"pos":<startposition>}
@@ -172,19 +166,48 @@ class Connection:
         self.sock.sendall(data.encode())
 
     def end_turn(self):
-        """Called when player's turn is over. resets player token, rollsleft,
-            turntoken."""
+        """Called when player's turn is over. resets player token, rollsleft, turntoken."""
         if self.my_player.turn_token:
             print("********************ENDTURN******************************")
             self.my_player.turn_token = False
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
-            self.my_player.turnstaken = 0
-            self.my_player.rollsleft = 0
             self.my_player.rollstaken = 0
+            #self.my_player.turns_total = 0
+            #self.my_player.rolls_total = 0
             msg = {"Colour": self.my_player.colour, "turnOver": True}
             data = json.dumps(msg)
             self.sock.sendall(data.encode())
+
+    def end_roll(self):
+        """
+        Called when player has finished movement of piece.
+        Resets all player's pieces.movable to FALSE.
+        Checks if player should end turn, Otherwise resets MY_PLAYER.diceroll_token to TRUE.
+        Checks if all player's pieces on home run, allowing player to win.
+        :var piece_flag: Counts all pieces in last four squares
+        :var firstpiece: Position in index of player's first piece
+        :var piece: Player's pieces
+        :var MY_PLAYER.roll: Value of dice
+        :var MY_PLAYER.specialmove: Checks if player had piece land on opposing player's piece
+        :var MY_PLAYER.rollstaken: Counts number of rolls player has rolled
+        :var MY_PLAYER.diceroll_token: Checks if player can roll allowed to roll dice
+        """
+        flag = 0
+        firstpiece = 0  # MY_PLAYER.lowrange
+        lastpiece = 4  # (MY_PLAYER.lowrange + 4)
+        for piece in range(firstpiece, lastpiece):
+            self.my_player.my_pieces[piece].movable = None
+            if self.my_player.my_pieces[piece].get_steps_from_start() in range(52, 56):  # Win Conditions
+                flag += 1
+                if flag == 4:
+                    self.win_condition()
+        if (self.my_player.roll != 6 or self.my_player.rollstaken == 3) is True and self.my_player.specialmove is False:
+            print("ROLL", self.my_player.roll, self.my_player.rollstaken, self.my_player.specialmove)
+            self.end_turn()
+        else:
+            print("RESETTING DICE")
+            self.my_player.diceroll_token = True
 
     def pieces_playable(self):
         flag = False
@@ -205,4 +228,11 @@ class Connection:
                 flag = True
         if not flag:
             self.end_turn()
-            # highlight()
+
+    def win_condition(self):
+        print("*****************WON THE GAME!*******************")
+        self.end_turn()
+        time.sleep(0.1)
+        data = {"Player_Won": self.my_player.colour}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())

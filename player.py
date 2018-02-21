@@ -7,7 +7,10 @@ class Player(object):
         self.turnstaken = 0
         # When it is their turn, it is changed to 1. It is decreased when a
         # Piece moves but it is incremented if you kill a piece/roll a 6.
-        self.rollsleft = 0
+        self.turn_token = False
+        self.rollstaken = 0
+        self.diceroll_token = True  # Allows player to roll dice once a roll(Mini-Turn)
+        self.specialmove = False  # Allows player to roll dice after landing piece on opposing players piece.
         self.ALL_PIECES = all_pieces
         self.movable_pieces_array = []
         if self.colour == "red":
@@ -26,7 +29,6 @@ class Player(object):
             self.start = 39
             self.end = 37
             self.low_range = 12#Is used for move_piece function
-        self.turn_token = False
         self.my_pieces = []
         for piece in self.ALL_PIECES:
             if self.colour == piece.colour:
