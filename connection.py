@@ -103,49 +103,22 @@ class Connection:
             if msg == "time is running out" and self.my_player.turn_token == True:
                 # this is the time out function
                 # either randomly pick a pieces or roll a
-                #print("success")
-                #print(self.my_player.rollsleft)
-                #if self.my_player.rollsleft == 1:
                 if self.my_player.diceroll_token:
                     self.board.dice_object.roll_dice()
-                #print("here")
-                    #continue  # send out a message and jump to the next loop
-                #self.pieces_playable()
-                #print(len(self.my_player.movable_pieces_array))
-                # shouldn't it only run if piece playable?
-                #print("Number of playable pieces", len(self.my_player.movable_pieces_array))
                 elif len(self.my_player.movable_pieces_array) != 0:  # Redundant? or fail-safe?
                     i = self.my_player.movable_pieces_array[randint(0, len(self.my_player.movable_pieces_array)-1)]
                     print("Value of I is:", i)
                     num = i.number + self.my_player.low_range - 1
-                    #self.my_player.turnstaken +=1
                     if i.position == None:  # shouldn't it be my_pieces or i.position?
                         print("from home")
                         self.board.move_piece(num, self.my_player.roll)
                         self.send_out(num, self.my_player.start)
-                        #self.my_player.roll = 0
-                        #self.i.set_position(self.my_player.start)
-                        #self.i.steps_from_start = 0
-                        #print("piece sent out - rolls:", self.my_player.rollsleft, "-turnstaken:", self.my_player.turnstaken)
-                        #f self.my_player.turnstaken >= 3:
-                        #    _thread.start_new_thread(self.end_turn, ())
                         #    print("endturn")
                     else:
                         self.board.move_piece(num, self.my_player.roll)
                         print("from board")
-                        #if self.my_player.roll != 0:
-                        #    self.my_player.turnstaken +=1  # Player moved piece, increase turnstaken
-                        #    print("piece moved after update rolls:", self.my_player.rollsleft, "-turnstaken:",
-                        #          self.my_player.turnstaken)
                         self.send_movement(num, self.my_player.roll)
-                        #if self.my_player.turnstaken == 3 or self.my_player.rollsleft == 0:  # End turn if player has no rolls left, or they've already taken 3 turns.
-                        #    _thread.start_new_thread(self.end_turn, ())
-                        #else:
-                        #    self.my_player.roll = 0
-                    self.end_roll()
-                    #continue
                 else:
-                    #_thread.start_new_thread(self.end_turn, ())
                     self.end_turn()
 
     def connect_to_server(self):
