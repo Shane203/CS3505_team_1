@@ -60,17 +60,17 @@ class Ludo(object):
         """Draws the timer which counts down until it reaches 0. When this
         happens it goes back to its original number and counts down again.
         """
-            while True:
-                j = self.time_limited + 1
-                while j != 0:
-                    j -= 1
-                    print(str(j))
-                    self.p.put(str(j))
-                    if not self.connection.q.empty():
-                        data = self.connection.q.get()  # receive a data and reset the timer
-                        if data == "already push a button":
-                            break
-                    time.sleep(1)
+        while True:
+            j = self.time_limited + 1
+            while j != 0:
+                j -= 1
+                print(str(j))
+                self.p.put(str(j))
+                if not self.connection.q.empty():
+                    data = self.connection.q.get()  # receive a data and reset the timer
+                    if data == "already push a button":
+                        break
+                time.sleep(1)
 
     def terminate(self):
         """Quit game if user closes window."""
