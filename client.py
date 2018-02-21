@@ -15,6 +15,7 @@ from constants import RED_PIECE, GREEN_PIECE, YELLOW_PIECE, BLUE_PIECE
 from setup import SCREEN, create_dicts, coOrds
 from board import Board
 from connection import Connection
+from queue import Queue
 
 class Ludo(object):
     def __init__(self):
@@ -31,7 +32,12 @@ class Ludo(object):
         self.score = ScoreBoard()
         self.IN = 1
         self.colour_check = 0
-        
+        self.time_limited=15
+        self.p = Queue()
+        self.font = pygame.font.SysFont("Arial", 72)
+        self.text = self.font.render("time", True, (0, 128, 0))
+
+
     def setup(self):
         create_dicts()
         pygame.init()
@@ -39,6 +45,19 @@ class Ludo(object):
         self.board.add_connection(self.connection)
         self.connection.connect_to_server()
         self.show_start_screen()
+
+    def draw_Time_Out(self):  # time out function on the client side
+            while True:
+                j = self.time_limited + 1
+                while j != 0:
+                    j -= 1
+                    print(str(j))
+                    self.p.put(str(j))
+                    if not self.connection.q.empty():
+                        data = self.connection.q.get()  # receive a data and reset the timer
+                        if data == "already push a button":
+                            break
+                    time.sleep(1)
 
     def terminate(self):
         pygame.quit()
@@ -52,7 +71,7 @@ class Ludo(object):
             print("piece moved after update rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
             self.connection.send_movement(num, self.connection.my_player.roll)
         if self.connection.my_player.turnstaken == 3 or self.connection.my_player.rollsleft == 0: #End turn if player has no rolls left, or they've already taken 3 turns.
-            _thread.start_new_thread(self.connection.end_turn, ()) 
+            _thread.start_new_thread(self.connection.end_turn, ())
         else:
             self.connection.my_player.roll = 0
         print("Outside", piece.get_steps_from_start())
@@ -91,7 +110,15 @@ class Ludo(object):
                 if OUTPUT is not None:
                     self.board.dice_object.dice.roll_dice_gif(OUTPUT, self.IN, 900, 230)
                 self.board.dice_object.display_dice(900, 230, self.connection.current_dice)
+                # draw remain time
+                if not self.p.empty():
+                    message = self.p.get()  # receive a data and reset the timer
+                    if message != "time":
+                        self.text = self.font.render(message, True, (0, 128, 0))
+                SCREEN.blit(self.text, (900, 20))
+
                 pygame.display.update()
+
                 for event in pygame.event.get():
                     if event.type == QUIT:
                         self.terminate()
@@ -137,6 +164,15 @@ class Ludo(object):
             except pygame.error:
                 continue
 
+
+
 ludo = Ludo()
 ludo.setup()
+
+try:
+    _thread.start_new_thread(ludo.draw_Time_Out, ())
+except:
+    print("unable to start a new thread")
+
 ludo.run()
+
