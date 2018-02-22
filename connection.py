@@ -80,7 +80,7 @@ class Connection:
                     self.pieces_playable()
             # This message is broadcast by the server if a player sends out a piece from their home.
             # It comes in the form {"Sendout":<piece-number>,"pos":<startposition>}
-            if "Sendout" in msg:
+            if "Sendout" in msg and msg["Colour"] != self.my_player.colour:
                 piece = msg["Sendout"]
                 pos = msg["pos"]
                 self.ALL_PIECES[piece].set_position(pos)
@@ -143,7 +143,7 @@ class Connection:
 
     def send_out(self, num, pos):
         """Announces to other players that you are sending out one of your pieces"""
-        data = {"Sendout": num, "pos": pos}
+        data = {"Sendout": num, "pos": pos, "Colour": self.my_player.colour}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
@@ -182,6 +182,7 @@ class Connection:
                 flag += 1
                 if flag == 4:
                     self.win_condition()
+                    break
         if (self.my_player.roll != 6 or self.my_player.rollstaken == 3) is True and self.my_player.specialmove is False:
             self.end_turn()
         else:
@@ -217,8 +218,12 @@ class Connection:
         """Called when players pieces have all lined up on home run"""
         print("*****************WON THE GAME!*******************")
         time.sleep(0.1)
-        data = {"Player_Won": self.my_player.colour}
+        data = {"Player_Won": self.my_player.colour, "Colour": self.my_player.colour}
+        self.my_player.turn_token = False  # Prevent player from interacting with board
+        self.my_player.diceroll_token = False  # Prevent player rolling dice
+        self.my_player.roll = 0  # Reset dice value # TODO: might be redundant
+        self.my_player.rollstaken = 0  # Resets rolls taken by player
+        # self.my_player.turns_total = 0     # TODO: provide total turns taken by player
+        # self.my_player.rolls_total = 0     # TODO: provide total rolls taken by player
         data = json.dumps(data)
         self.sock.sendall(data.encode())
-        time.sleep(0.1) # Might be redundant,  need to test
-        self.end_turn()

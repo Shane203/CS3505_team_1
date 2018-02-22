@@ -62,7 +62,11 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
             # TODO: remove player in linked list
             # TODO: Possible conflict with turnover
             print("Player ", msg["Player_Won"], "Won")
-            data = json.dumps(msg)
+            cons.token += 1
+            if cons.token > 3:
+                cons.token = 0
+            data = {"Colour": cons.colours[cons.token], "turnToken": True}
+            data = json.dumps(data)
         for i in range(4):
             cons.clients()[i].sendall(data.encode())
             print(data)

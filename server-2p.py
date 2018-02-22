@@ -61,7 +61,11 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
             # TODO: remove player in linked list
             # TODO: Possible conflict with turnover
             print("Player ", msg["Player_Won"], "Won")
-            data = json.dumps(msg)
+            cons.token += 1
+            if cons.token > 1:
+                cons.token = 0
+            data = {"Colour": cons.colours[cons.token], "turnToken": True}
+            data = json.dumps(data)
         for i in range(2):
             cons.clients()[i].sendall(data.encode())
             print(data)
@@ -100,7 +104,7 @@ def roll_genie():
         print("GENIE RETURN")
     return genie_status
 
-time_limited = 20
+time_limited = 2 #20
 def print_time(q, p):
     j = time_limited+1
     while (1):
