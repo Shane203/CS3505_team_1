@@ -15,6 +15,8 @@ from queue import Queue
 import time
 
 q = Queue()  # a method for communication within different threading
+# Global variable holding names of all players ['red', 'green', 'yellow', 'blue']
+names = []
 
 #Objective: Send colour +
 class Conns: #A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.
@@ -35,6 +37,17 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
     print('connection from', client_address)
     print("is full?")
     print(cons.isfull())
+    # Receives the name entered by the client and adds it to the list of 'NAMES'
+    recieved = 0
+    while recieved < 1:
+        data = connection.recv(4096).decode()
+        msg = json.loads(data)
+        # Msg format {"name": name}
+        if "name" in msg:
+            name = msg["name"]
+            global names
+            names += [name]
+            recieved += 1
     if cons.isfull(): #If there are 4 players connected, start a game
         StartGame()
         _thread.start_new_thread(print_time, (q, cons))
@@ -76,7 +89,11 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
         
 def StartGame():
     """A function that starts the game. It assigns a colour to each client by order in which they connected, and gives the turn token to the red player"""
-    start = [{"Colour":"red","start":True},{"Colour":"green","start":True},{"Colour":"yellow","start":True},{"Colour":"blue","start":True}]
+    global names
+    start = [{"Colour":"red","start":True, "names":names},
+             {"Colour":"green","start":True, "names":names},
+             {"Colour":"yellow","start":True, "names":names},
+             {"Colour":"blue","start":True, "names":names}]    
     for i in range (4):
         start[i] = json.dumps(start[i])
     for i in range(4):

@@ -8,6 +8,8 @@ import _thread
 from player import Player
 import time
 from queue import Queue
+from tkinter import *
+from form import Form
 
 
 class Connection:
@@ -24,6 +26,8 @@ class Connection:
         self.current_dice = ROLL_TO_IMG[1]
         self.ALL_PIECES = all_pieces
         self.q = Queue()
+        # Creates a form object
+        self.form = Form( "rules.txt")
 
     def connection_handler(self):
         """This function controls all data received from the server, and updates
@@ -31,6 +35,7 @@ class Connection:
         When referring to JSON message comments, if the symbols <> are used,
         it implies that the data is dynamic, and what will be in there depends
         on the player colour, roll of the dice etc."""
+        colors = ["red", "green", "yellow", "blue"]
         while True:
             data = self.sock.recv(4096).decode()  # decodes received data.
             print(data)
@@ -39,7 +44,10 @@ class Connection:
             # Start implies it is the first message of the game.
             # The message comes in the form {"start":True,"Colour":<colour>}
             if "start" in msg:
-                self.my_player = Player(msg["Colour"], "", self.ALL_PIECES)
+                names = msg["names"]
+                self.my_player = Player(msg["Colour"],
+                                        names[colors.index(msg["Colour"])],
+                                        self.ALL_PIECES, names)
                 self.board.my_player = self.my_player
                 print(self.my_player.name, self.my_player.colour)
             # Messages come of the form {"turn_token":True,"Colour":<colour>}.
@@ -124,7 +132,7 @@ class Connection:
                 else:
                     _thread.start_new_thread(self.end_turn, ())
 
-    def connect_to_server(self):
+    def connect_to_server(self, name):
         try:
             # "connects Client to server, creates thread to listen for incoming messages"
             self.sock.connect(self.server_address)  # Tries to connect to the Server
@@ -136,6 +144,10 @@ class Connection:
             print("Error: Port Number may already be in use.")
         except AttributeError:
             print("Error! An error has occured. Please try again later.")
+        #Sends your name to the server
+        data = {"name":str(name)}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
 
     def send_movement(self, num, roll):
         """Announces to other players that you are moving one of your pieces"""

@@ -1,5 +1,5 @@
 class Player(object):
-    def __init__(self, colour, name, all_pieces):
+    def __init__(self, colour, name, all_pieces, names):
         self.colour = colour
         self.name = name
         # Starts off at 0. When a player moves a piece, it goes up by one.
@@ -13,6 +13,7 @@ class Player(object):
         self.specialmove = False  # Allows player to roll dice after landing piece on opposing players piece.
         self.ALL_PIECES = all_pieces
         self.movable_pieces_array = []
+        self.names = names
         if self.colour == "red":
             self.start = 0
             self.end = 51
