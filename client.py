@@ -55,6 +55,7 @@ class Ludo(object):
         self.board.add_connection(self.connection)
         self.connection.connect_to_server()
         self.show_start_screen()
+        self.bgm()
 
     def draw_Time_Out(self):  # time out function on the client side
         """Draws the timer which counts down until it reaches 0. When this
@@ -178,6 +179,8 @@ class Ludo(object):
                                             #print("piece sent out - rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
                                             print("Home", piece.get_steps_from_start())
                                             break
+                                        elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x,y) and myplayer.roll != 6:
+                                            pygame.mixer.Sound.play(noMove_sound)
                                     else:
                                         if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
                                             self.click_piece(num, piece)
@@ -185,7 +188,10 @@ class Ludo(object):
                     self.clock.tick(c.FPS)
             except pygame.error:
                 continue
-
+    def bgm(self):
+        pygame.mixer.pre_init(44100,16,2,4096)
+        pygame.mixer.music.load("sound/BGM.mp3")
+        pygame.mixer.music.play(-1)
 
 ludo = Ludo()
 ludo.setup()
