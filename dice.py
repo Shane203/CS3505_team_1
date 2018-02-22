@@ -56,7 +56,7 @@ class Dice():
 
     def roll_dice_gif(self, n, IN, x, y):
         C = pygame.time.Clock()
-        tick = 35
+        tick = 15
         i = 1
         while i < 15:
             if IN < 15:
