@@ -1,5 +1,4 @@
 from setup import SCREEN
-from constants import rollDice_sound
 import json
 import pygame
 import time
@@ -48,7 +47,6 @@ class Dice():
             self.connection.my_player.diceroll_token = False  # Prevent roll until piece moved
             self.connection.my_player.roll = dice  # Sets to dice value
             msg = {"Colour": self.connection.my_player.colour, "roll": True, "dicevalue": dice}
-            pygame.mixer.Sound.play(rollDice_sound)
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
             #time.sleep(0.1)
@@ -56,7 +54,7 @@ class Dice():
 
     def roll_dice_gif(self, n, IN, x, y):
         C = pygame.time.Clock()
-        tick = 35
+        tick = 15
         i = 1
         while i < 15:
             if IN < 15:

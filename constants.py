@@ -1,14 +1,5 @@
 import pygame
 
-pygame.init()
-
-pieceMove_sound = pygame.mixer.Sound('sound/Move.wav')
-rollDice_sound = pygame.mixer.Sound('sound/Dice.wav')
-kill_sound = pygame.mixer.Sound('sound/Kill.wav')
-win_sound = pygame.mixer.Sound('sound/Win.wav')
-first_sound = pygame.mixer.Sound('sound/First.wav')
-noMove_sound = pygame.mixer.Sound('sound/NoMove.wav')
-
 GENIE_BIG = pygame.image.load('images/genie_big.png')
 GENIE_SMALL = pygame.image.load('images/genie.png')
 LAMP_SMALL = pygame.image.load('images/lamp.png')

@@ -7,7 +7,6 @@ from constants import INDENT_BOARD, BOX_SIZE
 from constants import STAR, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW
 from constants import GENIE_SMALL, LAMP_SMALL
 from constants import CENTRE, TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT
-from constants import pieceMove_sound, kill_sound
 from box_and_button import Box
 from box_and_button import Button
 from dice import Dice
@@ -59,7 +58,6 @@ class Board:
         After the piece has move it checks if there is a conflict with another
         piece on the board.
         """
-        pygame.mixer.Sound.play(pieceMove_sound)
         moving_piece = self.ALL_PIECES[piece_num]
         if moving_piece.get_position() is None:
             moving_piece.set_position(moving_piece.start)
@@ -289,7 +287,6 @@ class Board:
         """Sends the piece back to its starting position.
         It retraces its steps all the way back.
         """
-        pygame.mixer.Sound.play(kill_sound)
         piece.image = self.COLOUR_TO_IMG[piece.colour]
         while piece.get_position() != piece.start:
             piece.set_position((piece.get_position() - 1) % 52)
