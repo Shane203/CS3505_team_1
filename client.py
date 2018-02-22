@@ -90,8 +90,6 @@ class Ludo(object):
         to the server.
         """
         self.board.move_piece(num, self.connection.my_player.roll)
-        self.connection.my_player.turnstaken += 1 #Player moved piece, increase turnstaken
-        print("piece moved after update rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
         self.connection.send_movement(num, self.connection.my_player.roll)
         self.connection.end_roll()
         print("Outside", piece.get_steps_from_start())
@@ -180,7 +178,6 @@ class Ludo(object):
                                             self.board.move_piece(num, self.connection.my_player.roll)
                                             self.connection.send_out(num, self.connection.my_player.start)
                                             self.connection.end_roll()
-                                            #print("piece sent out - rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
                                             print("Home", piece.get_steps_from_start())
                                             break
                                     else:
@@ -188,7 +185,8 @@ class Ludo(object):
                                             self.click_piece(num, piece)
                                             break
                     self.clock.tick(c.FPS)
-            except pygame.error:
+            except pygame.error as e:
+                print(e)
                 continue
     def bgm(self):
         pygame.mixer.pre_init(44100,16,2,4096)
