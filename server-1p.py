@@ -104,7 +104,7 @@ def roll_genie():
         print("GENIE RETURN")
     return genie_status
 
-time_limited = 2 #20
+time_limited = 20
 def print_time(q, p):
     j = time_limited+1
     while (1):

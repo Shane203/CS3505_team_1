@@ -36,7 +36,7 @@ class Ludo(object):
         self.score = ScoreBoard()
         self.IN = 1
         self.colour_check = 0
-        self.time_limited = 1 #15
+        self.time_limited = 15
         self.p = Queue()
         self.font = pygame.font.SysFont("Arial", 72)
         self.text = self.font.render("time", True, (0, 128, 0))
