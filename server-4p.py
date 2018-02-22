@@ -14,9 +14,6 @@ from random import randint
 from queue import Queue
 import time
 
-q = Queue()  # a method for communication within different threading
-# Global variable holding names of all players ['red', 'green', 'yellow', 'blue']
-names = []
 
 #Objective: Send colour +
 class Conns: #A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.
@@ -37,24 +34,11 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
     print('connection from', client_address)
     print("is full?")
     print(cons.isfull())
-    # Receives the name entered by the client and adds it to the list of 'NAMES'
-    recieved = 0
-    while recieved < 1:
-        data = connection.recv(4096).decode()
-        msg = json.loads(data)
-        # Msg format {"name": name}
-        if "name" in msg:
-            name = msg["name"]
-            global names
-            names += [name]
-            recieved += 1
     if cons.isfull(): #If there are 4 players connected, start a game
         StartGame()
-        _thread.start_new_thread(print_time, (q, cons))
     while True:
         data = connection.recv(4096) #Get data from client
         print(data.decode())
-        q.put("have received a data")# tell the thread that we need to reset the timer
         msg = json.loads(data.decode()) #decode and create dict from data
         if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
             # num = rolldice()
@@ -89,11 +73,7 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
         
 def StartGame():
     """A function that starts the game. It assigns a colour to each client by order in which they connected, and gives the turn token to the red player"""
-    global names
-    start = [{"Colour":"red","start":True, "names":names},
-             {"Colour":"green","start":True, "names":names},
-             {"Colour":"yellow","start":True, "names":names},
-             {"Colour":"blue","start":True, "names":names}]    
+    start = [{"Colour":"red","start":True},{"Colour":"green","start":True},{"Colour":"yellow","start":True},{"Colour":"blue","start":True}]
     for i in range (4):
         start[i] = json.dumps(start[i])
     for i in range(4):
@@ -121,27 +101,6 @@ def roll_genie():
         genie_status = "return"
         print("GENIE RETURN")
     return genie_status
-
-time_limited = 15  #15 second to wait
-#the time out function
-def print_time(q, cons):
-    j = time_limited+1
-    while (1):
-        j -= 1
-        print(j)
-        if j == 0:  # send message to all client that "time is running out"
-            data = json.dumps("time is running out")
-            for i in range(4):
-                cons.clients()[i].sendall(data.encode())
-                print(data)
-            j = time_limited+1
-            continue
-        time.sleep(1)
-        if q.empty() == False: # to reset the timer
-            data = q.get()  # receive a data and reset the timer
-            if data == "have received a data":
-                j = time_limited+1
-
 
 
 

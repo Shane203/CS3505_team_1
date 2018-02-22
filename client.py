@@ -4,12 +4,12 @@ import _thread
 import pygame
 from piece import Piece
 from player import Player
+from score import ScoreBoard
 import constants as c
 from setup import SCREEN, create_dicts, coOrds
 from board import Board
 from connection import Connection
 from queue import Queue
-from box_and_button import Box
 
 class Ludo(object):
     """This is the main Ludo class.
@@ -33,6 +33,7 @@ class Ludo(object):
         self.connection = Connection(self.board, self.my_player, None, self.all_pieces)
         self.current_player = self.connection.current_player
         self.clock = pygame.time.Clock()
+        self.score = ScoreBoard()
         self.IN = 1
         self.colour_check = 0
         self.time_limited = 15
@@ -52,8 +53,7 @@ class Ludo(object):
         pygame.init()
         pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
         self.board.add_connection(self.connection)
-        name = self.connection.form.draw_form()
-        self.connection.connect_to_server(name)
+        self.connection.connect_to_server()
         self.show_start_screen()
         self.bgm()
 
@@ -75,8 +75,10 @@ class Ludo(object):
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
                     if data == "already push a button":
-                        break
+                        j = self.time_limited + 1
+                        continue
                 time.sleep(1)
+            self.connection.time_out()
 
     def terminate(self):
         """Quit game if user closes window."""
@@ -90,6 +92,8 @@ class Ludo(object):
         to the server.
         """
         self.board.move_piece(num, self.connection.my_player.roll)
+        self.connection.my_player.turnstaken += 1 #Player moved piece, increase turnstaken
+        print("piece moved after update rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
         self.connection.send_movement(num, self.connection.my_player.roll)
         self.connection.end_roll()
         print("Outside", piece.get_steps_from_start())
@@ -119,65 +123,6 @@ class Ludo(object):
             pygame.display.update()
             FPSCLOCK.tick(5)
 
-    def get_score(self, list_of_pieces):
-        #Returns a list of the scores in order: [red, green, yellow, blue]
-        red_score = 0
-        blue_score = 0
-        green_score = 0
-        yellow_score = 0
-        for piece in list_of_pieces:
-            if piece.colour == "red":
-                red_score += piece.get_steps_from_start()
-            elif piece.colour == "blue":
-                blue_score += piece.get_steps_from_start()
-            elif piece.colour == "green":
-                green_score += piece.get_steps_from_start()
-            elif piece.colour == "yellow":
-                yellow_score += piece.get_steps_from_start()
-        return [red_score, green_score, yellow_score, blue_score]
-
-    def draw_scoreboard(self, list_of_pieces):
-        w = 100
-        h = 30
-        y = 500
-        x = 900
-        name = Box("Name", x, y, w, h, c.BLACK, 1)
-        x += w
-        score = Box("Score", x, y, w, h, c.BLACK, 1)
-        x += w
-        name.draw()
-        score.draw()
-        #Returns a list of the scores in order: red, green, yellow, blue
-        scores = self.get_score(list_of_pieces)
-        list_of_scores = [(scores[0], "red"), (scores[1], "green"),
-                         (scores[2], "yellow"), (scores[3], "blue")]
-        #If all scores are zero, scoreboard is ordered as default
-        if scores != [0, 0, 0, 0]:
-            list_of_scores = sorted(list_of_scores)[::-1]
-        color_to_color = { "red" : c.RED, "green" :  c.GREEN, "yellow" : c.YELLOW, "blue" : c.BLUE}
-        # Used to get the name of the player variable names contains all the names of the
-        # players [red, green, yellow, blue]
-        colors = ["red", "green", "yellow", "blue"]
-        for i in list_of_scores:
-            #Access each player, sort them by score and draw the 4 players on the scoreboard.
-            color = color_to_color[i[1]]
-            y += h
-            x = 900
-            if self.connection.my_player.names != []:
-                nameField = Box( self.connection.my_player.names[colors.index(i[1])],
-                                 x, y, w, h, color)
-            else:
-                nameField = Box("", x, y, w, h, color)
-            nameField.draw()
-            outlineBox = Box("", x, y, w, h, c.BLACK, 1)
-            outlineBox.draw()
-            x += w
-            scoreField = Box(str(i[0]), x, y, w, h, color)
-            scoreField.draw()
-            outlineBox = Box("", x, y, w, h, c.BLACK, 1)
-            outlineBox.draw()
-            x += w
-
     def run(self):
         """This is the main game method.
 
@@ -190,7 +135,7 @@ class Ludo(object):
                 SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
                 self.board.draw_board(self.colour_check)
                 self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
-                self.draw_scoreboard(self.all_pieces)
+                self.score.draw(self.all_pieces)
                 self.board.PLAYER_FIELD.draw()
                 OUTPUT = self.board.ROLL_BUTTON.click()
                 if OUTPUT is not None:
@@ -237,6 +182,7 @@ class Ludo(object):
                                             self.board.move_piece(num, self.connection.my_player.roll)
                                             self.connection.send_out(num, self.connection.my_player.start)
                                             self.connection.end_roll()
+                                            #print("piece sent out - rolls:", self.connection.my_player.rollsleft, "-turnstaken:", self.connection.my_player.turnstaken)
                                             print("Home", piece.get_steps_from_start())
                                             break
                                     else:
@@ -244,8 +190,7 @@ class Ludo(object):
                                             self.click_piece(num, piece)
                                             break
                     self.clock.tick(c.FPS)
-            except pygame.error as e:
-                print(e)
+            except pygame.error:
                 continue
     def bgm(self):
         pygame.mixer.pre_init(44100,16,2,4096)
