@@ -8,6 +8,8 @@ import _thread
 from player import Player
 import time
 from queue import Queue
+from form import Form
+from tkinter import *
 
 
 class Connection:
@@ -24,6 +26,8 @@ class Connection:
         self.current_dice = ROLL_TO_IMG[1]
         self.ALL_PIECES = all_pieces
         self.q = Queue()
+        # Creates a form object
+        self.form = Form("rules.txt")
 
 
 
@@ -33,6 +37,7 @@ class Connection:
         When referring to JSON message comments, if the symbols <> are used,
         it implies that the data is dynamic, and what will be in there depends
         on the player colour, roll of the dice etc."""
+        colors = ["red", "green", "yellow", "blue"]
         while True:
             data = self.sock.recv(4096).decode()  # decodes received data.
             print(data)
@@ -41,7 +46,10 @@ class Connection:
             # Start implies it is the first message of the game.
             # The message comes in the form {"start":True,"Colour":<colour>}
             if "start" in msg:
-                self.my_player = Player(msg["Colour"], "", self.ALL_PIECES)
+                names = msg["names"]
+                self.my_player = Player(msg["Colour"],
+                                        names[colors.index(msg["Colour"])],
+                                        self.ALL_PIECES, names)
                 self.board.my_player = self.my_player
                 print(self.my_player.name, self.my_player.colour)
             # Messages come of the form {"turn_token":True,"Colour":<colour>}.
@@ -52,9 +60,6 @@ class Connection:
                     self.board.PLAYER_FIELD.set_msg("MY TURN")
                     self.my_player.turn_token = True
                     self.my_player.diceroll_token = True
-                    self.my_player.rollsleft = 1
-                    print("rolls:", self.my_player.rollsleft,
-                          "-turnstaken:", self.my_player.turnstaken)
                 else:
                     self.board.PLAYER_FIELD.set_msg(msg["Colour"] + "'s turn")
                 self.current_player = msg["Colour"]
@@ -82,13 +87,13 @@ class Connection:
                     self.pieces_playable()
             # This message is broadcast by the server if a player sends out a piece from their home.
             # It comes in the form {"Sendout":<piece-number>,"pos":<startposition>}
-            if "Sendout" in msg and msg["Colour"] != self.my_player.colour:
+            if "Sendout" in msg:
                 piece = msg["Sendout"]
                 pos = msg["pos"]
                 self.ALL_PIECES[piece].set_position(pos)
                 self.board.check_conflict(self.ALL_PIECES[piece])
-                if roll == 6:
-                    self.my_player.diceroll_token  == True
+                if self.my_player.roll == 6:
+                    self.my_player.diceroll_token == True
             # This message is broadcast if a player moves a piece.
             # As the player moves it's own pieces, they only react to other
             if "Movement" in msg and msg["Colour"] != self.my_player.colour:
@@ -98,7 +103,7 @@ class Connection:
                 steps = msg["Moveforward"]
                 num = msg["Movement"]
                 self.board.move_piece(num, steps)
-                if roll == 6:
+                if self.my_player.roll == 6:
                     self.my_player.diceroll_token == True
             if "Player_Won" in msg:
                 print(msg)
@@ -113,23 +118,22 @@ class Connection:
             elif len(self.my_player.movable_pieces_array) != 0:  # Redundant? or fail-safe?
                 i = self.my_player.movable_pieces_array[randint(0, len(self.my_player.movable_pieces_array) - 1)]
                 print("Value of I is:", i)
-                num = i.number + self.my_player.low_range - 1
-                if i.position == None:  # shouldn't it be my_pieces or i.position?
+                if self.ALL_PIECES[i] == None:  # shouldn't it be my_pieces or i.position?
                     print("from home")
-                    self.board.move_piece(num, self.my_player.roll)
-                    self.send_out(num, self.my_player.start)
+                    self.board.move_piece(i, self.my_player.roll)
+                    self.send_out(i, self.my_player.start)
                     #    print("endturn")
                     time.sleep(0.5)
                 else:
-                    self.board.move_piece(num, self.my_player.roll)
+                    self.board.move_piece(i, self.my_player.roll)
                     print("from board")
-                    self.send_movement(num, self.my_player.roll)
+                    self.send_movement(i, self.my_player.roll)
                     time.sleep(0.5)
                 self.end_roll()
             else:
                 self.end_turn()
 
-    def connect_to_server(self):
+    def connect_to_server(self,name):
         try:
             # "connects Client to server, creates thread to listen for incoming messages"
             self.sock.connect(self.server_address)  # Tries to connect to the Server
@@ -141,6 +145,10 @@ class Connection:
             print("Error: Port Number may already be in use.")
         except AttributeError:
             print("Error! An error has occured. Please try again later.")
+        #Sends your name to the server
+        data = {"name":str(name)}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
 
     def send_movement(self, num, roll):
         """Announces to other players that you are moving one of your pieces"""
@@ -150,20 +158,20 @@ class Connection:
 
     def send_out(self, num, pos):
         """Announces to other players that you are sending out one of your pieces"""
-        data = {"Sendout": num, "pos": pos, "Colour": self.my_player.colour}
+        data = {"Sendout": num, "pos": pos}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
     def end_turn(self):
-        """ Called when player's turn is over. Resets player values. """
+        """Called when player's turn is over. resets player token, rollsleft, turntoken."""
         if self.my_player.turn_token:
             print("********************ENDTURN******************************")
-            self.my_player.turn_token = False       # Prevent player from interacting with board
-            self.my_player.diceroll_token = False   # Prevent player rolling dice
-            self.my_player.roll = 0                 # Reset dice value # TODO: might be redundant
-            self.my_player.rollstaken = 0           # Resets rolls taken by player
-            #self.my_player.turns_total = 0     # TODO: provide total turns taken by player
-            #self.my_player.rolls_total = 0     # TODO: provide total rolls taken by player
+            self.my_player.turn_token = False
+            self.my_player.diceroll_token = False
+            self.my_player.roll = 0
+            self.my_player.rollstaken = 0
+            #self.my_player.turns_total = 0
+            #self.my_player.rolls_total = 0
             msg = {"Colour": self.my_player.colour, "turnOver": True}
             data = json.dumps(msg)
             self.sock.sendall(data.encode())
@@ -172,16 +180,18 @@ class Connection:
         """
         Called when player has finished movement of piece.
         Resets all player's pieces.movable to FALSE.
-        Checks if player should end turn, Otherwise resets diceroll_token to TRUE.
+        Checks if player should end turn, Otherwise resets MY_PLAYER.diceroll_token to TRUE.
         Checks if all player's pieces on home run, allowing player to win.
-        :var self.my_player.my_pieces[piece]: Players selected piece
-        :var self.my_player.roll: Value of dice
-        :var self.my_player.specialmove: Checks if player had piece land on opposing player's piece
-        :var self.my_player.rollstaken: Counts number of rolls player has rolled this turn
-        :var self.my_player.diceroll_token: Checks if player can roll allowed to roll dice
+        :var piece_flag: Counts all pieces in last four squares
+        :var firstpiece: Position in index of player's first piece
+        :var piece: Player's pieces
+        :var MY_PLAYER.roll: Value of dice
+        :var MY_PLAYER.specialmove: Checks if player had piece land on opposing player's piece
+        :var MY_PLAYER.rollstaken: Counts number of rolls player has rolled
+        :var MY_PLAYER.diceroll_token: Checks if player can roll allowed to roll dice
         """
-        flag = 0  # flag: Counts all pieces in last four squares
-        firstpiece = 0  # MY_PLAYER.lowrange  # firstpiece: First position in index of player's first piece
+        flag = 0
+        firstpiece = 0  # MY_PLAYER.lowrange
         lastpiece = 4  # (MY_PLAYER.lowrange + 4)
         for piece in range(firstpiece, lastpiece):
             self.my_player.my_pieces[piece].movable = None
@@ -189,8 +199,8 @@ class Connection:
                 flag += 1
                 if flag == 4:
                     self.win_condition()
-                    break
         if (self.my_player.roll != 6 or self.my_player.rollstaken == 3) is True and self.my_player.specialmove is False:
+            print("ROLL", self.my_player.roll, self.my_player.rollstaken, self.my_player.specialmove)
             self.end_turn()
         else:
             print("RESETTING DICE")
@@ -206,31 +216,27 @@ class Connection:
         for num in range(self.my_player.low_range, self.my_player.low_range + 4):
             piece = self.my_player.my_pieces[num - self.my_player.low_range]
             piece_pos = piece.get_position()
-            if piece.check_home_run():  # Checks if piece is on home run and can not move
+            if piece.check_home_run():  # can not move
                 piece.movable = False
-            elif piece.check_forward_movement() is False:  # Checks if space moving onto is not empty
+            elif piece.check_forward_movement() is False:  # if space moving onto is not empty
                 piece.movable = False
-            elif piece_pos is None and self.my_player.roll != 6:  # Checks if piece not on board and didn't roll a six
+            elif piece_pos is None and self.my_player.roll != 6:  # Didn't roll a six
                 piece.movable = False
             else:
                 print("Highlight", piece)
                 piece.movable = True
-                self.my_player.movable_pieces_array.append(piece)
+                self.my_player.movable_pieces_array.append(num)
                 flag = True
-        print("Number of playable pieces", len(self.my_player.movable_pieces_array))
         if not flag:
             self.end_turn()
 
     def win_condition(self):
-        """Called when players pieces have all lined up on home run"""
+
         print("*****************WON THE GAME!*******************")
         time.sleep(0.1)
-        data = {"Player_Won": self.my_player.colour, "Colour": self.my_player.colour}
-        self.my_player.turn_token = False  # Prevent player from interacting with board
-        self.my_player.diceroll_token = False  # Prevent player rolling dice
-        self.my_player.roll = 0  # Reset dice value # TODO: might be redundant
-        self.my_player.rollstaken = 0  # Resets rolls taken by player
-        # self.my_player.turns_total = 0     # TODO: provide total turns taken by player
-        # self.my_player.rolls_total = 0     # TODO: provide total rolls taken by player
+        data = {"Player_Won": self.my_player.colour}
         data = json.dumps(data)
+
         self.sock.sendall(data.encode())
+        time.sleep(0.1)
+        self.end_turn()
