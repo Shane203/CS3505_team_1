@@ -64,8 +64,13 @@ class Ludo(object):
         while True:
             j = self.time_limited + 1
             while j != 0:
-                j -= 1
-                print(str(j))
+                if j>6:
+                    j -= 1 
+                    print(str(j))
+                elif j<=6:
+                    pygame.mixer.Sound.play(c.noMove_sound)
+                    j -= 1
+                    print(str(j))
                 self.p.put(str(j))
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
