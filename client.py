@@ -66,7 +66,7 @@ class Ludo(object):
             while j != 0:
                 if j>6:
                     j -= 1 
-                    print(str(j))
+                    #print(str(j))
                 elif j<=6:
                     pygame.mixer.Sound.play(c.noMove_sound)
                     j -= 1
