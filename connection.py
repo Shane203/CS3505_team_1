@@ -105,6 +105,7 @@ class Connection:
                 # either randomly pick a pieces or roll a
                 if self.my_player.diceroll_token:
                     self.board.dice_object.roll_dice()
+                    time.sleep(0.5)
                 elif len(self.my_player.movable_pieces_array) != 0:  # Redundant? or fail-safe?
                     i = self.my_player.movable_pieces_array[randint(0, len(self.my_player.movable_pieces_array)-1)]
                     print("Value of I is:", i)
@@ -114,10 +115,12 @@ class Connection:
                         self.board.move_piece(num, self.my_player.roll)
                         self.send_out(num, self.my_player.start)
                         #    print("endturn")
+                        time.sleep(0.5)
                     else:
                         self.board.move_piece(num, self.my_player.roll)
                         print("from board")
                         self.send_movement(num, self.my_player.roll)
+                        time.sleep(0.5)
                     self.end_roll()
                 else:
                     self.end_turn()
