@@ -55,6 +55,7 @@ class Ludo(object):
         self.board.add_connection(self.connection)
         self.connection.connect_to_server()
         self.show_start_screen()
+        self.bgm()
 
     def draw_Time_Out(self):  # time out function on the client side
         """Draws the timer which counts down until it reaches 0. When this
@@ -63,8 +64,13 @@ class Ludo(object):
         while True:
             j = self.time_limited + 1
             while j != 0:
-                j -= 1
-                print(str(j))
+                if j>6:
+                    j -= 1 
+                    print(str(j))
+                elif j<=6:
+                    pygame.mixer.Sound.play(c.noMove_sound)
+                    j -= 1
+                    print(str(j))
                 self.p.put(str(j))
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
@@ -184,7 +190,10 @@ class Ludo(object):
                     self.clock.tick(c.FPS)
             except pygame.error:
                 continue
-
+    def bgm(self):
+        pygame.mixer.pre_init(44100,16,2,4096)
+        pygame.mixer.music.load("sound/BGM.mp3")
+        pygame.mixer.music.play(-1)
 
 ludo = Ludo()
 ludo.setup()
