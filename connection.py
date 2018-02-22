@@ -107,7 +107,6 @@ class Connection:
                 if len(self.my_player.movable_pieces_array) != 0:
                     i = self.my_player.movable_pieces_array[randint(0, len(self.my_player.movable_pieces_array)-1)]
                     print(i)
-                    self.my_player.turnstaken +=1
                     if self.ALL_PIECES[i].position == None:
                         print("from home")
                         self.send_out(i, self.my_player.start)
@@ -118,7 +117,6 @@ class Connection:
                         self.board.move_piece(i,self.my_player.roll)
                         print("from board")
                         if self.my_player.roll != 0:
-                            self.my_player.turnstaken +=1  # Player moved piece, increase turnstaken
                             self.send_movement(i,self.my_player.roll)
                         else:
                             self.my_player.roll = 0
