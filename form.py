@@ -10,14 +10,15 @@ class Form:
         self.name = Entry(self.frame1, width=20)
         self.label2 = Label(self.frame1, text="Server IP", fg="black")
         self.label3 = Label(self.frame1, text="", fg="black")
-        self.button = Button(self.frame1, text='Join Game', command=self.get_name)
+        self.button = Button(self.frame1, text='Join Game', command=self.get_name_and_ip)
         self.ip = Entry(self.frame1, width=20)
         self.button1 = Button(self.frame1, text='Rules', command=self.show_rules)
         self.filename = rules_file
 
-    def get_name(self):
+    def get_name_and_ip(self):
         # Gets the name entered by the player in the name box.
         self.player_name = self.name.get()
+        self.ip_address = self.ip.get()
         self.root.destroy()
 
     def show_rules(self):
@@ -60,7 +61,7 @@ class Form:
         self.button1.configure(background='lightblue')
         self.root.mainloop()
         # returns the name entered by the player.
-        return self.player_name
+        return (self.player_name, self.ip_address)
 
 
 
