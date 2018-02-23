@@ -138,11 +138,7 @@ class Ludo(object):
                 yellow_score += piece.get_steps_from_start()
         return [red_score, green_score, yellow_score, blue_score]
 
-    def draw_scoreboard(self, list_of_pieces):
-        w = 100
-        h = 30
-        y = 500
-        x = 900
+    def draw_scoreboard(self, list_of_pieces, x, y, w, h):
         name = Box("Name", x, y, w, h, c.BLACK, 1)
         x += w
         score = Box("Score", x, y, w, h, c.BLACK, 1)
@@ -179,6 +175,10 @@ class Ludo(object):
             outlineBox = Box("", x, y, w, h, c.BLACK, 1)
             outlineBox.draw()
             x += w
+            # Draws a marker after your entry to show who you are
+            if self.connection.my_player.name == self.connection.my_player.names[colors.index(i[1])]:
+                marker = Box("--", x, y, w, h, c.WHITE)
+                marker.draw()
 
     # Returns a list of the scores in order: [red, green, yellow, blue]
 
@@ -194,7 +194,7 @@ class Ludo(object):
                 SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
                 self.board.draw_board(self.colour_check)
                 self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
-                self.draw_scoreboard(self.all_pieces)
+                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
                 self.board.PLAYER_FIELD.draw()
                 OUTPUT = self.board.ROLL_BUTTON.click()
                 if OUTPUT is not None:
