@@ -14,14 +14,14 @@ from box_and_button import Box
 class Ludo(object):
     """This is the main Ludo class.
 
-    It initilaises my_player, genie_owner, all_pieces, board, connection,
+    It initialises my_player, genie_owner, all_pieces, board, connection,
     the score board and the timer.
 
     It also holds the main run function which runs the game.
     """
     def __init__(self):
         """
-        Initiliases the main attributes but does not take in any arguements.
+        Initialises the main attributes but does not take in any arguments.
         """
         self.my_player = None
         self.genie_owner = None
@@ -42,7 +42,7 @@ class Ludo(object):
 
 
     def setup(self):
-        """Creates the coo-rdinate dictionary for the board, initiliases
+        """Creates the coo-rdinate dictionary for the board, initialises
         pygame. It also blocks out some pygame events so the queue doesn't
         overflow from unneeded events such as MOUSEMOTION. It also setups
         attributes in board, connects to the server and shows the start

@@ -9,13 +9,13 @@ class Dice():
     def __init__(self, connection, my_player):
         self.connection = connection
 
-    def dice_rule(self, dice):
+    def dice_rule(self):
         """
         Checks which roll player is rolling and sets current roll value to dice roll
         :param dice: random int value between 1-6
-        :var MY_PLAYER.roll: Checks previous value of dice/roll
-        :var MY_PLAYER.specialmove: Checks if player had piece land on opposing player's piece
-        :var MY_PLAYER.rollstaken: Counts number of rolls player has rolled
+        :var self.connection.my_player.roll: Checks previous value of dice/roll
+        :var self.connection.my_player.specialmove: Checks if player had piece land on opposing player's piece
+        :var self.connection.my_player.rollstaken: Counts number of rolls player has rolled
         :return: True = Player can make a legal move, Else(Fail-safe) = Ends turn if no legal dice
         """
         if self.connection.my_player.specialmove is True and self.connection.my_player.rollstaken != 3:
@@ -36,18 +36,10 @@ class Dice():
             self.connection.end_turn()
             return False
 
-    def dice_roll(self):
-        """
-            Returns a random number between 1 and 6
-        """
-        return randint(1, 6)
-
     def roll_dice(self):
-        dice = self.dice_roll()
-        if self.connection.my_player.turn_token and self.connection.my_player.diceroll_token is True and self.dice_rule(dice) is True:
-            self.connection.my_player.diceroll_token = False  # Prevent roll until piece moved
-            self.connection.my_player.roll = dice  # Sets to dice value
-            msg = {"Colour": self.connection.my_player.colour, "roll": True, "dicevalue": dice}
+        if self.connection.my_player.turn_token and self.connection.my_player.diceroll_token is True and self.dice_rule() is True:
+            self.connection.my_player.diceroll_token = False  # Prevents roll until piece moved
+            msg = {"Colour": self.connection.my_player.colour, "roll": True}
             pygame.mixer.Sound.play(rollDice_sound)
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())

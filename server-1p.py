@@ -39,8 +39,7 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
         print(data.decode())
         msg = json.loads(data.decode()) #decode and create dict from data
         if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
-            #num = rolldice()
-            num = msg["dicevalue"]
+            num = rolldice()
             genie_status = roll_genie()
             data = {"Colour":msg["Colour"],"dicenum":num, "genie_result":genie_status} 
             data = json.dumps(data)
@@ -61,7 +60,7 @@ def ConnectionHandler(connection,client_address,cons): #Handles threads created 
             if cons.token > 3:
                 cons.token = 0
             data = {"Colour": cons.colours[cons.token], "turnToken": True}
-            data = json.dumps(msg)
+            data = json.dumps(data)
         for i in range(1):
             cons.clients()[i].sendall(data.encode())
             print(data)

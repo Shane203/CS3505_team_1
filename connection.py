@@ -69,6 +69,7 @@ class Connection:
             # It comes in the form {"dicenum":<number between 1-6>,"Colour":<colour>}
             if "dicenum" in msg:
                 roll = msg["dicenum"]
+                self.my_player.roll = roll  # Assigns value of dice roll to self
                 genie_status = msg["genie_result"]  # genie_status is either "take", "return" or None
                 if genie_status == "take" and self.board.genie_owner is None:
                     # If you roll to take the genie and no one currently has it
