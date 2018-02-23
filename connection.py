@@ -16,7 +16,8 @@ class Connection:
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
         # Sets values for host- the current domain name and port number 10000.
-        self.server_address = (gethostbyname(gethostname()), 10001)
+        self.port_number = 10001
+        self.server_address = (gethostbyname(gethostname()), self.port_number)
         self.ip_addr = gethostbyname(gethostname())  # The IP Address of the current machine.
         print('connecting to server at %s port %s' % self.server_address)
         print('IP address is %s' % self.ip_addr)
@@ -133,10 +134,12 @@ class Connection:
             else:
                 self.end_turn()
 
-    def connect_to_server(self,name):
+    def connect_to_server(self,name, ip_addr):
         try:
             # "connects Client to server, creates thread to listen for incoming messages"
-            self.sock.connect(self.server_address)  # Tries to connect to the Server
+            print("Check")
+            print((ip_addr, self.port_number))
+            self.sock.connect((ip_addr, self.port_number))  # Tries to connect to the Server
             _thread.start_new_thread(self.connection_handler, ())
 
         except ConnectionRefusedError:

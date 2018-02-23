@@ -52,8 +52,9 @@ class Ludo(object):
         pygame.init()
         pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
         self.board.add_connection(self.connection)
-        name = self.connection.form.draw_form()
-        self.connection.connect_to_server(name)
+        #Draw form returns a tuple of name and ip of server
+        name_and_ip = self.connection.form.draw_form()
+        self.connection.connect_to_server(name_and_ip[0], name_and_ip[1])
         self.show_start_screen()
         self.bgm()
 
@@ -179,6 +180,8 @@ class Ludo(object):
             if self.connection.my_player.name == self.connection.my_player.names[colors.index(i[1])]:
                 marker = Box("--", x, y, w, h, c.WHITE)
                 marker.draw()
+            else:
+                blank = Box("", x, y, w, h, c.WHITE)
 
     # Returns a list of the scores in order: [red, green, yellow, blue]
 
