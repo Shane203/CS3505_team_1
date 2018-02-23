@@ -137,8 +137,6 @@ class Connection:
     def connect_to_server(self,name, ip_addr):
         try:
             # "connects Client to server, creates thread to listen for incoming messages"
-            print("Check")
-            print((ip_addr, self.port_number))
             self.sock.connect((ip_addr, self.port_number))  # Tries to connect to the Server
             _thread.start_new_thread(self.connection_handler, ())
 
