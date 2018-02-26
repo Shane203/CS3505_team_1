@@ -81,7 +81,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
         
     def rolldice(self):
         """Returns a random number between 1 and 6"""
-        return randint(4,6)
+        return randint(1,6)
         #return 6
     def nextPlayer(self):
         self.token += 1
