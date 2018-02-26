@@ -14,14 +14,14 @@ from box_and_button import Box
 class Ludo(object):
     """This is the main Ludo class.
 
-    It initilaises my_player, genie_owner, all_pieces, board, connection,
+    It initialises my_player, genie_owner, all_pieces, board, connection,
     the score board and the timer.
 
     It also holds the main run function which runs the game.
     """
     def __init__(self):
         """
-        Initiliases the main attributes but does not take in any arguements.
+        Initialises the main attributes but does not take in any arguments.
         """
         self.my_player = None
         self.genie_owner = None
@@ -42,7 +42,7 @@ class Ludo(object):
 
 
     def setup(self):
-        """Creates the coo-rdinate dictionary for the board, initiliases
+        """Creates the coo-rdinate dictionary for the board, initialises
         pygame. It also blocks out some pygame events so the queue doesn't
         overflow from unneeded events such as MOUSEMOTION. It also setups
         attributes in board, connects to the server and shows the start
@@ -52,6 +52,7 @@ class Ludo(object):
         pygame.init()
         pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
         self.board.add_connection(self.connection)
+        #Draw form returns a tuple of name
         name = self.connection.form.draw_form()
         self.connection.connect_to_server(name)
         self.show_start_screen()
@@ -75,8 +76,10 @@ class Ludo(object):
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
                     if data == "already push a button":
-                        break
+                        j = self.time_limited + 1
+                        continue
                 time.sleep(1)
+            self.connection.time_out()
 
     def terminate(self):
         """Quit game if user closes window."""
@@ -136,11 +139,7 @@ class Ludo(object):
                 yellow_score += piece.get_steps_from_start()
         return [red_score, green_score, yellow_score, blue_score]
 
-    def draw_scoreboard(self, list_of_pieces):
-        w = 100
-        h = 30
-        y = 500
-        x = 900
+    def draw_scoreboard(self, list_of_pieces, x, y, w, h):
         name = Box("Name", x, y, w, h, c.BLACK, 1)
         x += w
         score = Box("Score", x, y, w, h, c.BLACK, 1)
@@ -178,6 +177,13 @@ class Ludo(object):
             outlineBox = Box("", x, y, w, h, c.BLACK, 1)
             outlineBox.draw()
             x += w
+            # Draws a marker after your entry to show who you are
+            if self.connection.my_player.name == self.connection.my_player.names[colors.index(i[1])]:
+                marker = Box("--", x, y, w, h, c.WHITE)
+                marker.draw()
+            else:
+                blank = Box("", x, y, w, h, c.WHITE)
+        # Returns a list of the scores in order: [red, green, yellow, blue]
 
     def run(self):
         """This is the main game method.
@@ -191,7 +197,7 @@ class Ludo(object):
                 SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
                 self.board.draw_board(self.colour_check)
                 self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
-                self.draw_scoreboard(self.all_pieces)
+                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
                 self.board.PLAYER_FIELD.draw()
                 OUTPUT = self.board.ROLL_BUTTON.click()
                 if OUTPUT is not None:
@@ -235,9 +241,7 @@ class Ludo(object):
                                             self.click_piece(num, piece)
                                             break
                                         elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
-                                            self.board.move_piece(num, self.connection.my_player.roll)
-                                            self.connection.send_out(num, self.connection.my_player.start)
-                                            self.connection.end_roll()
+                                            self.click_piece(num, piece)
                                             print("Home", piece.get_steps_from_start())
                                             break
                                     else:
