@@ -82,7 +82,12 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def rolldice(self):
         """Returns a random number between 1 and 6"""
         return randint(1,6)
-        #return 6
+
+    def roll_biased_dice(self):
+        """Return a random number between 1 and 8.
+        On the client side anything over a 5 is considered a 6"""
+        return randint(1,8)
+        
     def nextPlayer(self):
         self.token += 1
         if self.token >= self.max_players():
@@ -112,7 +117,10 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                 print(data.decode())
                 msg = json.loads(data.decode()) #decode and create dict from data
                 if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
-                    num = self.rolldice()
+                    if not msg["bias"]:
+                        num = self.rolldice()
+                    else:
+                        num = self.roll_biased_dice()
                     genie_status = self.roll_genie()
                     jsonmsg = {"Colour":msg["Colour"],"dicenum":num, "genie_result":genie_status}
                 elif "turnOver" in msg: 
@@ -123,11 +131,8 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                     jsonmsg = msg
                 elif "Player_Won" in msg:
                     print("Player ", msg["Player_Won"], "Won")
-                    jsonmsg = {"Colour": self.colours[self.token], "Player_Won": True}
-                    self.forward(jsonmsg)
-                    self.nextPlayer()
-                    jsonmsg = {"Colour": self.colours[self.token], "turnToken": True}
-                    print("iT is now the turn of   ", self.colours[self.token])
+                    self.nextplayer()
+                    jsonmsg = {"Colour": cons.colours[cons.token], "turnToken": True}
                 
                 self.forward(jsonmsg)
 

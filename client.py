@@ -179,6 +179,7 @@ class Ludo(object):
                 marker.draw()
             else:
                 blank = Box("", x, y, w, h, c.WHITE)
+                blank.draw()
         # Returns a list of the scores in order: [red, green, yellow, blue]
 
     def run(self):

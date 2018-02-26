@@ -16,8 +16,7 @@ class Connection:
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
         # Sets values for host- the current domain name and port number 10000.
-        self.port_number = 10001
-        self.server_address = (gethostbyname(gethostname()), self.port_number)
+        self.server_address = (gethostbyname(gethostname()), 10001)
         self.ip_addr = gethostbyname(gethostname())  # The IP Address of the current machine.
         print('connecting to server at %s port %s' % self.server_address)
         print('IP address is %s' % self.ip_addr)
@@ -62,13 +61,17 @@ class Connection:
                     self.my_player.turn_token = True
                     self.my_player.diceroll_token = True
                 else:
-                    self.board.PLAYER_FIELD.set_msg(msg["Colour"] + "'s turn")
+                    self.board.PLAYER_FIELD.set_msg(self.my_player.names[colors.index(msg["Colour"])] + "'s turn")
                 self.current_player = msg["Colour"]
                 self.board.current_player = msg["Colour"]
             # This message is a response to pressing the "ROLL" button.
             # It comes in the form {"dicenum":<number between 1-6>,"Colour":<colour>}
             if "dicenum" in msg:
                 roll = msg["dicenum"]
+                if roll > 5:
+                    print("roll ===============", roll)
+                    roll = 6
+                    #This is for the biased dice roll
                 self.my_player.roll = roll  # Assigns value of dice roll to self
                 genie_status = msg["genie_result"]  # genie_status is either "take", "return" or None
                 if genie_status == "take" and self.board.genie_owner is None:
@@ -230,8 +233,7 @@ class Connection:
         time.sleep(0.1)
         data = {"Player_Won": self.my_player.colour}
         data = json.dumps(data)
-        self.my_player.turn_token = False
-        self.my_player.diceroll_token = False
-        self.my_player.roll = 0
-        self.my_player.rollstaken = 0
+
         self.sock.sendall(data.encode())
+        time.sleep(0.1)
+        self.end_turn()

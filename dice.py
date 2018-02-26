@@ -39,12 +39,19 @@ class Dice():
     def roll_dice(self):
         if self.connection.my_player.turn_token and self.connection.my_player.diceroll_token is True and self.dice_rule() is True:
             self.connection.my_player.diceroll_token = False  # Prevents roll until piece moved
-            msg = {"Colour": self.connection.my_player.colour, "roll": True}
+            bias = self.check_for_bias()
+            msg = {"Colour": self.connection.my_player.colour, "roll": True, "bias": bias}
             pygame.mixer.Sound.play(rollDice_sound)
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
             #time.sleep(0.1)
             self.roll_dice_gif(1, 1, 900, 230)
+
+    def check_for_bias(self):
+        for piece in self.connection.my_player.my_pieces:
+            if piece.get_position() is not None:
+                return False
+        return True
 
     def roll_dice_gif(self, n, IN, x, y):
         C = pygame.time.Clock()
