@@ -17,10 +17,10 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def __init__(self):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._maxPlayers = 4
+        self._maxPlayers = 2
         self._inGame = [False] * self._maxPlayers
         self.token = 0 #the index of which player's turn it is.
-        self._names = []
+        self._names = ["None"]*4
     def clients(self): #returns list of client connections
         return self._clients
     def maxPlayers(self):
@@ -101,7 +101,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                 msg = json.loads(data)
                 if "name" in msg:
                     name = msg["name"]
-                    self._names += [name]
+                    self._names[self.numOfPlayers()-1]= name
                     break
             print("is full?")
             print(self.isfull())
@@ -196,7 +196,7 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
     except  OSError:
         print("OS Error: Port number already in use or another server process may be running")
         sys.exit()
-    except:
+    except OSError:
             print("Error! An error has occured. Please try again later.")
             sys.exit()
     sock.close();
