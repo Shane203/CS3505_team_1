@@ -14,5 +14,4 @@ class TestClient(unittest.TestCase):
         ludo.run()
         
 if __name__ == '__main__':
-    unittest.setUp()
-    unittest.test_ludo()
+    unittest.main()
