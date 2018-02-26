@@ -53,8 +53,8 @@ class Ludo(object):
         pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
         self.board.add_connection(self.connection)
         #Draw form returns a tuple of name and ip of server
-        name_and_ip = self.connection.form.draw_form()
-        self.connection.connect_to_server(name_and_ip[0], name_and_ip[1])
+        name,ip = self.connection.form.draw_form()
+        self.connection.connect_to_server(name,ip)
         self.show_start_screen()
         self.bgm()
 
@@ -67,11 +67,9 @@ class Ludo(object):
             while j != 0:
                 if j>6:
                     j -= 1 
-                    print(str(j))
                 elif j<=6:
                     pygame.mixer.Sound.play(c.noMove_sound)
                     j -= 1
-                    print(str(j))
                 self.p.put(str(j))
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
@@ -241,9 +239,7 @@ class Ludo(object):
                                             self.click_piece(num, piece)
                                             break
                                         elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
-                                            self.board.move_piece(num, self.connection.my_player.roll)
-                                            self.connection.send_out(num, self.connection.my_player.start)
-                                            self.connection.end_roll()
+                                            self.click_piece(num, piece)
                                             print("Home", piece.get_steps_from_start())
                                             break
                                     else:
