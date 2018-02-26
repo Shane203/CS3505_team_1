@@ -87,21 +87,13 @@ class Connection:
                 # If the dicenum is for this player, then react accordingly.
                 if msg["Colour"] == self.my_player.colour:
                     self.pieces_playable()
-            # This message is broadcast by the server if a player sends out a piece from their home.
-            # It comes in the form {"Sendout":<piece-number>,"pos":<startposition>}
-            if "Sendout" in msg:
-                piece = msg["Sendout"]
-                pos = msg["pos"]
-                self.ALL_PIECES[piece].set_position(pos)
-                self.board.check_conflict(self.ALL_PIECES[piece])
-                if self.my_player.roll == 6:
-                    self.my_player.diceroll_token == True
             # This message is broadcast if a player moves a piece.
             # As the player moves it's own pieces, they only react to other
             if "Movement" in msg and msg["Colour"] != self.my_player.colour:
                 # It comes in the form {"Movement":<piecenum>,
                 # "Moveforward":<number-of-steps-to-move>,"Colour":<colour>}
                 # player's movements.
+                print("in here, piece should move")
                 steps = msg["Moveforward"]
                 num = msg["Movement"]
                 self.board.move_piece(num, steps)
@@ -135,10 +127,13 @@ class Connection:
             else:
                 self.end_turn()
 
-    def connect_to_server(self,name, ip_addr):
+    def connect_to_server(self,name,ip_addr):
         try:
             # "connects Client to server, creates thread to listen for incoming messages"
-            self.sock.connect((ip_addr, self.port_number))  # Tries to connect to the Server
+            if ip_addr != "":
+                self.sock.connect((ip_addr, self.port_number))
+            else:
+                self.sock.connect((self.server_address))  # Tries to connect to the Server
             _thread.start_new_thread(self.connection_handler, ())
 
         except ConnectionRefusedError:
