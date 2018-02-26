@@ -17,7 +17,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def __init__(self):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._max_players = 4
+        self._max_players = 1
         self._inGame = [False] * self._max_players
         self.token = 0 #the index of which player's turn it is.
         self._names = ["None"]*self._max_players
@@ -123,8 +123,11 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                     jsonmsg = msg
                 elif "Player_Won" in msg:
                     print("Player ", msg["Player_Won"], "Won")
-                    self.nextplayer()
-                    jsonmsg = {"Colour": cons.colours[cons.token], "turnToken": True}
+                    jsonmsg = {"Colour": self.colours[self.token], "Player_Won": True}
+                    self.forward(jsonmsg)
+                    self.nextPlayer()
+                    jsonmsg = {"Colour": self.colours[self.token], "turnToken": True}
+                    print("iT is now the turn of   ", self.colours[self.token])
                 
                 self.forward(jsonmsg)
 

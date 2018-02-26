@@ -230,7 +230,8 @@ class Connection:
         time.sleep(0.1)
         data = {"Player_Won": self.my_player.colour}
         data = json.dumps(data)
-
+        self.my_player.turn_token = False
+        self.my_player.diceroll_token = False
+        self.my_player.roll = 0
+        self.my_player.rollstaken = 0
         self.sock.sendall(data.encode())
-        time.sleep(0.1)
-        self.end_turn()
