@@ -17,20 +17,20 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def __init__(self):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._maxPlayers = 4
-        self._inGame = [False] * self._maxPlayers
+        self._max_players = 4
+        self._inGame = [False] * self._max_players
         self.token = 0 #the index of which player's turn it is.
-        self._names = ["None"]*4
+        self._names = ["None"]*self._max_players
     def clients(self): #returns list of client connections
         return self._clients
-    def maxPlayers(self):
-        return self._maxPlayers
+    def max_players(self):
+        return self._max_players
     def inGame(self):
         return self._inGame
     def names(self):
         return self._names
     def add(self,connection): #adds "connection" to the list of connections self.clients
-        if len(self.clients()) <self.maxPlayers():
+        if len(self.clients()) <self.max_players():
             self._clients += [connection]
             self.inGame()[len(self._clients)-1] = True
             print(self.inGame())
@@ -42,11 +42,11 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                 
     def isfull(self):
         print(self.numOfPlayers())
-        print(self.maxPlayers())
-        return self.numOfPlayers() == self.maxPlayers()
+        print(self.max_players())
+        return self.numOfPlayers() == self.max_players()
     def forward(self,jsonmsg):
         string = json.dumps(jsonmsg)
-        for i in range(self.maxPlayers()):
+        for i in range(self.max_players()):
             if self.inGame()[i]:
                 self._clients[i].sendall(string.encode())
                 print("goodbye!")
@@ -85,11 +85,11 @@ class Game: #A simple class that keeps a list of current client connections. Thi
         #return 6
     def nextPlayer(self):
         self.token += 1
-        if self.token >= self.maxPlayers():
+        if self.token >= self.max_players():
             self.token = 0
         while not self.inGame()[self.token]:
             self.token +=1
-            if self.token >= self.maxPlayers():
+            if self.token >= self.max_players():
                 self.token = 0
     def ConnectionHandler(self,connection,client_address):
         try:

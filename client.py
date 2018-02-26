@@ -163,11 +163,7 @@ class Ludo(object):
             color = color_to_color[i[1]]
             y += h
             x = 900
-            if self.connection.my_player.names != []:
-                nameField = Box( self.connection.my_player.names[colors.index(i[1])],
-                                 x, y, w, h, color)
-            else:
-                nameField = Box("", x, y, w, h, color)
+            nameField = Box( self.connection.my_player.names[colors.index(i[1])], x, y, w, h, color)
             nameField.draw()
             outlineBox = Box("", x, y, w, h, c.BLACK, 1)
             outlineBox.draw()
@@ -179,7 +175,7 @@ class Ludo(object):
             x += w
             # Draws a marker after your entry to show who you are
             if self.connection.my_player.name == self.connection.my_player.names[colors.index(i[1])]:
-                marker = Box("--", x, y, w, h, c.WHITE)
+                marker = Box("<", x, y, w, h, c.WHITE)
                 marker.draw()
             else:
                 blank = Box("", x, y, w, h, c.WHITE)

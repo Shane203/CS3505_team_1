@@ -127,13 +127,10 @@ class Connection:
             else:
                 self.end_turn()
 
-    def connect_to_server(self,name,ip_addr):
+    def connect_to_server(self,name):
         try:
             # "connects Client to server, creates thread to listen for incoming messages"
-            if ip_addr != "":
-                self.sock.connect((ip_addr, self.port_number))
-            else:
-                self.sock.connect((self.server_address))  # Tries to connect to the Server
+            self.sock.connect((self.server_address))  # Tries to connect to the Server
             _thread.start_new_thread(self.connection_handler, ())
 
         except ConnectionRefusedError:
