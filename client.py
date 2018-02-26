@@ -255,13 +255,14 @@ class Ludo(object):
         pygame.mixer.music.load("sound/BGM.mp3")
         pygame.mixer.music.play(-1)
 
-ludo = Ludo()
-ludo.setup()
+if __name__ == '__main__':
+    ludo = Ludo()
+    ludo.setup()
 
-try:
-    _thread.start_new_thread(ludo.draw_Time_Out, ())
-except:
-    print("unable to start a new thread")
+    try:
+        _thread.start_new_thread(ludo.draw_Time_Out, ())
+    except:
+        print("unable to start a new thread")
 
-ludo.run()
+    ludo.run()
 

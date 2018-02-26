@@ -1,17 +1,13 @@
 import unittest
 from client import Ludo
-serv = __import__('server-1p.py')
 
 class TestClient(unittest.TestCase):
     def setUp(self):
-        serv()
-        ludo = Ludo()
-        ludo.setup()
+        self.ludo = Ludo()
         
-
-    def test_ludo(self):
-        print("hi")
-        ludo.run()
+    def test__initial_values(self):
+        self.assertEqual(self.ludo.my_player, None)
+        self.assertEqual(self.ludo.genie_owner, None)
         
 if __name__ == '__main__':
     unittest.main()
