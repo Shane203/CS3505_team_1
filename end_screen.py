@@ -2,11 +2,11 @@ import pygame
 from pygame.locals import MOUSEMOTION, KEYUP, MOUSEBUTTONUP, QUIT
 from player import Player
 from score import ScoreBoard
-from constants import BOARD_WIDTH, BOARD_HEIGHT, INDENT_BOARD, BG, CURRENT_DICE
+from constants import BOARD_WIDTH, BOARD_HEIGHT, INDENT_BOARD, BG, CURRENT_DICE, SCREEN
 from constants import WHITE, BLACK, RED, GREEN, BLUE, YELLOW
 from constants import GENIE_BIG, LAMP_BIG, LOW_RANGES
 from constants import RED_PIECE, GREEN_PIECE, YELLOW_PIECE, BLUE_PIECE
-from setup import SCREEN, create_dicts, coOrds
+from setup import create_dicts, coOrds
 from piece import Piece
 from sys import exit
 

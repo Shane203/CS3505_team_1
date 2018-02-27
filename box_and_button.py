@@ -1,5 +1,5 @@
 import pygame
-from setup import SCREEN
+from constants import SCREEN
 from constants import BLACK
 pygame.init()
 class Box(object):

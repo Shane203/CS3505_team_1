@@ -1,9 +1,8 @@
 import pygame
-from constants import BOARD_WIDTH, BOARD_HEIGHT, BOX_SIZE, INDENT_BOARD
-from pygame.locals import RESIZABLE
+from constants import BOX_SIZE, INDENT_BOARD
 import os
 os.environ['SDL_VIDEO_WINDOW_POS'] = str(0) + "," + str(25)
-SCREEN = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT), RESIZABLE)
+
 pygame.display.set_caption('Ludo Board')
 pygame.display.set_icon(pygame.image.load('images/desktop-backgrounds-30.jpg'))
 

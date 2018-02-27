@@ -5,11 +5,12 @@ import pygame
 from piece import Piece
 from player import Player
 import constants as c
-from setup import SCREEN, create_dicts, coOrds
+from setup import create_dicts, coOrds
 from board import Board
 from connection import Connection
 from queue import Queue
 from box_and_button import Box
+from constants import SCREEN
 
 class Ludo(object):
     """This is the main Ludo class.

@@ -1,7 +1,7 @@
 import pygame
 import sys
-from setup import SCREEN, create_dicts, coOrds
-from constants import WHITE, BLACK, RED, GREEN, BLUE, YELLOW, ORANGE, LGREEN, LYELLOW
+from setup import create_dicts, coOrds
+from constants import WHITE, BLACK, RED, GREEN, BLUE, YELLOW, ORANGE, LGREEN, LYELLOW, SCREEN
 from constants import LBLUE, BRIGHTGREEN, FPS, ORANGE_PIECE, ORANGE_PIECE_32
 from constants import INDENT_BOARD, BOX_SIZE
 from constants import STAR, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW

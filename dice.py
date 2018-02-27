@@ -1,4 +1,4 @@
-from setup import SCREEN
+from constants import SCREEN
 from constants import rollDice_sound
 import json
 import pygame
