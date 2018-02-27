@@ -131,7 +131,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                     jsonmsg = msg
                 elif "Player_Won" in msg:
                     print("Player ", msg["Player_Won"], "Won")
-                    self.nextplayer()
+                    self.nextPlayer()
                     jsonmsg = {"Colour": self.colours[self.token], "turnToken": True}
                 
                 self.forward(jsonmsg)
