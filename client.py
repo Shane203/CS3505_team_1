@@ -70,9 +70,9 @@ class Ludo(object):
                     j -= 1 
                     print(str(j))
                 elif j<=6:
-                    pygame.mixer.Sound.play(c.noMove_sound)
+                    pygame.mixer.Sound.play(c.noMove_sound)#show the time clock sound
                     j -= 1
-                    print(str(j))
+                    #print(str(j))
                 self.p.put(str(j))
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
@@ -80,7 +80,7 @@ class Ludo(object):
                         j = self.time_limited + 1
                         continue
                 time.sleep(1)
-            self.connection.time_out()
+            self.connection.time_out()# invoke the timeout function on the connection side .
 
     def terminate(self):
         """Quit game if user closes window."""
