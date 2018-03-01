@@ -108,21 +108,21 @@ class Connection:
                 print(Player, msg["Colour"], "disconnected")
                 self.board.disconnect_function(msg["Colour"])
 
-    def time_out(self):
+    def time_out(self):# it will be called when the timmer is running out
         if self.my_player.turn_token:
             # this is the time out function
             # either randomly pick a pieces or roll a DICE
-            if self.my_player.diceroll_token:
+            if self.my_player.diceroll_token:#to find if it is able to roll a dice
                 self.board.dice_object.roll_dice()
                 time.sleep(0.5)
             elif len(self.my_player.movable_pieces_array) != 0:
-                i = self.my_player.movable_pieces_array[randint(0, len(self.my_player.movable_pieces_array) - 1)]
-                if self.ALL_PIECES[i] == None:
+                i = self.my_player.movable_pieces_array[randint(0, len(self.my_player.movable_pieces_array) - 1)]#is the index of All_PIECES
+                if self.ALL_PIECES[i] == None:#which mean the pieces is in the pool
                     print("from home")
                     self.board.move_piece(i, self.my_player.roll)
                     self.send_out(i, self.my_player.start)
                     time.sleep(0.5)
-                else:
+                else:# which mean the pieces is currently on the board
                     self.board.move_piece(i, self.my_player.roll)
                     print("from board")
                     self.send_movement(i, self.my_player.roll)
