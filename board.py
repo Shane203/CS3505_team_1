@@ -299,6 +299,26 @@ class Board:
             self.c.tick(10)
         piece.set_position(None)
         piece.set_steps_from_start(0)
-        #MY_PLAYER.specialmove = True  # Allows roll if player's piece lands on opposing piece
         self.connection.my_player.specialmove = True
         
+    def disconnect_function(self, colour):
+        """Sends the piece back to its starting position."""
+        low_range = self.get_low_range(colour)
+        for num in range(low_range, low_range + 4):
+            piece = self.ALL_PIECES[num]
+            piece.image = self.COLOUR_TO_IMG[piece.colour]
+            piece.movable = None
+            self.draw_pieces(self.home_coords)
+            piece.set_position(None)
+            piece.set_steps_from_start(0)
+            #pygame.display.update()  # Might not be neccessary
+
+    def get_low_range(self, colour):
+        if colour == "red":
+            return 0
+        elif colour == "green":
+            return 4
+        elif colour == "yellow":
+            return 8
+        elif colour == "blue":
+            return 12

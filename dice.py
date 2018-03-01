@@ -11,8 +11,7 @@ class Dice():
 
     def dice_rule(self):
         """
-        Checks which roll player is rolling and sets current roll value to dice roll
-        :param dice: random int value between 1-6
+        Checks if player can roll a dice
         :var self.connection.my_player.roll: Checks previous value of dice/roll
         :var self.connection.my_player.specialmove: Checks if player had piece land on opposing player's piece
         :var self.connection.my_player.rollstaken: Counts number of rolls player has rolled
@@ -37,7 +36,7 @@ class Dice():
             return False
 
     def roll_dice(self):
-        if self.connection.my_player.turn_token and self.connection.my_player.diceroll_token is True and self.dice_rule() is True:
+        if self.connection.my_player.turn_token and self.connection.my_player.diceroll_token and self.dice_rule():
             self.connection.my_player.diceroll_token = False  # Prevents roll until piece moved
             bias = self.check_for_bias()
             msg = {"Colour": self.connection.my_player.colour, "roll": True, "bias": bias}

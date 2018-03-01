@@ -66,11 +66,9 @@ class Piece(object):
     def check_forward_movement(self):
         """
         Check if forward position is playable/possible for this piece.
-        :param piece: current piece
-        :var future_pos: future position of piece = current position and dice roll
-        :return: False = Piece not playable, True =
+        :return: False = Piece not able to move, True = Piece able to move
         """
-        future_pos = self.get_steps_from_start() + self.my_player.roll
+        future_pos = self.get_steps_from_start() + self.my_player.roll  # future position of piece
         if (future_pos in range(51, 56) or future_pos > 55) and self.check_space_empty(future_pos) is False:
             return False
         return True
