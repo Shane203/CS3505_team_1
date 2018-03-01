@@ -183,33 +183,20 @@ class Ludo(object):
                 blank.draw()
         # Returns a list of the scores in order: [red, green, yellow, blue]
 
-    def run(self):
-        """This is the main game method.
+    def bgm(self):
+        pygame.mixer.pre_init(44100,16,2,4096)
+        pygame.mixer.music.load("sound/BGM.mp3")
+        pygame.mixer.music.play(-1)
 
-        It draws the board, pieces and the buttons. It also shows the dice
+    def run(self):   
+        """This is the main game method.
+        It draws the board, pieces and the buttons. It also shows the diceS
         rolling animation.
         """
+        MUTE = 0
+        SOUND = c.SOUND_OPEN
         while True:
             try:
-                SCREEN.fill(c.WHITE)
-                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
-                self.board.draw_board(self.colour_check)
-                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
-                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
-                self.board.PLAYER_FIELD.draw()
-                OUTPUT = self.board.ROLL_BUTTON.click()
-                if OUTPUT is not None:
-                    self.board.dice_object.dice.roll_dice_gif(OUTPUT, self.IN, 900, 230)
-                self.board.dice_object.display_dice(900, 230, self.connection.current_dice)
-                # draw remain time
-                if not self.p.empty():
-                    message = self.p.get()  # receive a data and reset the timer
-                    if message != "time":
-                        self.text = self.font.render(message, True, (0, 128, 0))
-                SCREEN.blit(self.text, (900, 20))
-
-                pygame.display.update()
-
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.terminate()
@@ -246,14 +233,49 @@ class Ludo(object):
                                         if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
                                             self.click_piece(num, piece)
                                             break
-                    self.clock.tick(c.FPS)
+
+                        elif soundIcon_rect.collidepoint(event.pos) and MUTE == 0:
+                            pygame.mixer.music.pause()
+                            c.pieceMove_sound.set_volume(0.0)
+                            c.rollDice_sound.set_volume(0.0)
+                            c.noMove_sound.set_volume(0.0)
+                            c.kill_sound.set_volume(0.0)
+                            MUTE = 1
+                            SOUND = c.SOUND_MUTE
+                        elif soundIcon_rect.collidepoint(event.pos) and MUTE == 1:
+                            pygame.mixer.music.unpause()
+                            c.pieceMove_sound.set_volume(1.0)
+                            c.rollDice_sound.set_volume(1.0)
+                            c.noMove_sound.set_volume(1.0)
+                            c.kill_sound.set_volume(1.0)
+                            MUTE = 0
+                            SOUND = c.SOUND_OPEN
+                
+                SCREEN.fill(c.WHITE)
+                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
+                soundIcon = pygame.Surface((50, 50))
+                soundIcon_rect = soundIcon.get_rect(topleft=(1000, 700))
+                SCREEN.blit(SOUND,soundIcon_rect)
+                self.board.draw_board(self.colour_check)
+                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
+                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
+                self.board.PLAYER_FIELD.draw()
+                OUTPUT = self.board.ROLL_BUTTON.click()
+                if OUTPUT is not None:
+                    self.board.dice_object.dice.roll_dice_gif(OUTPUT, self.IN, 900, 230)
+                self.board.dice_object.display_dice(900, 230, self.connection.current_dice)
+                # draw remain time
+                if not self.p.empty():
+                    message = self.p.get()  # receive a data and reset the timer
+                    if message != "time":
+                        self.text = self.font.render(message, True, (0, 128, 0))
+                SCREEN.blit(self.text, (900, 20))
+                pygame.display.update()
+                self.clock.tick(c.FPS)
             except pygame.error as e:
                 print(e)
                 continue
-    def bgm(self):
-        pygame.mixer.pre_init(44100,16,2,4096)
-        pygame.mixer.music.load("sound/BGM.mp3")
-        pygame.mixer.music.play(-1)
+    
 
 if __name__ == "__main__":
     ludo = Ludo()

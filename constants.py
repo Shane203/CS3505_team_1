@@ -19,6 +19,8 @@ win_sound = pygame.mixer.Sound('sound/Win.wav')
 first_sound = pygame.mixer.Sound('sound/First.wav')
 noMove_sound = pygame.mixer.Sound('sound/NoMove.wav')
 
+SOUND_OPEN = pygame.image.load('images/sound_open.png')
+SOUND_MUTE = pygame.image.load('images/sound_mute.png')
 
 GENIE_BIG = pygame.image.load('images/genie_big.png').convert_alpha()
 GENIE_SMALL = pygame.image.load('images/genie.png').convert_alpha()

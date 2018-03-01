@@ -8,6 +8,7 @@ from constants import STAR, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW
 from constants import GENIE_SMALL, LAMP_SMALL
 from constants import CENTRE, TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT
 from constants import pieceMove_sound, kill_sound
+from constants import SOUND_OPEN, SOUND_MUTE
 from box_and_button import Box
 from box_and_button import Button
 from dice import Dice
@@ -300,3 +301,4 @@ class Board:
         piece.set_steps_from_start(0)
         #MY_PLAYER.specialmove = True  # Allows roll if player's piece lands on opposing piece
         self.connection.my_player.specialmove = True
+        
