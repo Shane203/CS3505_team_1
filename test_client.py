@@ -3,6 +3,7 @@ import pygame
 from client import Ludo
 from board import Board
 from piece import Piece
+import threading
 
 class TestClient(unittest.TestCase):
     def setUp(self):
@@ -18,16 +19,14 @@ class TestClient(unittest.TestCase):
         self.assertTrue(self.ludo.p.empty())
 
     def test_setup(self):
-        pygame.init()
-        pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
-        self.ludo.board.add_connection(self.ludo.connection)
+        self.ludo.setup()
         self.assertTrue(pygame.event.get_blocked(pygame.MOUSEMOTION))
         self.assertTrue(pygame.event.get_blocked(pygame.KEYUP))
         self.assertTrue(pygame.event.get_blocked(pygame.MOUSEBUTTONUP))
         self.assertEqual(self.ludo.connection, self.ludo.board.connection)
 
     def test_score(self):
-        score_list = ludo.get_score(ludo.all_pieces)
+        score_list = self.ludo.get_score(self.ludo.all_pieces)
         self.assertIsInstance(score_list[0], int)
         
 if __name__ == '__main__':
