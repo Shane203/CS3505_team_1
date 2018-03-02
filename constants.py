@@ -79,3 +79,4 @@ COLOUR_TO_IMG = {"red": RED_PIECE, "green": GREEN_PIECE, "yellow": YELLOW_PIECE,
 
 FLASH_RATE = FPS * 8
 IN = 1
+pygame.quit()

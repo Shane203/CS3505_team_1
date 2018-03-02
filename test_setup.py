@@ -1,0 +1,26 @@
+import unittest
+import os
+import pygame
+import setup as s
+
+class TestClient(unittest.TestCase):
+    def setUp(self):
+        pass
+        
+    def test_imports(self):
+        from constants import BOX_SIZE, INDENT_BOARD
+
+    def test_window_pos(self):
+        os.environ['SDL_VIDEO_WINDOW_POS'] = str(0) + "," + str(25)
+
+    def test_display(self):
+        pygame.display.set_caption('Ludo Board')
+        pygame.display.set_icon(pygame.image.load('images/desktop-backgrounds-30.jpg'))
+
+    def test_dict(self):
+        self.assertEqual(len(s.coOrds), 0)
+        s.create_dicts()
+        self.assertNotEqual(len(s.coOrds), 0)
+            
+if __name__ == '__main__':
+    unittest.main()

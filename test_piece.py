@@ -10,8 +10,11 @@ class TestClient(unittest.TestCase):
         self.cs = ["red", "green", "yellow", "blue"]
         self.colour_to_img = {"red": c.RED_PIECE, "green": c.GREEN_PIECE, "yellow": c.YELLOW_PIECE, "blue": c.BLUE_PIECE}
         self.all_pieces = [Piece(self.cs[c], num, self.colour_to_img[self.cs[c]], self.starting_point[self.cs[c]]) for c in range(4) for num in range(1, 5)]
-        self.piece = Piece("red", 1, c.RED_PIECE, 0)
-        
+        self.piece = self.all_pieces[0]
+
+    def set_player(self):
+        self.player = Player("red", "Team_1", self.all_pieces, ["a", "b", "c", "d"])
+        self.piece.set_my_player(self.player)
         
     def test_initial_values(self):
         self.assertEqual(self.piece.number, 1)
@@ -51,11 +54,29 @@ class TestClient(unittest.TestCase):
         self.assertFalse(self.piece.check_safe_point())
 
     def test_check_home_run(self):
-        pass
+        self.set_player()
+        self.piece.set_steps_from_start(50)
+        self.piece.my_player.roll = 6
+        self.assertTrue(self.piece.check_home_run())
+        for i in range(51, 56):
+            for roll in range(6):
+                piece_pos = i + roll
+                if piece_pos == 50 and roll == 6:
+                    return True
+                if piece_pos in range(51, 56) and (roll + piece_pos) > 55:
+                    return True
+                return False
 
     def test_check_forward_movement(self):
-        pass
-    
+        self.set_player()
+        for i in range(51, 56):
+            for roll in range(6):
+                future_pos = i + roll
+                if (future_pos in range(51, 56) or future_pos > 55) and not self.piece.check_space_empty(future_pos):
+                    self.assertFalse(self.piece.check_forward_movement())
+                else:
+                    self.assertTrue(self.piece.check_forward_movement())
+            
         
 if __name__ == '__main__':
     unittest.main()

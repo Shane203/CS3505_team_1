@@ -1,14 +1,7 @@
 import pygame
 import sys
 from setup import create_dicts, coOrds
-from constants import WHITE, BLACK, RED, GREEN, BLUE, YELLOW, ORANGE, LGREEN, LYELLOW, SCREEN
-from constants import LBLUE, BRIGHTGREEN, FPS, ORANGE_PIECE, ORANGE_PIECE_32
-from constants import INDENT_BOARD, BOX_SIZE
-from constants import STAR, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW
-from constants import GENIE_SMALL, LAMP_SMALL
-from constants import CENTRE, TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT
-from constants import pieceMove_sound, kill_sound
-from constants import SOUND_OPEN, SOUND_MUTE
+from constants import *
 from box_and_button import Box
 from box_and_button import Button
 from dice import Dice
