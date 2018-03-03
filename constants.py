@@ -56,7 +56,7 @@ BOTTOM_RIGHT = (TOP_LEFT_X + BOX_SIZE * 3, TOP_LEFT_Y + BOX_SIZE * 3)
 TOP_RIGHT = (TOP_LEFT_X + BOX_SIZE * 3, TOP_LEFT_Y)
 
 BG = pygame.transform.scale(pygame.image.load('images/wooden.jpg').convert_alpha(), (BOX_SIZE * 15, BOX_SIZE * 15))
-STAR = pygame.transform.scale(pygame.image.load('images/star.png').convert_alpha(), (BOX_SIZE, BOX_SIZE))
+STAR = pygame.image.load('images/star.png')
 UP_ARROW = pygame.transform.scale(pygame.image.load('images/up-arrow.png').convert_alpha(), (BOX_SIZE, BOX_SIZE))
 DOWN_ARROW = pygame.transform.scale(pygame.image.load('images/down-arrow.png').convert_alpha(), (BOX_SIZE, BOX_SIZE))
 LEFT_ARROW = pygame.transform.scale(pygame.image.load('images/left-arrow.png').convert_alpha().convert_alpha(), (BOX_SIZE, BOX_SIZE))
