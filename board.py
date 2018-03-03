@@ -57,7 +57,7 @@ class Board:
         After the piece has move it checks if there is a conflict with another
         piece on the board.
         """
-        pygame.mixer.Sound.play(pieceMove_sound)
+        pygame.mixer.Sound.play(MOVE_PIECE)
         moving_piece = self.ALL_PIECES[piece_num]
         if moving_piece.get_position() is None:
             moving_piece.set_position(moving_piece.start)
@@ -337,7 +337,7 @@ class Board:
         """Sends the piece back to its starting position.
         It retraces its steps all the way back.
         """
-        pygame.mixer.Sound.play(kill_sound)
+        pygame.mixer.Sound.play(KILL_PIECE)
         piece.image = self.COLOUR_TO_IMG[piece.colour]
         while piece.get_position() != piece.start:
             piece.set_position((piece.get_position() - 1) % 52)

@@ -1,5 +1,5 @@
 from constants import SCREEN
-from constants import rollDice_sound
+from constants import ROLL_DICE
 import json
 import pygame
 import time
@@ -48,7 +48,7 @@ class Dice():
             bias = self.check_for_bias()
             msg = {"Colour": self.connection.my_player.colour,
                    "roll": True, "bias": bias}
-            pygame.mixer.Sound.play(rollDice_sound)
+            pygame.mixer.Sound.play(ROLL_DICE)
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
             self.roll_dice_gif(1, 1, 900, 230)

@@ -69,7 +69,7 @@ class Ludo(object):
                 if j>6:
                     j -= 1 
                 elif j<=6:
-                    pygame.mixer.Sound.play(c.noMove_sound)#show the time clock sound
+                    pygame.mixer.Sound.play(c.TIMEOUT_WARNING)#show the time clock sound
                     j -= 1
                 self.p.put(str(j))
                 if not self.connection.q.empty():
@@ -172,18 +172,18 @@ class Ludo(object):
 
                         elif sound_icon_rect.collidepoint(event.pos) and not MUTE:
                             pygame.mixer.music.pause()
-                            c.pieceMove_sound.set_volume(0.0)
-                            c.rollDice_sound.set_volume(0.0)
-                            c.noMove_sound.set_volume(0.0)
-                            c.kill_sound.set_volume(0.0)
+                            c.MOVE_PIECE.set_volume(0.0)
+                            c.ROLL_DICE.set_volume(0.0)
+                            c.TIMEOUT_WARNING.set_volume(0.0)
+                            c.KILL_PIECE.set_volume(0.0)
                             MUTE = True
                             SOUND = c.SOUND_MUTE
                         elif sound_icon_rect.collidepoint(event.pos) and MUTE:
                             pygame.mixer.music.unpause()
-                            c.pieceMove_sound.set_volume(1.0)
-                            c.rollDice_sound.set_volume(1.0)
-                            c.noMove_sound.set_volume(1.0)
-                            c.kill_sound.set_volume(1.0)
+                            c.MOVE_PIECE.set_volume(1.0)
+                            c.ROLL_DICE.set_volume(1.0)
+                            c.TIMEOUT_WARNING.set_volume(1.0)
+                            c.KILL_PIECE.set_volume(1.0)
                             MUTE = False
                             SOUND = c.SOUND_OPEN
                 
