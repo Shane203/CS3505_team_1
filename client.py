@@ -120,66 +120,6 @@ class Ludo(object):
             pygame.display.update()
             FPSCLOCK.tick(5)
 
-    def get_score(self, list_of_pieces):
-        #Returns a list of the scores in order: [red, green, yellow, blue]
-        red_score = 0
-        blue_score = 0
-        green_score = 0
-        yellow_score = 0
-        for piece in list_of_pieces:
-            if piece.colour == "red":
-                red_score += piece.get_steps_from_start()
-            elif piece.colour == "blue":
-                blue_score += piece.get_steps_from_start()
-            elif piece.colour == "green":
-                green_score += piece.get_steps_from_start()
-            elif piece.colour == "yellow":
-                yellow_score += piece.get_steps_from_start()
-        return [red_score, green_score, yellow_score, blue_score]
-
-    def draw_scoreboard(self, list_of_pieces, x, y, w, h):
-        name = Box("Name", x, y, w, h, c.BLACK, 1)
-        x += w
-        score = Box("Score", x, y, w, h, c.BLACK, 1)
-        x += w
-        name.draw()
-        score.draw()
-        #Returns a list of the scores in order: red, green, yellow, blue
-        scores = self.get_score(list_of_pieces)
-        #If all scores are zero, scoreboard is ordered as default
-        color_to_color = { "red" : c.RED, "green" :  c.GREEN, "yellow" : c.YELLOW, "blue" : c.BLUE}
-        # Used to get the name of the player variable names contains all the names of the
-        # players [red, green, yellow, blue]
-        colors = ["red", "green", "yellow", "blue"]
-        list_of_scores = []
-        for i in range(len(self.connection.my_player.names)):
-            list_of_scores.append((scores[i], colors[i]))
-        if scores != [0, 0, 0, 0]:
-            list_of_scores = sorted(list_of_scores)[::-1]
-        for i in list_of_scores:
-            #Access each player, sort them by score and draw the 4 players on the scoreboard.
-            color = color_to_color[i[1]]
-            y += h
-            x = 900
-            nameField = Box( self.connection.my_player.names[colors.index(i[1])], x, y, w, h, color)
-            nameField.draw()
-            outlineBox = Box("", x, y, w, h, c.BLACK, 1)
-            outlineBox.draw()
-            x += w
-            scoreField = Box(str(i[0]), x, y, w, h, color)
-            scoreField.draw()
-            outlineBox = Box("", x, y, w, h, c.BLACK, 1)
-            outlineBox.draw()
-            x += w
-            # Draws a marker after your entry to show who you are
-            if self.connection.my_player.name == self.connection.my_player.names[colors.index(i[1])]:
-                marker = Box("<", x, y, w, h, c.WHITE)
-                marker.draw()
-            else:
-                blank = Box("", x, y, w, h, c.WHITE)
-                blank.draw()
-        # Returns a list of the scores in order: [red, green, yellow, blue]
-
     def bgm(self):
         """Sets the frequency, loads the background music and plays it."""
         pygame.mixer.pre_init(44100,16,2,4096)
@@ -254,7 +194,7 @@ class Ludo(object):
                 SCREEN.blit(SOUND,sound_icon_rect)  # Draw the sound icon.
                 self.board.draw_board(self.colour_check)
                 self.colour_check = (self.colour_check + 1) % c.FLASH_RATE # For flashing.
-                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)  # Draw scoreboard
+                self.board.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)  # Draw scoreboard
                 self.board.PLAYER_FIELD.draw()
                 OUTPUT = self.board.ROLL_BUTTON.click()  # Check if roll button was clicked.
                 if OUTPUT is not None:
