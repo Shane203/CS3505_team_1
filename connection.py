@@ -229,6 +229,7 @@ class Connection:
         """ Called when players pieces met win condition"""
         print("*****************WON THE GAME!*******************")
         data = {"Player_Won": self.my_player.colour}
+        time.sleep(0.2)
         data = json.dumps(data)
         self.sock.sendall(data.encode())
         _thread.start_new_thread(self.end_screen, (self.my_player.names,self.board.get_score(self.ALL_PIECES),"You Won!!"))
