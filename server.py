@@ -17,7 +17,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def __init__(self):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._max_players = 1
+        self._max_players = 2
         self._inGame = [False] * self._max_players
         self.token = 0 #the index of which player's turn it is.
         self._names = ["None"]*self._max_players
@@ -47,7 +47,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def forward(self,jsonmsg):
         string = json.dumps(jsonmsg)
         for i in range(self.max_players()):
-            if self.inGame()[i]:
+            if self.inGame()[i] != False: #Condition accepts True and None(won) players.
                 self._clients[i].sendall(string.encode())
                 print("goodbye!")
     def sendto(self,jsonmsg,index):
@@ -87,7 +87,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
         """Return a random number between 1 and 8.
         On the client side anything over a 5 is considered a 6"""
         return randint(1,8)
-        
+
     def nextPlayer(self):
         self.token += 1
         if self.token >= self.max_players():
@@ -123,7 +123,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                         num = self.roll_biased_dice()
                     genie_status = self.roll_genie()
                     jsonmsg = {"Colour":msg["Colour"],"dicenum":num, "genie_result":genie_status}
-                elif "turnOver" in msg: 
+                elif "turnOver" in msg and index == self.token: 
                     self.nextPlayer()
                     jsonmsg = {"Colour":self.colours[self.token],"turnToken":True}
                     print("iT is now the turn of   ",self.colours[self.token])
@@ -131,14 +131,16 @@ class Game: #A simple class that keeps a list of current client connections. Thi
                     jsonmsg = msg
                 elif "Player_Won" in msg:
                     print("Player ", msg["Player_Won"], "Won")
-                    jsonmsg = {msg["Player_Won"], "Won"}
+                    self.inGame()[index] = None
+                    self.nextPlayer()
+                    jsonmsg = {"Colour": self.colours[self.token], "turnToken": True}
                 
                 self.forward(jsonmsg)
 
                 
         except sockerr:
             print(colour," left the game")
-            bye = {"byebye": True, "Colour":colour}
+            bye = {"disconnected": True, "Colour":colour}
             self.inGame()[index] = False
             self.forward(bye)
             sleep(.25)
@@ -180,7 +182,7 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
     try:
         sock = socket(AF_INET, SOCK_STREAM) #Creates TCP server socket.
         ipaddr = gethostbyname(gethostname()) # IP Address of the current machine.
-        server_address = (ipaddr, 10001)#Sets values for host- the current domain name and port number 10000.
+        server_address = (ipaddr, 10001)#Sets values for host- the current domain name and port number 10001.
         
         print('*** Server starting on %s port %s ***' % server_address)
         print('IP address is %s' % ipaddr)
@@ -204,7 +206,7 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
     except  OSError:
         print("OS Error: Port number already in use or another server process may be running")
         sys.exit()
-    except OSError:
+    except:
             print("Error! An error has occured. Please try again later.")
             sys.exit()
     sock.close();
