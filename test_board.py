@@ -83,8 +83,39 @@ class TestClient(unittest.TestCase):
                 moving_piece.image = ORANGE_PIECE_32
                 self.assertEqual(moving_piece.image.get_width(), 32)
                 moving_piece.image = temp
-        
-                
+
+    def test_death_function(self):
+        self.connection = Connection(self.board, self.player, None, self.all_pieces)
+        self.board.add_connection(self.connection)
+        self.board.draw_board(0)
+        moving_piece = self.board.ALL_PIECES[0]
+        moving_piece.set_position(10)
+        moving_piece.set_steps_from_start(10)
+        self.board.death_function(moving_piece)
+        self.assertIsNone(moving_piece.get_position())
+        self.assertEqual(moving_piece.get_steps_from_start(), 0)
+        self.assertTrue(self.board.connection.my_player.specialmove)
+
+    def test_disconnect_function(self):
+        colour_list = ["red", "green", "yellow", "blue"]
+        self.connection = Connection(self.board, self.player, None, self.all_pieces)
+        self.board.add_connection(self.connection)
+        self.board.draw_board(0)
+        for colour in colour_list:
+            self.board.disconnect_function(colour)
+            lo = self.board.get_low_range(colour)
+            for i in range(lo, lo + 4):
+                piece = self.board.ALL_PIECES[i]
+                self.assertEqual(piece.image, self.board.COLOUR_TO_IMG[piece.colour])
+                self.assertIsNone(piece.movable)
+                self.assertIsNone(piece.get_position())
+                self.assertEqual(piece.get_steps_from_start(), 0)
+            
+    def test_get_low_range(self):
+        self.assertEqual(self.board.get_low_range("red"), 0)
+        self.assertEqual(self.board.get_low_range("green"), 4)
+        self.assertEqual(self.board.get_low_range("yellow"), 8)
+        self.assertEqual(self.board.get_low_range("blue"), 12)
                 
 if __name__ == '__main__':
     unittest.main()
