@@ -68,11 +68,9 @@ class Ludo(object):
             while j != 0:
                 if j>6:
                     j -= 1 
-                    print(str(j))
                 elif j<=6:
                     pygame.mixer.Sound.play(c.noMove_sound)#show the time clock sound
                     j -= 1
-                    #print(str(j))
                 self.p.put(str(j))
                 if not self.connection.q.empty():
                     data = self.connection.q.get()  # receive a data and reset the timer
@@ -96,7 +94,6 @@ class Ludo(object):
         self.board.move_piece(num, self.connection.my_player.roll)
         self.connection.send_movement(num, self.connection.my_player.roll)
         self.connection.end_roll()
-        print("Outside", piece.get_steps_from_start())
 
     def show_start_screen(self):
         """Shows the start screen whent game first starts.
@@ -184,6 +181,7 @@ class Ludo(object):
         # Returns a list of the scores in order: [red, green, yellow, blue]
 
     def bgm(self):
+        """Sets the frequency, loads the background music and plays it."""
         pygame.mixer.pre_init(44100,16,2,4096)
         pygame.mixer.music.load("sound/BGM.mp3")
         pygame.mixer.music.play(-1)
@@ -193,7 +191,7 @@ class Ludo(object):
         It draws the board, pieces and the buttons. It also shows the diceS
         rolling animation.
         """
-        MUTE = 0
+        MUTE = False
         SOUND = c.SOUND_OPEN
         while True:
             try:
@@ -216,7 +214,6 @@ class Ludo(object):
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if self.connection.my_player.turn_token is True and self.connection.my_player.diceroll_token is False:
                             x, y = event.pos
-                            print(x, y)
                             for num in range(self.connection.my_player.low_range, self.connection.my_player.low_range + 4): #e.g for "red" - range(0, 4), for "green" - range(4, 8)
                                 piece = self.connection.my_player.my_pieces[num - self.connection.my_player.low_range] #gets index 0-3 to use my_pieces.
                                 pos = piece.get_position()
@@ -227,44 +224,45 @@ class Ludo(object):
                                             break
                                         elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
                                             self.click_piece(num, piece)
-                                            print("Home", piece.get_steps_from_start())
                                             break
                                     else:
                                         if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
                                             self.click_piece(num, piece)
                                             break
 
-                        elif soundIcon_rect.collidepoint(event.pos) and MUTE == 0:
+                        elif sound_icon_rect.collidepoint(event.pos) and not MUTE:
                             pygame.mixer.music.pause()
                             c.pieceMove_sound.set_volume(0.0)
                             c.rollDice_sound.set_volume(0.0)
                             c.noMove_sound.set_volume(0.0)
                             c.kill_sound.set_volume(0.0)
-                            MUTE = 1
+                            MUTE = True
                             SOUND = c.SOUND_MUTE
-                        elif soundIcon_rect.collidepoint(event.pos) and MUTE == 1:
+                        elif sound_icon_rect.collidepoint(event.pos) and MUTE:
                             pygame.mixer.music.unpause()
                             c.pieceMove_sound.set_volume(1.0)
                             c.rollDice_sound.set_volume(1.0)
                             c.noMove_sound.set_volume(1.0)
                             c.kill_sound.set_volume(1.0)
-                            MUTE = 0
+                            MUTE = False
                             SOUND = c.SOUND_OPEN
                 
-                SCREEN.fill(c.WHITE)
-                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
-                soundIcon = pygame.Surface((50, 50))
-                soundIcon_rect = soundIcon.get_rect(topleft=(1000, 700))
-                SCREEN.blit(SOUND,soundIcon_rect)
+                SCREEN.fill(c.WHITE)  # Paint the background white.
+                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))  # Draw wooden background.
+                sound_icon = pygame.Surface((50, 50))
+                sound_icon_rect = sound_icon.get_rect(topleft=(1000, 700))
+                SCREEN.blit(SOUND,sound_icon_rect)  # Draw the sound icon.
                 self.board.draw_board(self.colour_check)
-                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
-                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
+                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE # For flashing.
+                self.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)  # Draw scoreboard
                 self.board.PLAYER_FIELD.draw()
-                OUTPUT = self.board.ROLL_BUTTON.click()
+                OUTPUT = self.board.ROLL_BUTTON.click()  # Check if roll button was clicked.
                 if OUTPUT is not None:
+                    # If clicked roll dice.
                     self.board.dice_object.dice.roll_dice_gif(OUTPUT, self.IN, 900, 230)
+                # Display the dice number rolled.
                 self.board.dice_object.display_dice(900, 230, self.connection.current_dice)
-                # draw remain time
+                # Draw the countdown timer.
                 if not self.p.empty():
                     message = self.p.get()  # receive a data and reset the timer
                     if message != "time":
@@ -280,7 +278,6 @@ class Ludo(object):
 if __name__ == "__main__":
     ludo = Ludo()
     ludo.setup()
-
     try:
         _thread.start_new_thread(ludo.draw_Time_Out, ())
     except:
