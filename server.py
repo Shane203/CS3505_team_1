@@ -180,8 +180,9 @@ if __name__ == "__main__":#If this file is being executed as the top layer, star
     games = Games() #Creates instance of class
     try:
         sock = socket(AF_INET, SOCK_STREAM) #Creates TCP server socket.
-        server_address = (getfqdn(), 10001)#Sets values for host- the current domain name and port number 10000.
         ipaddr = gethostbyname(gethostname()) # IP Address of the current machine.
+        server_address = (ipaddr, 10001)#Sets values for host- the current domain name and port number 10000.
+        
         print('*** Server starting on %s port %s ***' % server_address)
         print('IP address is %s' % ipaddr)
         sock.bind(server_address) # Bind Socket to the host and port
