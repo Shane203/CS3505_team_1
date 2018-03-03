@@ -16,7 +16,7 @@ class Connection:
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
         # Sets values for host- the current domain name and port number 10000.
-        self.server_address = (gethostbyname(gethostname()), 10001)
+        self.server_address = (gethostbyname(gethostname()), 10000)
         self.ip_addr = gethostbyname(gethostname())  # The IP Address of the current machine.
         print('connecting to server at %s port %s' % self.server_address)
         print('IP address is %s' % self.ip_addr)
@@ -104,7 +104,8 @@ class Connection:
                     self.my_player.diceroll_token == True
             if "Player_Won" in msg and msg["Colour"] != self.my_player.colour:
                 print(msg)
-            if "Player_Disconnected" in msg:
+                self.win_condition()
+            if "disconnected" in msg:
                 print(Player, msg["Colour"], "disconnected")
                 self.board.disconnect_function(msg["Colour"])
 
@@ -230,6 +231,29 @@ class Connection:
         data = {"Player_Won": self.my_player.colour}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
+        _thread.start_new_thread(self.end_screen, (self.my_player.names,self.board.get_score(self.ALL_PIECES),"You Won!!"))
+        
+    def end_screen(self,names, scores, label):
+        "Creates a TKinter window which shows the scores of each player"
+        player_list = []
+        colours = ["red", "green", "yellow", "blue"]
+        for i in range(len(names)):
+            player = [names[i], scores[i], colours[i]]
+            player_list += [player]
+        player_list = sorted(player_list, key=lambda e: e[1], reverse=True)
+        root = Tk()
+        root.resizable(0, 0)
+        root.configure(background='white')
+
+        title = Label(height=2, bg="white", text=label) #The text area where all received messages go.
+        title.grid(row=0, column=1, columnspan=3)
+        for i in range(len(player_list)):
+            name = Label(height=2, width=8, text=player_list[i][0], bg=player_list[i][2])
+            name.grid(padx=5, row=i+1, column=0, columnspan=2)
+            score = Label(height=2, width=8, text=str(player_list[i][1]), bg=player_list[i][2])
+            score.grid(row=i+1, column=2, columnspan=2)
+        root.title("Game Finished!")
+        root.mainloop()
 
         time.sleep(0.5)  # Pause between messages
 
