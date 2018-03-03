@@ -1,0 +1,295 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>server &#8212; Team One release documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for server</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Team 1</span>
+<span class="sd">&quot;&quot;&quot;A simple server program that acts as half a chat program with a client.</span>
+
+<span class="sd">The server listens for any connections to any clients. The server then waits for the client to send</span>
+<span class="sd">a message to the server. The server keeps a record of all connected clients and broadcasts any message from a client to all clients.</span>
+<span class="sd">&quot;&quot;&quot;</span>      
+<span class="kn">from</span> <span class="nn">socket</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">socket</span> <span class="k">import</span> <span class="n">error</span> <span class="k">as</span> <span class="n">sockerr</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">sleep</span>
+<span class="kn">import</span> <span class="nn">_thread</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+
+<span class="c1">#Objective: Send colour + </span>
+
+<div class="viewcode-block" id="Game"><a class="viewcode-back" href="../rst_files/server.html#server.Game">[docs]</a><span class="k">class</span> <span class="nc">Game</span><span class="p">:</span> <span class="c1">#A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;green&quot;</span><span class="p">,</span><span class="s2">&quot;yellow&quot;</span><span class="p">,</span><span class="s2">&quot;blue&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inGame</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#the index of which player&#39;s turn it is.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span>
+<div class="viewcode-block" id="Game.clients"><a class="viewcode-back" href="../rst_files/server.html#server.Game.clients">[docs]</a>    <span class="k">def</span> <span class="nf">clients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#returns list of client connections</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span>
+<div class="viewcode-block" id="Game.max_players"><a class="viewcode-back" href="../rst_files/server.html#server.Game.max_players">[docs]</a>    <span class="k">def</span> <span class="nf">max_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span>
+<div class="viewcode-block" id="Game.inGame"><a class="viewcode-back" href="../rst_files/server.html#server.Game.inGame">[docs]</a>    <span class="k">def</span> <span class="nf">inGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inGame</span>
+<div class="viewcode-block" id="Game.names"><a class="viewcode-back" href="../rst_files/server.html#server.Game.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_names</span>
+<div class="viewcode-block" id="Game.add"><a class="viewcode-back" href="../rst_files/server.html#server.Game.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">connection</span><span class="p">):</span> <span class="c1">#adds &quot;connection&quot; to the list of connections self.clients</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">())</span> <span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">+=</span> <span class="p">[</span><span class="n">connection</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inGame</span><span class="p">()[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inGame</span><span class="p">())</span></div>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<div class="viewcode-block" id="Game.remove"><a class="viewcode-back" href="../rst_files/server.html#server.Game.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inGame</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<div class="viewcode-block" id="Game.numOfPlayers"><a class="viewcode-back" href="../rst_files/server.html#server.Game.numOfPlayers">[docs]</a>    <span class="k">def</span> <span class="nf">numOfPlayers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">)</span>
+                
+<div class="viewcode-block" id="Game.isfull"><a class="viewcode-back" href="../rst_files/server.html#server.Game.isfull">[docs]</a>    <span class="k">def</span> <span class="nf">isfull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numOfPlayers</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">numOfPlayers</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">()</span>
+<div class="viewcode-block" id="Game.forward"><a class="viewcode-back" href="../rst_files/server.html#server.Game.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">jsonmsg</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inGame</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#Condition accepts True and None(won) players.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;goodbye!&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="Game.sendto"><a class="viewcode-back" href="../rst_files/server.html#server.Game.sendto">[docs]</a>    <span class="k">def</span> <span class="nf">sendto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">jsonmsg</span><span class="p">,</span><span class="n">index</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+<div class="viewcode-block" id="Game.StartGame"><a class="viewcode-back" href="../rst_files/server.html#server.Game.StartGame">[docs]</a>    <span class="k">def</span> <span class="nf">StartGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A function that starts the game. It assigns a colour to each client by order in which they connected, and gives the turn token to the red player&quot;&quot;&quot;</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;start&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()},</span>
+             <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="s2">&quot;green&quot;</span><span class="p">,</span><span class="s2">&quot;start&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()},</span>
+             <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="s2">&quot;yellow&quot;</span><span class="p">,</span><span class="s2">&quot;start&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()},</span>
+             <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span><span class="s2">&quot;start&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()}]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numOfPlayers</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sent start to &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span><span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s2">&quot;turnToken&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<div class="viewcode-block" id="Game.roll_genie"><a class="viewcode-back" href="../rst_files/server.html#server.Game.roll_genie">[docs]</a>    <span class="k">def</span> <span class="nf">roll_genie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Roll a &quot;dice&quot;(not a real dice, just a 1 in 6 chance of each result) to get or give back the genie.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">genie_status</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">genie_status</span> <span class="o">=</span> <span class="s2">&quot;take&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GENIE TAKE&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">genie_status</span> <span class="o">=</span> <span class="s2">&quot;return&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GENIE RETURN&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">genie_status</span>
+
+        
+<div class="viewcode-block" id="Game.rolldice"><a class="viewcode-back" href="../rst_files/server.html#server.Game.rolldice">[docs]</a>    <span class="k">def</span> <span class="nf">rolldice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a random number between 1 and 6&quot;&quot;&quot;</span></div>
+        <span class="k">return</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Game.roll_biased_dice"><a class="viewcode-back" href="../rst_files/server.html#server.Game.roll_biased_dice">[docs]</a>    <span class="k">def</span> <span class="nf">roll_biased_dice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a random number between 1 and 8.</span>
+<span class="sd">        On the client side anything over a 5 is considered a 6&quot;&quot;&quot;</span></div>
+        <span class="k">return</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Game.nextPlayer"><a class="viewcode-back" href="../rst_files/server.html#server.Game.nextPlayer">[docs]</a>    <span class="k">def</span> <span class="nf">nextPlayer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inGame</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">+=</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">():</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="mi">0</span>
+<div class="viewcode-block" id="Game.ConnectionHandler"><a class="viewcode-back" href="../rst_files/server.html#server.Game.ConnectionHandler">[docs]</a>    <span class="k">def</span> <span class="nf">ConnectionHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">connection</span><span class="p">,</span><span class="n">client_address</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;connection from&#39;</span><span class="p">,</span> <span class="n">client_address</span><span class="p">)</span>
+
+            <span class="n">colour</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">numOfPlayers</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span> <span class="n">name</span>
+                    <span class="k">break</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;is full?&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isfull</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isfull</span><span class="p">():</span> <span class="c1">#If there are 4 players connected, start a game</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">StartGame</span><span class="p">()</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span> <span class="c1">#Get data from client</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span> <span class="c1">#decode and create dict from data</span>
+                <span class="k">if</span> <span class="s2">&quot;roll&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span> <span class="c1">#If request for roll is sent, call rolldice() function and broadcast the dice roll.</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;bias&quot;</span><span class="p">]:</span>
+                        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rolldice</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roll_biased_dice</span><span class="p">()</span>
+                    <span class="n">genie_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roll_genie</span><span class="p">()</span>
+                    <span class="n">jsonmsg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;Colour&quot;</span><span class="p">],</span><span class="s2">&quot;dicenum&quot;</span><span class="p">:</span><span class="n">num</span><span class="p">,</span> <span class="s2">&quot;genie_result&quot;</span><span class="p">:</span><span class="n">genie_status</span><span class="p">}</span>
+                <span class="k">elif</span> <span class="s2">&quot;turnOver&quot;</span> <span class="ow">in</span> <span class="n">msg</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span> 
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nextPlayer</span><span class="p">()</span>
+                    <span class="n">jsonmsg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">],</span><span class="s2">&quot;turnToken&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;iT is now the turn of   &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="s2">&quot;Movement&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span> <span class="c1">#If the JSON message is Sendout or Movement, simply forward it unchanged to all other clients.</span>
+                    <span class="n">jsonmsg</span> <span class="o">=</span> <span class="n">msg</span>
+                <span class="k">elif</span> <span class="s2">&quot;Player_Won&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Player &quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;Player_Won&quot;</span><span class="p">],</span> <span class="s2">&quot;Won&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">inGame</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nextPlayer</span><span class="p">()</span>
+                    <span class="n">jsonmsg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">],</span> <span class="s2">&quot;turnToken&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
+
+                
+        <span class="k">except</span> <span class="n">sockerr</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colour</span><span class="p">,</span><span class="s2">&quot; left the game&quot;</span><span class="p">)</span>
+            <span class="n">bye</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;disconnected&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="n">colour</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inGame</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">bye</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">25</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nextPlayer</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Colour&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">],</span><span class="s2">&quot;turnToken&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Player left, so we moved the token on!&quot;</span><span class="p">)</span>
+    
+
+<div class="viewcode-block" id="Games"><a class="viewcode-back" href="../rst_files/server.html#server.Games">[docs]</a><span class="k">class</span> <span class="nc">Games</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_allgames</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_newestgame</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="Games.newGame"><a class="viewcode-back" href="../rst_files/server.html#server.Games.newGame">[docs]</a>    <span class="k">def</span> <span class="nf">newGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_allgames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_newestgame</span> <span class="o">=</span> <span class="n">game</span></div>
+        <span class="k">return</span> <span class="n">game</span>
+<div class="viewcode-block" id="Games.allgames"><a class="viewcode-back" href="../rst_files/server.html#server.Games.allgames">[docs]</a>    <span class="k">def</span> <span class="nf">allgames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allgames</span>
+<div class="viewcode-block" id="Games.newestgamefull"><a class="viewcode-back" href="../rst_files/server.html#server.Games.newestgamefull">[docs]</a>    <span class="k">def</span> <span class="nf">newestgamefull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_newestgame</span><span class="o">.</span><span class="n">isfull</span><span class="p">()</span>
+<div class="viewcode-block" id="Games.newestgame"><a class="viewcode-back" href="../rst_files/server.html#server.Games.newestgame">[docs]</a>    <span class="k">def</span> <span class="nf">newestgame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_newestgame</span>
+<div class="viewcode-block" id="Games.isEmpty"><a class="viewcode-back" href="../rst_files/server.html#server.Games.isEmpty">[docs]</a>    <span class="k">def</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_allgames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<div class="viewcode-block" id="Games.clean"><a class="viewcode-back" href="../rst_files/server.html#server.Games.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">game</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allgames</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_newestgame</span> <span class="o">==</span> <span class="n">game</span><span class="p">:</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_newestgame</span> <span class="o">=</span> <span class="kc">None</span>
+            
+    
+    
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span><span class="c1">#If this file is being executed as the top layer, start the server.</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="n">Games</span><span class="p">()</span> <span class="c1">#Creates instance of class</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="c1">#Creates TCP server socket.</span>
+        <span class="n">ipaddr</span> <span class="o">=</span> <span class="n">gethostbyname</span><span class="p">(</span><span class="n">gethostname</span><span class="p">())</span> <span class="c1"># IP Address of the current machine.</span>
+        <span class="n">server_address</span> <span class="o">=</span> <span class="p">(</span><span class="n">ipaddr</span><span class="p">,</span> <span class="mi">10001</span><span class="p">)</span><span class="c1">#Sets values for host- the current domain name and port number 10001.</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** Server starting on </span><span class="si">%s</span><span class="s1"> port </span><span class="si">%s</span><span class="s1"> ***&#39;</span> <span class="o">%</span> <span class="n">server_address</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;IP address is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ipaddr</span><span class="p">)</span>
+        <span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">server_address</span><span class="p">)</span> <span class="c1"># Bind Socket to the host and port</span>
+        <span class="n">sock</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Listens for incoming connections.</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#Server always running.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** Waiting for a connection ***&#39;</span><span class="p">)</span>
+            <span class="n">connection</span><span class="p">,</span> <span class="n">client_address</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span> <span class="c1"># Accepts connection between client and server.</span>
+            <span class="k">if</span> <span class="n">games</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">()</span> <span class="ow">or</span> <span class="n">games</span><span class="o">.</span><span class="n">newestgamefull</span><span class="p">():</span>
+                <span class="n">game</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">newGame</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">game</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">newestgame</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_thread</span><span class="o">.</span><span class="n">start_new_thread</span> <span class="p">(</span> <span class="n">game</span><span class="o">.</span><span class="n">ConnectionHandler</span><span class="p">,</span> <span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">client_address</span><span class="p">)</span> <span class="p">)</span> <span class="c1">#Starts a new thread for each connection.</span>
+            <span class="k">except</span> <span class="ne">InterruptedError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error! The signal has been interrupted.&quot;</span><span class="p">)</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    
+                
+    <span class="k">except</span>  <span class="ne">OSError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OS Error: Port number already in use or another server process may be running&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error! An error has occured. Please try again later.&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="n">sock</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>

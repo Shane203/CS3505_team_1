@@ -1,0 +1,515 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>board &#8212; Team One release documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for board</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">setup</span> <span class="k">import</span> <span class="n">create_dicts</span><span class="p">,</span> <span class="n">coOrds</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">box_and_button</span> <span class="k">import</span> <span class="n">Box</span>
+<span class="kn">from</span> <span class="nn">box_and_button</span> <span class="k">import</span> <span class="n">Button</span>
+<span class="kn">from</span> <span class="nn">dice</span> <span class="k">import</span> <span class="n">Dice</span>
+
+
+<div class="viewcode-block" id="Board"><a class="viewcode-back" href="../rst_files/board.html#board.Board">[docs]</a><span class="k">class</span> <span class="nc">Board</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Draws the main Ludo board and the moving pieces.</span>
+
+<span class="sd">    It also checks if two pieces are on the same spot. If that is the case,</span>
+<span class="sd">    then the size of the pieces is changed. It also checks if a piece has</span>
+<span class="sd">    killed and opponents piece.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        genie_owner: The player who has the genie.</span>
+<span class="sd">        my_player: Your player object.</span>
+<span class="sd">        all_pieces: All the pieces on the board.</span>
+<span class="sd">        colour_to_img: Dictionary that map player colour to images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genie_owner</span><span class="p">,</span> <span class="n">my_player</span><span class="p">,</span> <span class="n">all_pieces</span><span class="p">,</span> <span class="n">colour_to_img</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Takes in genie_owner, my_player, all_pieces, colour_to_img as</span>
+<span class="sd">            arguments. It also initialises the coordinates list for the home</span>
+<span class="sd">            positions, the ROLL_BUTTON, PLAYER_FIELD, and the connection to</span>
+<span class="sd">            the server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">my_player</span> <span class="o">=</span> <span class="n">my_player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genie_owner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_object</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PLAYER_FIELD</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ROLL_BUTTON</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ALL_PIECES</span> <span class="o">=</span> <span class="n">all_pieces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">COLOUR_TO_IMG</span> <span class="o">=</span> <span class="n">colour_to_img</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Board.add_connection"><a class="viewcode-back" href="../rst_files/board.html#board.Board.add_connection">[docs]</a>    <span class="k">def</span> <span class="nf">add_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds the connection to the board. It creates a new dice object,</span>
+<span class="sd">            a roll button and the current_player whose turn it is.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_object</span> <span class="o">=</span> <span class="n">Dice</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_player</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ROLL_BUTTON</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="s2">&quot;ROLL&quot;</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">430</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">GREEN</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                  <span class="n">BRIGHTGREEN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dice_object</span><span class="o">.</span><span class="n">roll_dice</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">current_player</span>
+
+<div class="viewcode-block" id="Board.move_piece"><a class="viewcode-back" href="../rst_files/board.html#board.Board.move_piece">[docs]</a>    <span class="k">def</span> <span class="nf">move_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">piece_num</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This moves the piece assuming the piece is movable.</span>
+
+<span class="sd">        If the piece is in the home position, it can onl be moved if a 6 is</span>
+<span class="sd">        rolled on the dice. It also draws the pieces as they move each step.</span>
+<span class="sd">        After the piece has move it checks if there is a conflict with another</span>
+<span class="sd">        piece on the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">MOVE_PIECE</span><span class="p">)</span>
+        <span class="n">moving_piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALL_PIECES</span><span class="p">[</span><span class="n">piece_num</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">moving_piece</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">moving_piece</span><span class="o">.</span><span class="n">steps_from_start</span> <span class="o">+=</span> <span class="n">step</span>
+            <span class="k">while</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="mi">50</span> <span class="ow">and</span> <span class="n">piece_num</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">and</span> <span class="mi">8</span> <span class="o">&gt;</span> <span class="n">piece_num</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="o">-</span><span class="mi">11</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="mi">24</span> <span class="ow">and</span> <span class="mi">12</span> <span class="o">&gt;</span> <span class="n">piece_num</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="mi">37</span> <span class="ow">and</span> <span class="mi">16</span> <span class="o">&gt;</span> <span class="n">piece_num</span> <span class="o">&gt;</span> <span class="mi">11</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">piece_num</span> <span class="o">&lt;</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="mi">7</span> <span class="o">&lt;</span> <span class="n">piece_num</span> <span class="o">&lt;</span> <span class="mi">16</span> <span class="ow">and</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">52</span><span class="p">)</span>
+                <span class="n">step</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_pieces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">,</span> <span class="mi">65</span><span class="p">)</span>
+                <span class="c1"># Limits update to board</span>
+                <span class="n">board_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">board_rect</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_conflict</span><span class="p">(</span><span class="n">moving_piece</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Board.draw_arrows_and_stars"><a class="viewcode-back" href="../rst_files/board.html#board.Board.draw_arrows_and_stars">[docs]</a>    <span class="k">def</span> <span class="nf">draw_arrows_and_stars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draws the arrows and stars on the board. It also calls the</span>
+<span class="sd">            draw_boxes function. The arrows are drawn using pygames draw</span>
+<span class="sd">            function. The arrow images are blit on to the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">RED</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">TOP_LEFT</span><span class="p">,</span> <span class="n">BOTTOM_LEFT</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">GREEN</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">TOP_LEFT</span><span class="p">,</span> <span class="n">TOP_RIGHT</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">YELLOW</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">TOP_RIGHT</span><span class="p">,</span> <span class="n">BOTTOM_RIGHT</span><span class="p">),</span>
+                            <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">BOTTOM_LEFT</span><span class="p">,</span> <span class="n">BOTTOM_RIGHT</span><span class="p">),</span>
+                            <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">TOP_LEFT</span><span class="p">,</span> <span class="n">BOTTOM_LEFT</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">TOP_LEFT</span><span class="p">,</span> <span class="n">TOP_RIGHT</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">TOP_RIGHT</span><span class="p">,</span> <span class="n">BOTTOM_RIGHT</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">,</span> <span class="n">BOTTOM_LEFT</span><span class="p">,</span> <span class="n">BOTTOM_RIGHT</span><span class="p">),</span>
+                            <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_boxes</span><span class="p">()</span>
+
+        <span class="c1"># Print Arrows on SCREEN</span>
+        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">UP_ARROW</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">14</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">))</span>
+        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">DOWN_ARROW</span><span class="p">,</span> <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">INDENT_BOARD</span><span class="p">))</span>
+        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">RIGHT_ARROW</span><span class="p">,</span> <span class="p">(</span><span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">))</span>
+        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">LEFT_ARROW</span><span class="p">,</span></div>
+                    <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">14</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Board.draw_boxes"><a class="viewcode-back" href="../rst_files/board.html#board.Board.draw_boxes">[docs]</a>    <span class="k">def</span> <span class="nf">draw_boxes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draws rectangles for each position on the board using the boc_pos</span>
+<span class="sd">            list. It also blits star images on the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">box_pos</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="o">-</span><span class="mi">13</span><span class="p">,</span> <span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">13</span><span class="p">],</span>
+                   <span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">26</span><span class="p">],</span> <span class="p">[</span><span class="mi">39</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">17</span><span class="p">,</span> <span class="o">-</span><span class="mi">18</span><span class="p">,</span> <span class="o">-</span><span class="mi">19</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">51</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span>
+                    <span class="mi">46</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span>
+                    <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
+                    <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">36</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">47</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">box_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">RED</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">box_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">GREEN</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">box_pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">YELLOW</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">box_pos</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">box_pos</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">BOX_SIZE</span><span class="p">,</span> <span class="n">BOX_SIZE</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">box_pos</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span></div>
+            <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">STAR</span><span class="p">,</span> <span class="p">(</span><span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="Board.draw_genie"><a class="viewcode-back" href="../rst_files/board.html#board.Board.draw_genie">[docs]</a>    <span class="k">def</span> <span class="nf">draw_genie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draws the genie on the board depending on who has the genie.</span>
+<span class="sd">            If no-one has the genie, a lamp is placed in the middle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genie_owner</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span><span class="p">:</span>
+            <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">GENIE_SMALL</span><span class="p">,</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">57</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">89</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">genie_owner</span> <span class="o">==</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span>
+            <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">GENIE_SMALL</span><span class="p">,</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">57</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">89</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">genie_owner</span> <span class="o">==</span> <span class="s2">&quot;yellow&quot;</span><span class="p">:</span>
+            <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">GENIE_SMALL</span><span class="p">,</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">8</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">57</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">8</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">89</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">genie_owner</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span>
+            <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">GENIE_SMALL</span><span class="p">,</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">12</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">57</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="mi">12</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">89</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">LAMP_SMALL</span><span class="p">,</span> <span class="p">(</span><span class="n">CENTRE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">37</span><span class="p">,</span> <span class="n">CENTRE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">37</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Board.draw_pieces"><a class="viewcode-back" href="../rst_files/board.html#board.Board.draw_pieces">[docs]</a>    <span class="k">def</span> <span class="nf">draw_pieces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">home_coords</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draws the pieces on the board.</span>
+
+<span class="sd">        It goes through all the pieces on the board and draw it in their</span>
+<span class="sd">        position. If there is a conflict their size changes.</span>
+<span class="sd">        The pieces flash is they are movable depending on the dice roll.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">piece_in</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+            <span class="n">piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALL_PIECES</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+            <span class="n">piece_pos</span> <span class="o">=</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
+            <span class="c1"># If pieces are movable flash orange.</span>
+            <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">colour</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="ow">and</span> <span class="n">piece</span><span class="o">.</span><span class="n">movable</span> \
+                    <span class="ow">and</span> <span class="n">check</span> <span class="o">&gt;</span> <span class="n">FPS</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">piece</span><span class="o">.</span><span class="n">image</span>
+                <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">64</span><span class="p">:</span>
+                    <span class="n">piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">ORANGE_PIECE_32</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">ORANGE_PIECE</span>
+            <span class="c1"># If piece in home.</span>
+            <span class="k">if</span> <span class="n">piece_pos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">[</span><span class="n">num</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">64</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">piece_in</span><span class="p">:</span>
+                        <span class="n">piece_in</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()]</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span>
+                            <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                        <span class="n">piece_in</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">piece_in</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span>
+                            <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">20</span><span class="p">,</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                        <span class="n">piece_in</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span>
+                            <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span>
+                            <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">SCREEN</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span>
+                        <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">7</span><span class="p">,</span> <span class="n">coOrds</span><span class="p">[</span><span class="n">piece_pos</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">25</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">temp</span><span class="p">:</span>
+                <span class="n">piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">temp</span></div>
+                <span class="n">temp</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Board.draw_board"><a class="viewcode-back" href="../rst_files/board.html#board.Board.draw_board">[docs]</a>    <span class="k">def</span> <span class="nf">draw_board</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draws the main board.</span>
+
+<span class="sd">        It calls the draw_arrows_and_stars function. It also draws the rectangle</span>
+<span class="sd">        and the circles as home bases for the pieces.</span>
+
+<span class="sd">        It then draw the pieces, genie, roll button and displays dice.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_arrows_and_stars</span><span class="p">()</span>
+
+        <span class="c1"># Drawing home bases and each players pieces</span>
+        <span class="n">colours</span> <span class="o">=</span> <span class="p">[</span><span class="n">RED</span><span class="p">,</span> <span class="n">GREEN</span><span class="p">,</span> <span class="n">YELLOW</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">]</span>
+        <span class="n">home</span> <span class="o">=</span> <span class="p">[(</span><span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">INDENT_BOARD</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">INDENT_BOARD</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">INDENT_BOARD</span><span class="p">,</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="n">INDENT_BOARD</span><span class="p">)]</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="mi">28</span>
+        <span class="n">home_size</span> <span class="o">=</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">6</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">white_box_x</span> <span class="o">=</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">BOX_SIZE</span>
+            <span class="n">white_box_y</span> <span class="o">=</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">BOX_SIZE</span>
+            <span class="n">white_box_size</span> <span class="o">=</span> <span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">4</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span> <span class="ow">and</span> <span class="n">colours</span><span class="p">[</span>
+                    <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">RED</span> <span class="ow">and</span> <span class="n">check</span> <span class="o">&gt;</span> <span class="n">FPS</span> <span class="o">*</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">ORANGE</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">home_size</span><span class="p">,</span> <span class="n">home_size</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">==</span> <span class="s2">&quot;green&quot;</span> <span class="ow">and</span> <span class="n">colours</span><span class="p">[</span>
+                    <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">GREEN</span> <span class="ow">and</span> <span class="n">check</span> <span class="o">&gt;</span> <span class="n">FPS</span> <span class="o">*</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">LGREEN</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">home_size</span><span class="p">,</span> <span class="n">home_size</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">==</span> <span class="s2">&quot;yellow&quot;</span> <span class="ow">and</span> <span class="n">colours</span><span class="p">[</span>
+                    <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">YELLOW</span> <span class="ow">and</span> <span class="n">check</span> <span class="o">&gt;</span> <span class="n">FPS</span> <span class="o">*</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">LYELLOW</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">home_size</span><span class="p">,</span> <span class="n">home_size</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span> <span class="ow">and</span> <span class="n">colours</span><span class="p">[</span>
+                    <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">BLUE</span> <span class="ow">and</span> <span class="n">check</span> <span class="o">&gt;</span> <span class="n">FPS</span> <span class="o">*</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">LBLUE</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">home_size</span><span class="p">,</span> <span class="n">home_size</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                 <span class="p">(</span><span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">home_size</span><span class="p">,</span> <span class="n">home_size</span><span class="p">))</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span>
+                             <span class="p">(</span><span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">home</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">home_size</span><span class="p">,</span> <span class="n">home_size</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">white_box_x</span><span class="p">,</span> <span class="n">white_box_y</span><span class="p">,</span> <span class="n">white_box_size</span><span class="p">,</span> <span class="n">white_box_size</span><span class="p">))</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">white_box_x</span><span class="p">,</span> <span class="n">white_box_y</span><span class="p">,</span> <span class="n">white_box_size</span><span class="p">,</span> <span class="n">white_box_size</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">circle_1x</span> <span class="o">=</span> <span class="n">white_box_x</span> <span class="o">+</span> <span class="n">BOX_SIZE</span>
+            <span class="n">circle_1y</span> <span class="o">=</span> <span class="n">white_box_y</span> <span class="o">+</span> <span class="n">BOX_SIZE</span>
+            <span class="n">circle_2x</span> <span class="o">=</span> <span class="n">white_box_x</span> <span class="o">+</span> <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">circle_2y</span> <span class="o">=</span> <span class="n">white_box_y</span> <span class="o">+</span> <span class="p">(</span><span class="n">BOX_SIZE</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">circle_1x</span><span class="p">,</span> <span class="n">circle_1y</span><span class="p">),</span>
+                               <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">circle_1x</span><span class="p">,</span> <span class="n">circle_1y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">circle_2x</span><span class="p">,</span> <span class="n">circle_1y</span><span class="p">),</span>
+                               <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">circle_2x</span><span class="p">,</span> <span class="n">circle_1y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">circle_1x</span><span class="p">,</span> <span class="n">circle_2y</span><span class="p">),</span>
+                               <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">circle_1x</span><span class="p">,</span> <span class="n">circle_2y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">circle_2x</span><span class="p">,</span> <span class="n">circle_2y</span><span class="p">),</span>
+                               <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">SCREEN</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="n">circle_2x</span><span class="p">,</span> <span class="n">circle_2y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">circle_1x</span> <span class="o">-</span> <span class="mi">32</span><span class="p">,</span> <span class="n">circle_1y</span> <span class="o">-</span> <span class="mi">64</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="n">circle_2x</span> <span class="o">-</span> <span class="mi">32</span><span class="p">,</span> <span class="n">circle_1y</span> <span class="o">-</span> <span class="mi">64</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="n">circle_1x</span> <span class="o">-</span> <span class="mi">32</span><span class="p">,</span> <span class="n">circle_2y</span> <span class="o">-</span> <span class="mi">64</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="n">circle_2x</span> <span class="o">-</span> <span class="mi">32</span><span class="p">,</span> <span class="n">circle_2y</span> <span class="o">-</span> <span class="mi">64</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_genie</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_pieces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PLAYER_FIELD</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_object</span><span class="o">.</span><span class="n">display_dice</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">current_dice</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ROLL_BUTTON</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Board.check_conflict"><a class="viewcode-back" href="../rst_files/board.html#board.Board.check_conflict">[docs]</a>    <span class="k">def</span> <span class="nf">check_conflict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moving_piece</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if two pieces are in the same position.</span>
+
+<span class="sd">        Goes through all the pieces on the board and checks if there is</span>
+<span class="sd">        a conflict. If there is and the opponents piece is not in a safe</span>
+<span class="sd">        spot then kill the piece by calling the death_function. Also</span>
+<span class="sd">        call the check_many_pieces to check if there are other pieces</span>
+<span class="sd">        that are in conflicting positions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALL_PIECES</span><span class="p">:</span>
+            <span class="n">equal_pos</span> <span class="o">=</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
+            <span class="n">not_equal_colour</span> <span class="o">=</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">colour</span> <span class="o">!=</span> <span class="n">piece</span><span class="o">.</span><span class="n">colour</span>
+            <span class="n">safe_start</span> <span class="o">=</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">start</span>
+            <span class="k">if</span> <span class="n">equal_pos</span> <span class="ow">and</span> <span class="n">not_equal_colour</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">safe_start</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">genie</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">death_function</span><span class="p">(</span><span class="n">moving_piece</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_many_pieces</span><span class="p">(</span><span class="n">piece</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">piece</span><span class="o">.</span><span class="n">check_safe_point</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">death_function</span><span class="p">(</span><span class="n">piece</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_many_pieces</span><span class="p">(</span><span class="n">moving_piece</span><span class="p">)</span>
+                    <span class="k">break</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_many_pieces</span><span class="p">(</span><span class="n">piece</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Board.check_many_pieces"><a class="viewcode-back" href="../rst_files/board.html#board.Board.check_many_pieces">[docs]</a>    <span class="k">def</span> <span class="nf">check_many_pieces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moving_piece</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if there is a conflict in position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+            <span class="n">piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALL_PIECES</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">piece</span> <span class="o">==</span> <span class="n">moving_piece</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
+                    <span class="n">moving_piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">==</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">():</span>
+                <span class="n">piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+                <span class="n">moving_piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">moving_piece</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                                                            <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+                <span class="k">return</span></div>
+        <span class="n">moving_piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLOUR_TO_IMG</span><span class="p">[</span><span class="n">moving_piece</span><span class="o">.</span><span class="n">colour</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Board.death_function"><a class="viewcode-back" href="../rst_files/board.html#board.Board.death_function">[docs]</a>    <span class="k">def</span> <span class="nf">death_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">piece</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the piece back to its starting position.</span>
+<span class="sd">        It retraces its steps all the way back.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">KILL_PIECE</span><span class="p">)</span>
+        <span class="n">piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLOUR_TO_IMG</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">colour</span><span class="p">]</span>
+        <span class="k">while</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">!=</span> <span class="n">piece</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+            <span class="n">piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="n">piece</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">52</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_pieces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">piece</span><span class="o">.</span><span class="n">set_steps_from_start</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">my_player</span><span class="o">.</span><span class="n">special_move</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Board.disconnect_function"><a class="viewcode-back" href="../rst_files/board.html#board.Board.disconnect_function">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the piece back to its starting position.&quot;&quot;&quot;</span>
+        <span class="n">low_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_low_range</span><span class="p">(</span><span class="n">colour</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">low_range</span><span class="p">,</span> <span class="n">low_range</span> <span class="o">+</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">piece</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALL_PIECES</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+            <span class="n">piece</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLOUR_TO_IMG</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">colour</span><span class="p">]</span>
+            <span class="n">piece</span><span class="o">.</span><span class="n">movable</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_pieces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">home_coords</span><span class="p">)</span>
+            <span class="n">piece</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+            <span class="n">piece</span><span class="o">.</span><span class="n">set_steps_from_start</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Board.get_low_range"><a class="viewcode-back" href="../rst_files/board.html#board.Board.get_low_range">[docs]</a>    <span class="k">def</span> <span class="nf">get_low_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colour</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">4</span>
+        <span class="k">elif</span> <span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;yellow&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">8</span>
+        <span class="k">elif</span> <span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="mi">12</span>
+
+<div class="viewcode-block" id="Board.draw_scoreboard"><a class="viewcode-back" href="../rst_files/board.html#board.Board.draw_scoreboard">[docs]</a>    <span class="k">def</span> <span class="nf">draw_scoreboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_pieces</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">w</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;Score&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">w</span>
+        <span class="n">name</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">score</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="c1"># Returns a list of the scores in order: red, green, yellow, blue</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_score</span><span class="p">(</span><span class="n">list_of_pieces</span><span class="p">)</span>
+        <span class="c1"># If all scores are zero, scoreboard is ordered as default</span>
+        <span class="n">color_to_color</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="n">RED</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="n">GREEN</span><span class="p">,</span>
+                          <span class="s2">&quot;yellow&quot;</span><span class="p">:</span> <span class="n">YELLOW</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="n">BLUE</span><span class="p">}</span>
+        <span class="c1"># Used to get the name of the player variable names contains all</span>
+        <span class="c1"># the names of the</span>
+        <span class="c1"># players [red, green, yellow, blue]</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">]</span>
+        <span class="n">list_of_scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">my_player</span><span class="o">.</span><span class="n">names</span><span class="p">)):</span>
+            <span class="n">list_of_scores</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">scores</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+            <span class="n">list_of_scores</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">list_of_scores</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">list_of_scores</span><span class="p">:</span>
+            <span class="c1"># Access each player, sort them by score</span>
+            <span class="c1"># and draw the 4 players on the scoreboard.</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">color_to_color</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="n">h</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">900</span>
+            <span class="n">name_field</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">my_player</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">colors</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span>
+                             <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+            <span class="n">name_field</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="n">out_line_box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">out_line_box</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="n">w</span>
+            <span class="n">score_field</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+            <span class="n">score_field</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="n">out_line_box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">BLACK</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">out_line_box</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="n">w</span>
+            <span class="c1"># Draws a marker after your entry to show who you are</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">my_player</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">my_player</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">colors</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])]:</span>
+                <span class="n">marker</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">)</span>
+                <span class="n">marker</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">blank</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">)</span></div>
+                <span class="n">blank</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="c1"># Returns a list of the scores in order: [red, green, yellow, blue]</span>
+
+<div class="viewcode-block" id="Board.get_score"><a class="viewcode-back" href="../rst_files/board.html#board.Board.get_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_pieces</span><span class="p">):</span>
+        <span class="c1"># Returns a list of the scores in order: [red, green, yellow, blue]</span>
+        <span class="n">red_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">blue_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">green_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">yellow_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">list_of_pieces</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span><span class="p">:</span>
+                <span class="n">red_score</span> <span class="o">+=</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_steps_from_start</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">piece</span><span class="o">.</span><span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span>
+                <span class="n">blue_score</span> <span class="o">+=</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_steps_from_start</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">piece</span><span class="o">.</span><span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span>
+                <span class="n">green_score</span> <span class="o">+=</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_steps_from_start</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">piece</span><span class="o">.</span><span class="n">colour</span> <span class="o">==</span> <span class="s2">&quot;yellow&quot;</span><span class="p">:</span>
+                <span class="n">yellow_score</span> <span class="o">+=</span> <span class="n">piece</span><span class="o">.</span><span class="n">get_steps_from_start</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">red_score</span><span class="p">,</span> <span class="n">green_score</span><span class="p">,</span> <span class="n">yellow_score</span><span class="p">,</span> <span class="n">blue_score</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>

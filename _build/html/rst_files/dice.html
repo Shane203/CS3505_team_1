@@ -1,0 +1,147 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dice module &#8212; Team One release documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="end_screen module" href="end_screen.html" />
+    <link rel="prev" title="constants module" href="constants.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="end_screen.html" title="end_screen module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="constants.html" title="constants module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-dice">
+<span id="dice-module"></span><h1>dice module<a class="headerlink" href="#module-dice" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="dice.Dice">
+<em class="property">class </em><code class="descclassname">dice.</code><code class="descname">Dice</code><span class="sig-paren">(</span><em>connection</em>, <em>my_player</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dice.html#Dice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dice.Dice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="dice.Dice.check_for_bias">
+<code class="descname">check_for_bias</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dice.html#Dice.check_for_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dice.Dice.check_for_bias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dice.Dice.dice_rule">
+<code class="descname">dice_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dice.html#Dice.dice_rule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dice.Dice.dice_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if player can roll a dice
+:var self.connection.my_player.roll: Checks previous value of dice/roll
+:var self.connection.my_player.special_move: Checks if player had piece
+land on opposing player’s piece
+:var self.connection.my_player.rolls_taken: Counts number of rolls player
+has rolled
+:return: Player can make a legal move OR Ends turn if no legal dice</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dice.Dice.display_dice">
+<code class="descname">display_dice</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dice.html#Dice.display_dice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dice.Dice.display_dice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dice.Dice.roll_dice">
+<code class="descname">roll_dice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dice.html#Dice.roll_dice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dice.Dice.roll_dice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dice.Dice.roll_dice_gif">
+<code class="descname">roll_dice_gif</code><span class="sig-paren">(</span><em>n</em>, <em>in_</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dice.html#Dice.roll_dice_gif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dice.Dice.roll_dice_gif" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="constants.html"
+                        title="previous chapter">constants module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="end_screen.html"
+                        title="next chapter">end_screen module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rst_files/dice.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="end_screen.html" title="end_screen module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="constants.html" title="constants module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,232 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>board module &#8212; Team One release documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="box_and_button module" href="box_and_button.html" />
+    <link rel="prev" title="CS3505_team_1" href="modules.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="box_and_button.html" title="box_and_button module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="CS3505_team_1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-board">
+<span id="board-module"></span><h1>board module<a class="headerlink" href="#module-board" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="board.Board">
+<em class="property">class </em><code class="descclassname">board.</code><code class="descname">Board</code><span class="sig-paren">(</span><em>genie_owner</em>, <em>my_player</em>, <em>all_pieces</em>, <em>colour_to_img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Draws the main Ludo board and the moving pieces.</p>
+<p>It also checks if two pieces are on the same spot. If that is the case,
+then the size of the pieces is changed. It also checks if a piece has
+killed and opponents piece.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>genie_owner: The player who has the genie.
+my_player: Your player object.
+all_pieces: All the pieces on the board.
+colour_to_img: Dictionary that map player colour to images.</dd>
+</dl>
+<p>Takes in genie_owner, my_player, all_pieces, colour_to_img as
+arguments. It also initialises the coordinates list for the home
+positions, the ROLL_BUTTON, PLAYER_FIELD, and the connection to
+the server.</p>
+<dl class="method">
+<dt id="board.Board.add_connection">
+<code class="descname">add_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.add_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.add_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the connection to the board. It creates a new dice object,
+a roll button and the current_player whose turn it is.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.check_conflict">
+<code class="descname">check_conflict</code><span class="sig-paren">(</span><em>moving_piece</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.check_conflict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.check_conflict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if two pieces are in the same position.</p>
+<p>Goes through all the pieces on the board and checks if there is
+a conflict. If there is and the opponents piece is not in a safe
+spot then kill the piece by calling the death_function. Also
+call the check_many_pieces to check if there are other pieces
+that are in conflicting positions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.check_many_pieces">
+<code class="descname">check_many_pieces</code><span class="sig-paren">(</span><em>moving_piece</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.check_many_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.check_many_pieces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if there is a conflict in position.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.death_function">
+<code class="descname">death_function</code><span class="sig-paren">(</span><em>piece</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.death_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.death_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the piece back to its starting position.
+It retraces its steps all the way back.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.disconnect_function">
+<code class="descname">disconnect_function</code><span class="sig-paren">(</span><em>colour</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.disconnect_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.disconnect_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the piece back to its starting position.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.draw_arrows_and_stars">
+<code class="descname">draw_arrows_and_stars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.draw_arrows_and_stars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.draw_arrows_and_stars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the arrows and stars on the board. It also calls the
+draw_boxes function. The arrows are drawn using pygames draw
+function. The arrow images are blit on to the board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.draw_board">
+<code class="descname">draw_board</code><span class="sig-paren">(</span><em>check</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.draw_board"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.draw_board" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the main board.</p>
+<p>It calls the draw_arrows_and_stars function. It also draws the rectangle
+and the circles as home bases for the pieces.</p>
+<p>It then draw the pieces, genie, roll button and displays dice.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.draw_boxes">
+<code class="descname">draw_boxes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.draw_boxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.draw_boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws rectangles for each position on the board using the boc_pos
+list. It also blits star images on the board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.draw_genie">
+<code class="descname">draw_genie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.draw_genie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.draw_genie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the genie on the board depending on who has the genie.
+If no-one has the genie, a lamp is placed in the middle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.draw_pieces">
+<code class="descname">draw_pieces</code><span class="sig-paren">(</span><em>home_coords</em>, <em>check=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.draw_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.draw_pieces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the pieces on the board.</p>
+<p>It goes through all the pieces on the board and draw it in their
+position. If there is a conflict their size changes.
+The pieces flash is they are movable depending on the dice roll.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="board.Board.draw_scoreboard">
+<code class="descname">draw_scoreboard</code><span class="sig-paren">(</span><em>list_of_pieces</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.draw_scoreboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.draw_scoreboard" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="board.Board.get_low_range">
+<code class="descname">get_low_range</code><span class="sig-paren">(</span><em>colour</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.get_low_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.get_low_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="board.Board.get_score">
+<code class="descname">get_score</code><span class="sig-paren">(</span><em>list_of_pieces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.get_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.get_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="board.Board.move_piece">
+<code class="descname">move_piece</code><span class="sig-paren">(</span><em>piece_num</em>, <em>step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/board.html#Board.move_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#board.Board.move_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>This moves the piece assuming the piece is movable.</p>
+<p>If the piece is in the home position, it can onl be moved if a 6 is
+rolled on the dice. It also draws the pieces as they move each step.
+After the piece has move it checks if there is a conflict with another
+piece on the board.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">CS3505_team_1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="box_and_button.html"
+                        title="next chapter">box_and_button module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rst_files/board.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="box_and_button.html" title="box_and_button module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="CS3505_team_1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One release documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>
