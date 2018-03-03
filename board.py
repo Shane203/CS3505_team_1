@@ -81,7 +81,9 @@ class Board:
                         (moving_piece.get_position() + 1) % 52)
                 step -= 1
                 self.draw_pieces(self.home_coords, 65)
-                pygame.display.update()
+                # Limits update to board
+                board_rect = pygame.Rect(0, 0, 800, 800)
+                pygame.display.update(board_rect)
                 self.c.tick(10)
         self.check_conflict(moving_piece)
 
@@ -354,7 +356,6 @@ class Board:
             self.draw_pieces(self.home_coords)
             piece.set_position(None)
             piece.set_steps_from_start(0)
-            # pygame.display.update()  # Might not be neccessary
 
     def get_low_range(self, colour):
         if colour == "red":

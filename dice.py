@@ -68,7 +68,8 @@ class Dice():
                     self.display_dice(x, y, self.connection.current_dice)
                     C.tick(tick)
                     IN = 1
-            pygame.display.update()
+            dice_rect = pygame.Rect(900, 230, 1100, 430)
+            pygame.display.update(dice_rect)
             i += 1
 
     def display_dice(self, x, y, img):
