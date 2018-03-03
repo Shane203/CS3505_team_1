@@ -23,7 +23,7 @@ class Board:
 
     def __init__(self, genie_owner, my_player, all_pieces, colour_to_img):
         """Takes in genie_owner, my_player, all_pieces, colour_to_img as
-            arguements. It also intialises the coordinates list for the home
+            arguments. It also initialises the coordinates list for the home
             positions, the ROLL_BUTTON, PLAYER_FIELD, and the connection to
             the server.
         """
@@ -127,27 +127,27 @@ class Board:
                    [8, 34, 21, 47]]
         for item in box_pos[0]:
             pygame.draw.rect(SCREEN, RED, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
             pygame.draw.rect(SCREEN, BLACK, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
         for item in box_pos[1]:
             pygame.draw.rect(SCREEN, GREEN, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
             pygame.draw.rect(SCREEN, BLACK, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
         for item in box_pos[2]:
             pygame.draw.rect(SCREEN, YELLOW, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
             pygame.draw.rect(SCREEN, BLACK, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
         for item in box_pos[3]:
             pygame.draw.rect(SCREEN, BLUE, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 0)
             pygame.draw.rect(SCREEN, BLACK, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
         for item in box_pos[4]:
             pygame.draw.rect(SCREEN, BLACK, (
-            coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
+                coOrds[item][0], coOrds[item][1], BOX_SIZE, BOX_SIZE), 1)
         for item in box_pos[5]:
             SCREEN.blit(STAR, (coOrds[item][0], coOrds[item][1]))
 
@@ -157,16 +157,16 @@ class Board:
         """
         if self.genie_owner == "red":
             SCREEN.blit(GENIE_SMALL, (
-            self.home_coords[0][0] + 57, self.home_coords[0][1] + 89))
+                self.home_coords[0][0] + 57, self.home_coords[0][1] + 89))
         elif self.genie_owner == "green":
             SCREEN.blit(GENIE_SMALL, (
-            self.home_coords[4][0] + 57, self.home_coords[4][1] + 89))
+                self.home_coords[4][0] + 57, self.home_coords[4][1] + 89))
         elif self.genie_owner == "yellow":
             SCREEN.blit(GENIE_SMALL, (
-            self.home_coords[8][0] + 57, self.home_coords[8][1] + 89))
+                self.home_coords[8][0] + 57, self.home_coords[8][1] + 89))
         elif self.genie_owner == "blue":
             SCREEN.blit(GENIE_SMALL, (
-            self.home_coords[12][0] + 57, self.home_coords[12][1] + 89))
+                self.home_coords[12][0] + 57, self.home_coords[12][1] + 89))
         else:
             SCREEN.blit(LAMP_SMALL, (CENTRE[0] - 37, CENTRE[1] - 37))
 
@@ -183,7 +183,8 @@ class Board:
             piece = self.ALL_PIECES[num]
             piece_pos = piece.get_position()
             # If pieces are movable flash orange.
-            if piece.colour == self.current_player and piece.movable and check > FPS * 2:
+            if piece.colour == self.current_player and piece.movable \
+                    and check > FPS * 2:
                 temp = piece.image
                 if piece.image.get_width() != 64:
                     piece.image = ORANGE_PIECE_32
@@ -197,18 +198,19 @@ class Board:
                     if piece.get_position() not in piece_in:
                         piece_in[piece.get_position()] = 0
                         SCREEN.blit(piece.image, (
-                        coOrds[piece_pos][0], coOrds[piece_pos][1]))
+                            coOrds[piece_pos][0], coOrds[piece_pos][1]))
                         piece_in[piece.get_position()] += 1
                     elif piece_in[piece.get_position()] == 1:
                         SCREEN.blit(piece.image, (
-                        coOrds[piece_pos][0] + 20, coOrds[piece_pos][1]))
+                            coOrds[piece_pos][0] + 20, coOrds[piece_pos][1]))
                         piece_in[piece.get_position()] += 1
                     else:
                         SCREEN.blit(piece.image, (
-                        coOrds[piece_pos][0] + 10, coOrds[piece_pos][1] + 15))
+                            coOrds[piece_pos][0] + 10,
+                            coOrds[piece_pos][1] + 15))
                 else:
                     SCREEN.blit(piece.image, (
-                    coOrds[piece_pos][0] - 7, coOrds[piece_pos][1] - 25))
+                        coOrds[piece_pos][0] - 7, coOrds[piece_pos][1] - 25))
             if temp:
                 piece.image = temp
                 temp = None
@@ -236,19 +238,19 @@ class Board:
             white_box_y = home[i][1] + BOX_SIZE
             white_box_size = BOX_SIZE * 4
             if self.current_player == "red" and colours[
-                i] == RED and check > FPS * 6:
+                    i] == RED and check > FPS * 6:
                 pygame.draw.rect(SCREEN, ORANGE,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "green" and colours[
-                i] == GREEN and check > FPS * 6:
+                    i] == GREEN and check > FPS * 6:
                 pygame.draw.rect(SCREEN, LGREEN,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "yellow" and colours[
-                i] == YELLOW and check > FPS * 6:
+                    i] == YELLOW and check > FPS * 6:
                 pygame.draw.rect(SCREEN, LYELLOW,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "blue" and colours[
-                i] == BLUE and check > FPS * 6:
+                    i] == BLUE and check > FPS * 6:
                 pygame.draw.rect(SCREEN, LBLUE,
                                  (home[i][0], home[i][1], home_size, home_size))
             else:
@@ -257,9 +259,9 @@ class Board:
             pygame.draw.rect(SCREEN, BLACK,
                              (home[i][0], home[i][1], home_size, home_size), 1)
             pygame.draw.rect(SCREEN, WHITE, (
-            white_box_x, white_box_y, white_box_size, white_box_size))
+                white_box_x, white_box_y, white_box_size, white_box_size))
             pygame.draw.rect(SCREEN, BLACK, (
-            white_box_x, white_box_y, white_box_size, white_box_size), 1)
+                white_box_x, white_box_y, white_box_size, white_box_size), 1)
 
             circle_1x = white_box_x + BOX_SIZE
             circle_1y = white_box_y + BOX_SIZE
@@ -344,7 +346,7 @@ class Board:
             self.c.tick(10)
         piece.set_position(None)
         piece.set_steps_from_start(0)
-        self.connection.my_player.specialmove = True
+        self.connection.my_player.special_move = True
 
     def disconnect_function(self, colour):
         """Sends the piece back to its starting position."""
@@ -394,16 +396,16 @@ class Board:
             color = color_to_color[i[1]]
             y += h
             x = 900
-            nameField = Box(self.connection.my_player.names[colors.index(i[1])],
-                            x, y, w, h, color)
-            nameField.draw()
-            outlineBox = Box("", x, y, w, h, BLACK, 1)
-            outlineBox.draw()
+            name_field = Box(self.connection.my_player.names[colors.index(i[1])],
+                             x, y, w, h, color)
+            name_field.draw()
+            out_line_box = Box("", x, y, w, h, BLACK, 1)
+            out_line_box.draw()
             x += w
-            scoreField = Box(str(i[0]), x, y, w, h, color)
-            scoreField.draw()
-            outlineBox = Box("", x, y, w, h, BLACK, 1)
-            outlineBox.draw()
+            score_field = Box(str(i[0]), x, y, w, h, color)
+            score_field.draw()
+            out_line_box = Box("", x, y, w, h, BLACK, 1)
+            out_line_box.draw()
             x += w
             # Draws a marker after your entry to show who you are
             if self.connection.my_player.name == \

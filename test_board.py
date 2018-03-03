@@ -94,7 +94,7 @@ class TestClient(unittest.TestCase):
         self.board.death_function(moving_piece)
         self.assertIsNone(moving_piece.get_position())
         self.assertEqual(moving_piece.get_steps_from_start(), 0)
-        self.assertTrue(self.board.connection.my_player.specialmove)
+        self.assertTrue(self.board.connection.my_player.special_move)
 
     def test_disconnect_function(self):
         colour_list = ["red", "green", "yellow", "blue"]

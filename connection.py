@@ -167,7 +167,7 @@ class Connection:
             self.my_player.turn_token = False
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
-            self.my_player.rollstaken = 0
+            self.my_player.rolls_taken = 0
             #self.my_player.turns_total = 0
             #self.my_player.rolls_total = 0
             msg = {"Colour": self.my_player.colour, "turnOver": True}
@@ -181,8 +181,8 @@ class Connection:
         Checks if player should end turn, Otherwise allows player another dice roll.
         Checks if all player's pieces on home run, allowing player to win.
         :var self.my_player.roll: Value of dice
-        :var self.my_player.specialmove: Boolean used when player piece kill opposing piece
-        :var self.my_player.rollstaken: Counts amounts of times player has rolled dice
+        :var self.my_player.special_move: Boolean used when player piece kill opposing piece
+        :var self.my_player.rolls_taken: Counts amounts of times player has rolled dice
         :var self.my_player.diceroll_token: Boolean used to prevent player rolling dice in succession
         """
         final_pos = 0  # Check if all four pieces in home run
@@ -194,7 +194,7 @@ class Connection:
                 final_pos += 1
                 if final_pos == 4:
                     self.win_condition()
-        if (self.my_player.roll != 6 or self.my_player.rollstaken == 3) and self.my_player.specialmove is False:
+        if (self.my_player.roll != 6 or self.my_player.rolls_taken == 3) and self.my_player.special_move is False:
             self.end_turn()
         else:
             print("Next roll of dice")
