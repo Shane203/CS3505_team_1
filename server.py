@@ -17,7 +17,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
     def __init__(self):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._max_players = 2
+        self._max_players = 1
         self._inGame = [False] * self._max_players
         self.token = 0 #the index of which player's turn it is.
         self._names = ["None"]*self._max_players

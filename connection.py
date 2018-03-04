@@ -16,7 +16,7 @@ class Connection:
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
         # Sets values for host- the current domain name and port number 10000.
-        self.server_address = (gethostbyname(gethostname()), 10000)
+        self.server_address = (gethostbyname(gethostname()), 10001)
         self.ip_addr = gethostbyname(gethostname())  # The IP Address of the current machine.
         print('connecting to server at %s port %s' % self.server_address)
         print('IP address is %s' % self.ip_addr)

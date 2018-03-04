@@ -51,7 +51,7 @@ class Ludo(object):
         """
         create_dicts()
         pygame.init()
-        pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP, pygame.MOUSEBUTTONUP])
+        pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN, pygame.QUIT])
         self.board.add_connection(self.connection)
         #Draw form returns a tuple of name
         name = self.connection.form.draw_form()
