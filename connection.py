@@ -10,6 +10,7 @@ import time
 from queue import Queue
 from form import Form
 from tkinter import *
+from chat import ChatBox
 
 
 class Connection:
