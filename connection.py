@@ -28,6 +28,7 @@ class Connection:
         self.q = Queue()
         # Creates a form object
         self.form = Form("rules.txt")
+        self.chat = ChatBox(self.sock)
 
 
 
