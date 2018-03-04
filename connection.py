@@ -19,7 +19,7 @@ class Connection:
     :param board: The board object
     :param my_player: Player object
     :param current: Current player
-    :param all_pieces: Array of akk pieces
+    :param all_pieces: Array of all pieces
     """
 
     def __init__(self, board, my_player, current, all_pieces):
@@ -43,18 +43,19 @@ class Connection:
     def connection_handler(self):
         """
         This function controls all data received from the server, and updates
-        the client-side program according to the received JSON messages.
+        the client-side program according to the received ``JSON`` messages.
 
         When referring to ``JSON`` message comments, if the symbols ``<>``
         are used, it implies that the data is dynamic, and what will be
         in there depends on the player colour, roll of the dice etc.
+
         """
         colors = ["red", "green", "yellow", "blue"]
         while True:
             data = self.sock.recv(4096).decode()  # decodes received data.
             print(data)
             msg = json.loads(data)
-            # tell the time out function to reset the time
+            # Tell the time out function to reset the time.
             self.q.put("already push a button")
             # Start implies it is the first message of the game.
             # The message comes in the form {"start":True,"Colour":<colour>}
@@ -65,8 +66,8 @@ class Connection:
                                         self.ALL_PIECES, names)
                 self.board.my_player = self.my_player
                 print(self.my_player.name, self.my_player.colour)
-            # Messages come of the form {"turn_token":True,"Colour":<colour>}.
             # This tells all games which player's turn it is.
+            # Messages come of the form {"turn_token":True,"Colour":<colour>}.
             if "turnToken" in msg:
                 # If msg["Colour"] is client's colour, then it is their turn.
                 if msg["Colour"] == self.my_player.colour:
@@ -83,11 +84,11 @@ class Connection:
             # It comes in the form {"dicenum":<between 1-6>,"Colour":<colour>}
             if "dicenum" in msg:
                 roll = msg["dicenum"]
+                #  This is for the biased dice roll
                 if roll > 5:
                     print("roll ===============", roll)
                     roll = 6
-                    #  This is for the biased dice roll
-                self.my_player.roll = roll  # Assigns value of dice roll to self
+                self.my_player.roll = roll  # Assigned value of dice roll
                 # genie_status is either "take", "return" or None
                 genie_status = msg["genie_result"]
                 if genie_status == "take" and self.board.genie_owner is None:
@@ -147,13 +148,13 @@ class Connection:
                 # i is value of random piece in index of movable_pieces_array
                 i = self.my_player.movable_pieces_array[
                     randint(0, len(self.my_player.movable_pieces_array) - 1)]
-                # if random piece is not on board, move onto board
+                # If random piece is not on board, move onto board
                 if self.ALL_PIECES[i] is None:
                     print("from home")
                     self.board.move_piece(i, self.my_player.roll)
                     self.send_out(i, self.my_player.start)
                     time.sleep(0.5)
-                # else move random playable piece on board.
+                # Else move random playable piece on board.
                 else:
                     self.board.move_piece(i, self.my_player.roll)
                     print("from board")
@@ -165,7 +166,8 @@ class Connection:
 
     def connect_to_server(self, name):
         """
-        Connects client to server, creates thread to listen for incoming message
+        Connects client to server, creates thread to listen for incoming
+        message.
 
         :param name: string inputted by client
         """
@@ -187,7 +189,12 @@ class Connection:
         self.sock.sendall(data.encode())
 
     def send_movement(self, num, roll):
-        """Announces to other players that you are moving one of your pieces"""
+        """
+        Announces to other players that you are moving one of your pieces
+
+        :param num: number of piece in ``ALL_PIECES`` array
+        :param roll: value of dice roll
+        """
         data = {"Movement": num, "Moveforward": roll,
                 "Colour": self.my_player.colour}
         data = json.dumps(data)
@@ -195,7 +202,7 @@ class Connection:
 
     def send_out(self, num, pos):
         """
-        Announces to other players that you are sending out one of your pieces
+        Announces to other players that you are sending out one of your pieces.
 
         :param num: number of piece in ``ALL_PIECES`` array
         :param pos: position of piece on board
@@ -207,7 +214,7 @@ class Connection:
     def end_turn(self):
         """
         Called when player's turn is over. It resets player turn token, the
-        amount of rolls, and ability to roll dice
+        amount of rolls, and ability to roll dice.
         """
         if self.my_player.turn_token:
             print("********************ENDTURN******************************")
@@ -224,9 +231,9 @@ class Connection:
     def end_roll(self):
         """
         Called when player has finished movement of piece. Resets all player's
-        pieces.movable to FALSE. Checks if player should end turn, Otherwise
-        allows player another dice roll. Checks if all player's pieces on
-        home run, allowing player to win.
+        ``pieces.movable`` to ``False``. Checks if player should end turn,
+        Otherwise allows player another dice roll.
+        Checks if all player's pieces on home run, allowing player to win.
         """
         final_pos = 0  # Check if all four pieces in home run
         first_piece = 0  # Position in index of player's first piece
@@ -238,8 +245,7 @@ class Connection:
                 final_pos += 1
                 if final_pos == 4:
                     self.win_condition()
-        if (
-                self.my_player.roll != 6 or self.my_player.rolls_taken == 3) \
+        if (self.my_player.roll != 6 or self.my_player.rolls_taken == 3) \
                 and self.my_player.special_move is False:
             self.end_turn()
         else:
@@ -250,7 +256,7 @@ class Connection:
         """
         Checks if any or all players pieces can be played.
 
-        :return: Array of playable pieces to be used by `` def time_out()``
+        :return: Array of playable pieces to be used by ``def time_out()``
         """
         flag = False  # flag: Checks if any piece movable
         self.my_player.movable_pieces_array = []
@@ -277,8 +283,10 @@ class Connection:
             self.end_turn()
 
     def win_condition(self):
-        """ Called when players pieces met win condition"""
-        print("*****************WON THE GAME!*******************")
+        """
+        Called when players meet's the winning conditions. Sends message
+        ``"Player_Won": "my colour"`` to server and creates an end screen.
+        """
         data = {"Player_Won": self.my_player.colour}
         time.sleep(0.2)
         data = json.dumps(data)
@@ -296,7 +304,6 @@ class Connection:
         :param scores: list of scores
         :param label:  text to be shown on scoreboard
 
-        :return: produces TKinter window which shows the scores of each player
         """
         player_list = []
         colours = ["red", "green", "yellow", "blue"]
@@ -319,5 +326,3 @@ class Connection:
             score.grid(row=i + 1, column=2, columnspan=2)
         root.title("Game Finished!")
         root.mainloop()
-
-        time.sleep(0.5)  # Pause between messages
