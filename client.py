@@ -85,21 +85,12 @@ class Ludo(object):
         pygame.quit()
         sys.exit()
 
-    def click_piece(self, num, piece):
-        """
-        After a dice is roller, if the player clicks a movable piece, call click_piece.
-        It calls the move_piece function, it also sends what piece was moved
-        to the server.
-        """
-        self.board.move_piece(num, self.connection.my_player.roll)
-        self.connection.send_movement(num, self.connection.my_player.roll)
-        self.connection.end_roll()
-
     def show_start_screen(self):
         """Shows the start screen whent game first starts.
 
         It shows the word LUDO in flashing colours. Once the player
-        connects to the server, the screen goes away."""
+        connects to the server, the screen goes away.
+        """
         FPSCLOCK = pygame.time.Clock()
         title_font = pygame.font.SysFont("Arial", 100)
         colours = [c.RED, c.GREEN, c.YELLOW, c.BLUE]
@@ -125,6 +116,65 @@ class Ludo(object):
         pygame.mixer.pre_init(44100,16,2,4096)
         pygame.mixer.music.load("sound/BGM.mp3")
         pygame.mixer.music.play(-1)
+
+    def check_click(self, x, y):
+        """If there is a click after a dice has been rolled check all my_player
+        pieces. If piece is movable check the size of the piece to set the
+        clickable coordinates.
+
+        :param x: The x coordinate of the click.
+        :type x: int.
+        :param y: The x coordinate of the click.
+        :type y: int.
+        """
+        for num in range(self.connection.my_player.low_range, self.connection.my_player.low_range + 4): #e.g for "red" - range(0, 4), for "green" - range(4, 8)
+            piece = self.connection.my_player.my_pieces[num - self.connection.my_player.low_range] #gets index 0-3 to use my_pieces.
+            pos = piece.get_position()
+            if piece.movable:
+                if piece.image.get_width() == 64:
+                    if pos is not None and piece.image.get_rect(topleft=(coOrds[pos][0]-7, coOrds[pos][1]-25)).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
+                        self.click_piece(num, piece)
+                        break
+                    elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
+                        self.click_piece(num, piece)
+                        break
+                else:
+                    if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
+                        self.click_piece(num, piece)
+                        break
+
+    def click_piece(self, num, piece):
+        """
+        After a dice is rolled, if the player clicks a movable piece, call click_piece.
+        It calls the move_piece function, it also sends what piece was moved
+        to the server.
+
+        :param num: the number of the piece.
+        :type num: int.
+        :param piece: The piece object that is to be moved.
+        :type piece: pygame.Surface
+        """
+        self.board.move_piece(num, self.connection.my_player.roll)
+        self.connection.send_movement(num, self.connection.my_player.roll)
+        self.connection.end_roll()
+
+    def pause(self):
+        """Pauses all music and sounds."""
+        pygame.mixer.music.pause()
+        c.MOVE_PIECE.set_volume(0.0)
+        c.ROLL_DICE.set_volume(0.0)
+        c.TIMEOUT_WARNING.set_volume(0.0)
+        c.KILL_PIECE.set_volume(0.0)
+        return True, c.SOUND_MUTE
+
+    def unpause(self):
+        """Unpauses all music and sounds."""
+        pygame.mixer.music.unpause()
+        c.MOVE_PIECE.set_volume(1.0)
+        c.ROLL_DICE.set_volume(1.0)
+        c.TIMEOUT_WARNING.set_volume(1.0)
+        c.KILL_PIECE.set_volume(1.0)
+        return False, c.SOUND_OPEN
 
     def run(self):   
         """This is the main game method.
@@ -155,39 +205,11 @@ class Ludo(object):
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if self.connection.my_player.turn_token is True and self.connection.my_player.diceroll_token is False:
                             x, y = event.pos
-                            for num in range(self.connection.my_player.low_range, self.connection.my_player.low_range + 4): #e.g for "red" - range(0, 4), for "green" - range(4, 8)
-                                piece = self.connection.my_player.my_pieces[num - self.connection.my_player.low_range] #gets index 0-3 to use my_pieces.
-                                pos = piece.get_position()
-                                if piece.movable:
-                                    if piece.image.get_width() == 64:
-                                        if pos is not None and piece.image.get_rect(topleft=(coOrds[pos][0]-7, coOrds[pos][1]-25)).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
-                                            self.click_piece(num, piece)
-                                            break
-                                        elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
-                                            self.click_piece(num, piece)
-                                            break
-                                    else:
-                                        if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
-                                            self.click_piece(num, piece)
-                                            break
-
+                            self.check_click(x, y)
                         elif sound_icon_rect.collidepoint(event.pos) and not MUTE:
-                            pygame.mixer.music.pause()
-                            c.MOVE_PIECE.set_volume(0.0)
-                            c.ROLL_DICE.set_volume(0.0)
-                            c.TIMEOUT_WARNING.set_volume(0.0)
-                            c.KILL_PIECE.set_volume(0.0)
-                            MUTE = True
-                            SOUND = c.SOUND_MUTE
+                            MUTE, SOUND = self.pause()
                         elif sound_icon_rect.collidepoint(event.pos) and MUTE:
-                            pygame.mixer.music.unpause()
-                            c.MOVE_PIECE.set_volume(1.0)
-                            c.ROLL_DICE.set_volume(1.0)
-                            c.TIMEOUT_WARNING.set_volume(1.0)
-                            c.KILL_PIECE.set_volume(1.0)
-                            MUTE = False
-                            SOUND = c.SOUND_OPEN
-                
+                            MUTE, SOUND = self.unpause() 
                 SCREEN.fill(c.WHITE)  # Paint the background white.
                 SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))  # Draw wooden background.
                 sound_icon = pygame.Surface((50, 50))
