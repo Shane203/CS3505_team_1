@@ -108,7 +108,7 @@ class Connection:
                 print(msg)
                 self.win_condition()
             if "msg" in msg:
-+               self.chat.NewMessage(msg)
+                self.chat.NewMessage(msg)
             if "disconnected" in msg:
                 print(Player, msg["Colour"], "disconnected")
                 self.board.disconnect_function(msg["Colour"])
