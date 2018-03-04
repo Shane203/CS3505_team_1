@@ -131,6 +131,7 @@ class Ludo(object):
         It draws the board, pieces and the buttons. It also shows the diceS
         rolling animation.
         """
+        _thread.start_new_thread(self.connection.chat.start, (self.connection.my_player.name,))
         MUTE = False
         SOUND = c.SOUND_OPEN
         while True:
