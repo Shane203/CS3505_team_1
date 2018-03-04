@@ -8,22 +8,18 @@ class ChatBox():
     def __init__(self,sock):
         self.name = "" 
         self.sock = sock
-
-
         
-
     def new_message(self,msg):
         string = msg["Name"] + ": " + msg["msg"]
         self.recvd.insert("end","%s \n"%string)
         self.recvd.see(END)
-
     
     def send(self,event):
-        message = {"Name":self.name,"msg":self.msg.get()}
-        message = json.dumps(message)
-        self.sock.sendall(message.encode())
-        self.msg.delete(0, 'end')
-
+        if self.msg.get().strip() != "":
+            message = {"Name":self.name,"msg":self.msg.get()}
+            message = json.dumps(message)
+            self.sock.sendall(message.encode())
+            self.msg.delete(0, 'end')
         
     def start(self,name):
         self.name = name
@@ -42,10 +38,3 @@ class ChatBox():
         self.msg.pack(ipady=5)
         self.frame.pack()
         self.root.mainloop()
-        
-
-
-       
-
-
-
