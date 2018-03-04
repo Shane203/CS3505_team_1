@@ -49,7 +49,6 @@ class Game: #A simple class that keeps a list of current client connections. Thi
         for i in range(self.max_players()):
             if self.inGame()[i] != False: #Condition accepts True and None(won) players.
                 self._clients[i].sendall(string.encode())
-                print("goodbye!")
     def sendto(self,jsonmsg,index):
         string = json.dumps(jsonmsg)
         print(string)
@@ -113,29 +112,36 @@ class Game: #A simple class that keeps a list of current client connections. Thi
             if self.isfull(): #If there are 4 players connected, start a game
                 self.StartGame()
             while True:
-                data = connection.recv(4096) #Get data from client
-                print(data.decode())
-                msg = json.loads(data.decode()) #decode and create dict from data
-                if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
-                    if not msg["bias"]:
-                        num = self.rolldice()
-                    else:
-                        num = self.roll_biased_dice()
-                    genie_status = self.roll_genie()
-                    jsonmsg = {"Colour":msg["Colour"],"dicenum":num, "genie_result":genie_status}
-                elif "turnOver" in msg and index == self.token: 
-                    self.nextPlayer()
-                    jsonmsg = {"Colour":self.colours[self.token],"turnToken":True}
-                    print("iT is now the turn of   ",self.colours[self.token])
-                elif "Movement" in msg: #If the JSON message is Sendout or Movement, simply forward it unchanged to all other clients.
-                    jsonmsg = msg
-                elif "Player_Won" in msg:
-                    print("Player ", msg["Player_Won"], "Won")
-                    self.inGame()[index] = None
-                    self.nextPlayer()
-                    jsonmsg = {"Colour": self.colours[self.token], "turnToken": True}
-                
-                self.forward(jsonmsg)
+                jsonmsg = None
+                data = connection.recv(4096).decode() #Get data from client
+                print(data)
+                data = data.split("}")
+                for msg in data:
+                    if len(msg) >1:
+                        msg += "}"
+                        msg = json.loads(msg)
+                        if "roll" in msg: #If request for roll is sent, call rolldice() function and broadcast the dice roll.
+                            if not msg["bias"]:
+                                num = self.rolldice()
+                            else:
+                                num = self.roll_biased_dice()
+                            genie_status = self.roll_genie()
+                            jsonmsg = {"Colour":msg["Colour"],"dicenum":num, "genie_result":genie_status}
+                        elif "turnOver" in msg and index == self.token: 
+                            self.nextPlayer()
+                            jsonmsg = {"Colour":self.colours[self.token],"turnToken":True}
+                            print("iT is now the turn of   ",self.colours[self.token])
+                        elif "Movement" in msg: #If the JSON message is Sendout or Movement, simply forward it unchanged to all other clients.
+                            jsonmsg = msg
+                        elif "msg" in msg:
+                            jsonmsg = msg
+                        elif "Player_Won" in msg:
+                            print("Player ", msg["Player_Won"], "Won")
+                            self.inGame()[index] = None
+                            self.nextPlayer()
+                            jsonmsg = {"Colour": self.colours[self.token], "turnToken": True}
+                        if jsonmsg:
+                            self.forward(jsonmsg)
 
                 
         except sockerr:
