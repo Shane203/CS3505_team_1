@@ -44,16 +44,7 @@ class ChatBox():
         self.root.mainloop()
         
 
-"""sock = socket(AF_INET, SOCK_STREAM)#Creates a TCP server socket.
-server_address =(gethostbyname(gethostname()), 11000) #Sets values for host- the current domain name and port number 10000.
-ipaddr = gethostbyname(gethostname())
-sock.connect(server_address)
-Game  = ChatBox(sock)
-_thread.start_new_thread(Game,())
-while True:
-    pass
 
-"""
        
 
 
