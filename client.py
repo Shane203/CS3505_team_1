@@ -222,7 +222,7 @@ class Ludo(object):
                 OUTPUT = self.board.ROLL_BUTTON.click()  # Check if roll button was clicked.
                 if OUTPUT is not None:
                     # If clicked roll dice.
-                    self.board.dice_object.dice.roll_dice_gif(OUTPUT, self.IN, 900, 230)
+                    self.board.dice_object.dice.roll_dice_gif(900, 230)
                 # Display the dice number rolled.
                 self.board.dice_object.display_dice(900, 230, self.connection.current_dice)
                 # Draw the countdown timer.
