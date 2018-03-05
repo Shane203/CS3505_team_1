@@ -7,14 +7,19 @@ from random import randint
 
 class Dice():
     def __init__(self, connection, my_player):
+        """Initialisation
+        
+        :param connection: connection to the server
+        :param my_player: ?
+        """
         self.connection = connection
 
     def dice_rule(self):
         """Checks if player can roll a dice.
         
         :var self.connection.my_player.roll: Checks previous value of dice/roll
-        :var self.connection.my_player.special_move: Checks if player had piece
-        land on opposing player's piece
+        :var self.connection.my_player.special_move: Checks if player had its piece
+        land on an opposing player's piece
         :var self.connection.my_player.rolls_taken: Counts number of rolls player
         has rolled
         :return: Player can make a legal move OR Ends turn if no legal dice
@@ -66,7 +71,7 @@ class Dice():
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
             #Generates the roll dice animation.
-            self.roll_dice_gif(1, 1, 900, 230)
+            self.roll_dice_gif(900, 230)
 
     def check_for_bias(self):
         """Checks for bias in the player's pieces. This happens if the player has 
@@ -85,23 +90,33 @@ class Dice():
         #All pieces are at home.
         return True
 
-    def roll_dice_gif(self, n, in_, x, y):
+    def roll_dice_gif(self, x, y):
+        """Displays a rolling dice animation when the 'ROLL' button is pressed 
+        and before the resulting dice image is displayed.
+         
+        :param x: x coordinate of image to be displayed in animation.
+        :param y: y coordinate of image to be displayed in animation.
+        """
         c = pygame.time.Clock()
         tick = 35
         i = 1
+        #Turned to a string to create the images for the animation. eg. "1.gif", "2.gif".
+        dice_img = 1
         while i < 15:
-            if in_ < 15:
+            if dice_img < 15:
                 # ensure filename is correct
-                filename = "images/" + str(in_) + ".gif"
+                filename = "images/" + str(dice_img) + ".gif"
                 img = pygame.image.load(filename)
                 img = pygame.transform.scale(img, (200, 200))
                 self.display_dice(x, y, img)
                 c.tick(tick)
-                in_ += 1
-                if in_ == 14:
+                dice_img += 1
+                #Ensures the animation looks realistic
+                #Displays current dice.
+                if dice_img == 14:
                     self.display_dice(x, y, self.connection.current_dice)
                     c.tick(tick)
-                    in_ = 1
+                    dice_img = 1
             dice_rect = pygame.Rect(900, 230, 1100, 430)
             pygame.display.update(dice_rect)
             i += 1
