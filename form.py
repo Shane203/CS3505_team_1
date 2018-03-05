@@ -123,6 +123,15 @@ class Form:
         print (self.game_id)
         print (self.player_number)
 
+    def check_conflict(self,name,id):
+        self.connection.send_check_if_game_is_started (int(id))
+        data = self.connection.sock.recv (4096).decode ()  # decodes received data.
+        msg = json.loads (data)
+        if msg["RESULT"]:
+            self.public_room_is_full()
+        else:
+            self.start_game(name,int(id))
+
     def check_selected(self):
         if self.player_number != None:
             self.connection.send_check_if_game_is_started (int (self.game_id))
@@ -320,7 +329,7 @@ class Form:
                           fg="black")  # take in number of players in that game
         print (room_id)
         start_game = Button (frame, width=30, text="Start Game",
-                             command=lambda: self.start_game (name_entry.get (), int (room_id)))
+                             command=lambda: self.check_conflict (name_entry.get (), int (room_id)))
 
         # Drawing each widget on to the frame
         self.root.minsize (width=220, height=230)
@@ -491,13 +500,10 @@ class Form:
         elif self.current_page == "public_lobby":
             self.join_public ()
         elif self.current_page == "public_room_is_full":
-            self.join_public ()
+            self.home_page()
 
     def run(self):
         self.home_page ()
 
 
-'''
-form = Form("rules.txt", None)
-name = form.run()
-print(name)'''
+
