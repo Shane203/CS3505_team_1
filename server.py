@@ -10,17 +10,28 @@ from time import sleep
 import _thread, sys
 import json
 from random import randint
+import itertools
 
 #Objective: Send colour + 
 
 class Game: #A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.
-    def __init__(self):
+    id_generator = itertools.count (1)
+    def __init__(self, code=""):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._max_players = 1
+        self._max_players = 4
         self._inGame = [False] * self._max_players
         self.token = 0 #the index of which player's turn it is.
         self._names = ["None"]*self._max_players
+        self.room_code = code
+        self.id = next (self.id_generator)
+
+    def is_public_game(self):
+        if self.room_code == "":
+            return True
+        else:
+            return  False
+
     def clients(self): #returns list of client connections
         return self._clients
     def max_players(self):
@@ -37,13 +48,14 @@ class Game: #A simple class that keeps a list of current client connections. Thi
             return (self.colours[len(self._clients) - 1],len(self._clients) -1)
     def remove(self,index):
         self._inGame[index] = False
-    def numOfPlayers(self):
-        return len(self._clients)
+    def num_of_players(self):
+        return len (self._clients)
                 
-    def isfull(self):
-        print(self.numOfPlayers())
+    def is_full(self):
+        print(self.num_of_players())
         print(self.max_players())
-        return self.numOfPlayers() == self.max_players()
+        return self.num_of_players() == self.max_players()
+
     def forward(self,jsonmsg):
         string = json.dumps(jsonmsg)
         for i in range(self.max_players()):
@@ -59,7 +71,7 @@ class Game: #A simple class that keeps a list of current client connections. Thi
              {"Colour":"green","start":True, "names":self.names()},
              {"Colour":"yellow","start":True, "names":self.names()},
              {"Colour":"blue","start":True, "names":self.names()}]
-        for i in range(self.numOfPlayers()):
+        for i in range(self.num_of_players()):
             self.sendto(start[i],i)
             print("sent start to ",i)
         sleep(1)
@@ -95,21 +107,15 @@ class Game: #A simple class that keeps a list of current client connections. Thi
             self.token +=1
             if self.token >= self.max_players():
                 self.token = 0
-    def ConnectionHandler(self,connection,client_address):
+    def ConnectionHandler(self,connection,client_address,name):
         try:
             print('connection from', client_address)
 
             colour, index = self.add(connection)
-            while True:
-                data = connection.recv(4096).decode()
-                msg = json.loads(data)
-                if "name" in msg:
-                    name = msg["name"]
-                    self._names[self.numOfPlayers()-1]= name
-                    break
+            self._names[self.num_of_players()-1]= name
             print("is full?")
-            print(self.isfull())
-            if self.isfull(): #If there are 4 players connected, start a game
+            print(self.is_full())
+            if self.is_full(): #If there are 4 players connected, start a game
                 self.StartGame()
             while True:
                 jsonmsg = None
@@ -160,62 +166,135 @@ class Game: #A simple class that keeps a list of current client connections. Thi
 
 class Games:
     def __init__(self):
-        self._allgames = set()
-        self._newestgame = None
-    def newGame(self):
-        game = Game()
-        self._allgames.add(game)
-        self._newestgame = game
+        self.all_games = []
+
+    def create_new_game(self,code=""):
+        game = Game(code)
+        self.all_games.append(game)
         return game
-    def allgames(self):
-        return self._allgames
-    def newestgamefull(self):
-        return self._newestgame.isfull()
-    def newestgame(self):
-        return self._newestgame
-    def isEmpty(self):
-        return len(self._allgames) == 0
-    def clean(self,game):
-        self.allgames.remove(game)
-        if self._newestgame == game:
-            self._newestgame = None
-            
-    
-    
+    def check_if_game_started(self,room_id):
+        for game in self.all_games:
+            if game.id == room_id:
+                return game.is_full()
+    def get_game_by_id(self,ID):
+        for game in self.all_games:
+            if game.id == ID:
+                return game
 
-if __name__ == "__main__":#If this file is being executed as the top layer, start the server.
-    games = Games() #Creates instance of class
+    def get_public_games_ids(self):
+        id_array = []
+        for game in self.all_games:
+            if game.is_public_game() and not game.is_full():
+                id_array.append(game.id)
+        return id_array
+
+    def find_num_of_players_by_id(self, game_id):
+        for game in self.all_games:
+            if game.id == game_id:
+                return game.num_of_players()
+
+
+    def join_game_connection(self,connection,client_address):
+        print("successfully start the thread")
+        try:
+            print('Join the Game', client_address)
+            while True:
+                data = connection.recv (4096)  # Get data from client
+                msg = json.loads (data.decode ())  # decode and create dict from data
+                print(msg)
+                if "create_game" in msg:# it should followed with name
+                        this_game = self.create_new_game(msg["create_game"])
+                        jsonmsg = {"player_number": this_game.num_of_players(), "room_id": this_game.id, "room_code": this_game.room_code}
+                        string = json.dumps (jsonmsg)
+                        print (string)
+                        connection.sendall(string.encode())
+                        continue
+                elif "show_game_list" in msg:
+                    ID_array = []
+                    num_array = []
+                    Public_array = []
+                    for game in self.all_games:
+                        ID_array.append (game.id)
+                        num_array.append (game.num_of_players ())
+                        Public_array.append (game.is_public_game ())
+                    data = {"ID": ID_array, "NUM": num_array, "IS_PUBLIC": Public_array}
+                    print (data)
+                    data = json.dumps (data)
+                    connection.sendall (data.encode())
+                elif "check_game" in msg:
+                    data = {"ROOM_ID":msg["check_game"],"RESULT":self.check_if_game_started(msg["check_game"]),"player_number":self.find_num_of_players_by_id(msg["check_game"])}
+                    data = json.dumps (data)
+                    connection.sendall (data.encode ())
+                elif "check_room_code" in msg:
+                    print(msg)
+                    exists = False
+                    for game in self.all_games:
+                        if game.room_code == msg["check_room_code"]:
+                            print("t")
+                            exists = True
+                            data = {"exists": True, "room_code": game.room_code,
+                                    "num_of_players": game.num_of_players(), "game_id": game.id}
+                            data = json.dumps(data)
+                            connection.sendall(data.encode())
+                            break
+                    if not exists:
+                        if msg["check_type"] == "create":
+                            new_game = self.create_new_game(msg["check_room_code"])
+                            data = {"exists": False, "new_game_id": new_game.id}
+                        else:
+                            data = {"exists": False}
+                        data = json.dumps(data)
+                        connection.sendall(data.encode())
+                    continue
+                elif "START_THE_GAME" in msg:
+                    try:
+                        _thread.start_new_thread (self.get_game_by_id(msg["ROOM_ID"]).ConnectionHandler,
+                                                  (connection,
+                                                   client_address,msg["NAME"]))  # Starts a new thread for each connection.
+                    except InterruptedError:
+                        print ("Error! The signal has been interrupted.")
+                        connection.close ()
+                    while True:# i am not sure if i can break here?
+                        pass
+        except sockerr:
+            print (colour, " left the game")
+            bye = {"byebye": True, "Colour": colour}
+            self.inGame ()[index] = False
+            self.forward (bye)
+            sleep (.25)
+            if index == self.token:
+                self.nextPlayer ()
+                data = {"Colour": self.colours[self.token], "turnToken": True}
+                print (data)
+                self.forward (data)
+                print ("Player left, so we moved the token on!")
+
+
+
+if __name__ == "__main__":  # If this file is being executed as the top layer, start the server.
+    games = Games()  # Creates instance of class
     try:
-        sock = socket(AF_INET, SOCK_STREAM) #Creates TCP server socket.
-        ipaddr = gethostbyname(gethostname()) # IP Address of the current machine.
-        server_address = (ipaddr, 10001)#Sets values for host- the current domain name and port number 10001.
-        
-        print('*** Server starting on %s port %s ***' % server_address)
-        print('IP address is %s' % ipaddr)
-        sock.bind(server_address) # Bind Socket to the host and port
-        sock.listen(5) # Listens for incoming connections.
+        sock = socket (AF_INET, SOCK_STREAM)  # Creates TCP server socket.
+        server_address = (getfqdn (), 10001)  # Sets values for host- the current domain name and port number 10000.
+        ipaddr = gethostbyname (gethostname ())  # IP Address of the current machine.
+        print ('*** Server starting on %s port %s ***' % server_address)
+        print ('IP address is %s' % ipaddr)
+        sock.bind (server_address)  # Bind Socket to the host and port
+        sock.listen (10)  # Listens for incoming connections.
 
-        while True: #Server always running.
-            print('*** Waiting for a connection ***')
-            connection, client_address = sock.accept() # Accepts connection between client and server.
-            if games.isEmpty() or games.newestgamefull():
-                game = games.newGame()
-            else:
-                game = games.newestgame()
+        while True:  # Server always running.
+            print ('*** Waiting for a connection ***')
+            connection, client_address = sock.accept ()  # Accepts connection between client and server.
             try:
-                _thread.start_new_thread ( game.ConnectionHandler, (connection, client_address) ) #Starts a new thread for each connection.
+                _thread.start_new_thread (games.join_game_connection,
+                                          (connection, client_address))  # Starts a new thread for each connection.
             except InterruptedError:
-                print("Error! The signal has been interrupted.")
-                connection.close()
-                    
-                
+                print ("Error! The signal has been interrupted.")
+                connection.close ()
     except  OSError:
-        print("OS Error: Port number already in use or another server process may be running")
-        sys.exit()
-    except:
-            print("Error! An error has occured. Please try again later.")
-            sys.exit()
-    sock.close();
-
-
-
+        print ("OS Error: Port number already in use or another server process may be running")
+        sys.exit ()
+    except OSError:
+        print ("Error! An error has occured. Please try again later.")
+        sys.exit ()
+    sock.close ();

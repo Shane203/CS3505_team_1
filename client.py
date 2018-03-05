@@ -53,11 +53,11 @@ class Ludo(object):
         pygame.init()
         pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN, pygame.QUIT])
         self.board.add_connection(self.connection)
-        #Draw form returns a tuple of name
-        name = self.connection.form.draw_form()
-        self.connection.connect_to_server(name)
-        self.show_start_screen()
-        self.bgm()
+        self.connection.sock.connect ((self.connection.server_address))
+        self.connection.form.run ()
+        self.connection.connect_to_server ()
+        self.show_start_screen ()
+        self.bgm ()
 
     def draw_Time_Out(self):  # time out function on the client side
         """Draws the timer which counts down until it reaches 0. When this
