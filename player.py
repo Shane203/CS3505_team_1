@@ -1,33 +1,35 @@
 class Player(object):
     """Create an object to represent a player with 4 piece objects.
     
-    The function of this class is limited to representing attributes for the player;
-    therefore there are no methods. This class also holds universal attributes, like 
-    all_pieces and names that are used to draw pieces and scores that don't belong to
-    this client and therefore wouldn't have access to.
+    The function of this class is limited to representing attributes for the
+    player; therefore there are no methods. This class also holds universal
+    attributes, like ``all_pieces`` and ``names`` that are used to draw pieces
+    and ``scores`` that don't belong to this client and therefore wouldn't have
+    access to.
     
     Args:
-        colour: The colour used to represent the player and all their pieces.
-        name: The name displayed with this player's score and chat messages.
-        all_pieces: A list of all Piece objects in the game currently.
-        names: The list of all player names. Needed to display the score board.
+        :arg colour: The colour used to represent player and all their pieces.
+        :arg name: The name displayed with player's score and chat messages.
+        :arg all_pieces: A list of all Piece objects in the game currently.
+        :arg names: The list of all player names. Needed to display the score
+             board.
     """
     def __init__(self, colour, name, all_pieces, names):
         self.colour = colour
         self.name = name
-        # Starts off at 0. When a player moves a piece, it goes up by one.
-        # When it goes up to 3, their turn automatically ends.
-        self.turnstaken = 0
-        # When it is their turn, it is changed to 1. It is decreased when a
-        # Piece moves but it is incremented if you kill a piece/roll a 6.
-        self.turn_token = False
+        self.ALL_PIECES = all_pieces
+        self.names = names
+        self.roll = 0
+        self.turn_token = False  # States if it is your turn or not
+        # Starts off at 0. When it goes up to 3, their turn automatically ends.
         self.rolls_taken = 0
         self.diceroll_token = True  # Used to prevent multiple rolls a turn
         # Allows player extra dice roll after landing piece on opposing piece.
         self.special_move = False
-        self.ALL_PIECES = all_pieces
+        # stores number of movable pieces
         self.movable_pieces_array = []
-        self.names = names
+        self.my_pieces = []  # Stores index of my pieces
+        # Sets values of piece and board positions according to your colour
         if self.colour == "red":
             self.start = 0
             self.end = 51
@@ -44,9 +46,8 @@ class Player(object):
             self.start = 39
             self.end = 37
             self.low_range = 12  # Is used for the Board.move_piece function
-        self.my_pieces = []
+        # Assigns pieces to player
         for piece in self.ALL_PIECES:
             if self.colour == piece.colour:
                 self.my_pieces += [piece]
                 piece.set_my_player(self)
-        self.roll = 0

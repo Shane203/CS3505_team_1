@@ -14,12 +14,14 @@ from chat import ChatBox
 class Connection:
     """
     Connection is used to receive all communication from the server to this
-    client and vice versa.
+    client and vice versa. All dynamic action by client occurs through
+    Connection.py.
 
-    :param board: The board object
-    :param my_player: Player object
-    :param current: Current player
-    :param all_pieces: Array of all pieces
+    Args:
+        :arg board: The board object
+        :arg my_player: Player object
+        :arg current: Current player
+        :arg all_pieces: Array of all pieces
     """
 
     def __init__(self, board, my_player, current, all_pieces):
@@ -37,7 +39,7 @@ class Connection:
         self.ALL_PIECES = all_pieces
         self.q = Queue()
         # Creates a form object
-        self.form = Form ("rules.txt", self)
+        self.form = Form("rules.txt", self)
         self.chat = ChatBox(self.sock)
         self.roomNumber = ""
         self.colours = ["red", "green", "yellow", "blue"]
@@ -113,7 +115,7 @@ class Connection:
                 # If the dicenum is for this player, then react accordingly.
                 if msg["Colour"] == self.my_player.colour:
                     self.pieces_playable()
-            # This message is broadcast if a player moves a piece.
+            # This message is broadcasted if a player moves a piece.
             # As the player moves it's own pieces, they only react to other
             if "Movement" in msg and msg["Colour"] != self.my_player.colour:
                 # It comes in the form {"Movement":<piecenum>,
@@ -123,8 +125,6 @@ class Connection:
                 steps = msg["Moveforward"]
                 num = msg["Movement"]
                 self.board.move_piece(num, steps)
-                if self.my_player.roll == 6:
-                    self.my_player.diceroll_token is True
             if "Player_Won" in msg and msg["Colour"] != self.my_player.colour:
                 print(msg)
                 self.win_condition()
@@ -136,9 +136,8 @@ class Connection:
 
     def time_out(self):
         """
-        This method is called when the timer has run out of time.
-
-        :return: Will automatically roll dice or move random piece
+        This method is called when the timer has run out of time. Will
+        automatically roll dice or move random piece when timer runs out.
         """
         if self.my_player.turn_token:
             # If able to, it will roll dice.
@@ -147,20 +146,20 @@ class Connection:
                 time.sleep(0.5)
             # Else, if their is a playable piece, move a random piece
             elif len(self.my_player.movable_pieces_array) != 0:
-                # i is value of random piece in index of movable_pieces_array
-                i = self.my_player.movable_pieces_array[
+                # random_piece is value in index of movable_pieces_array
+                random_piece = self.my_player.movable_pieces_array[
                     randint(0, len(self.my_player.movable_pieces_array) - 1)]
                 # If random piece is not on board, move onto board
-                if self.ALL_PIECES[i] is None:
+                if self.ALL_PIECES[random_piece] is None:
                     print("from home")
-                    self.board.move_piece(i, self.my_player.roll)
-                    self.send_out(i, self.my_player.start)
+                    self.board.move_piece(random_piece, self.my_player.roll)
+                    self.send_out(random_piece, self.my_player.start)
                     time.sleep(0.5)
                 # Else move random playable piece on board.
                 else:
-                    self.board.move_piece(i, self.my_player.roll)
+                    self.board.move_piece(random_piece, self.my_player.roll)
                     print("from board")
-                    self.send_movement(i, self.my_player.roll)
+                    self.send_movement(random_piece, self.my_player.roll)
                     time.sleep(0.5)
                 self.end_roll()
             else:
@@ -170,8 +169,6 @@ class Connection:
         """
         Connects client to server, creates thread to listen for incoming
         message.
-
-        :param name: string inputted by client
         """
         try:
             # Tries to connect to the Server.
@@ -188,10 +185,12 @@ class Connection:
 
     def send_movement(self, num, roll):
         """
-        Announces to other players that you are moving one of your pieces
+        Announces to other players that one of your pieces is moving
 
         :param num: number of piece in ``ALL_PIECES`` array
+        :type num: int
         :param roll: value of dice roll
+        :type roll: int
         """
         data = {"Movement": num, "Moveforward": roll,
                 "Colour": self.my_player.colour}
@@ -200,62 +199,67 @@ class Connection:
 
     def send_out(self, num, pos):
         """
-        Announces to other players that you are sending out one of your pieces.
+        Sends message to server informing other players that you are sending out
+        one of your pieces.
 
         :param num: number of piece in ``ALL_PIECES`` array
+        :type num: int
         :param pos: position of piece on board
+        :type pos: int
         """
         data = {"Sendout": num, "pos": pos}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
-    def send_check_if_game_is_started(self,room_id):
+    def send_check_if_game_is_started(self, room_id):
         """
-        it should be called when user try the join a game
+        Called when client tries to join a game. Sends message to server.
 
         :param room_id: the room  id of lobby game
-
+        :type room_id: str
         """
         data = {"check_game": room_id}
-        data = json.dumps (data)
-        self.sock.sendall (data.encode ())
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
 
     def send_join_public_game(self):
         """
-        it should be called when user press the button "Join Public Game"
-
+        Called when user press the button "Join Public Game", informing server.
         """
         data = "show_game_list"
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
-    def send_create_game(self,room_code):
+    def send_create_game(self, room_code):
         """
-        it should bu call when user press the button "create"
+        Called when user press the button "create" during lobby, informs server.
 
-        :param room_code : the room_code of the lobby game
-
+        :param room_code: the room_code of the lobby game
+        :type room_code: str
         """
         data = {"create_game": room_code}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
-    def send_strat_the_game(self, id ,name):
+    def send_strat_the_game(self, identification, name):
         """
-        it should bu call when user send message to server and ask to start a game
+        Called when client asks to start a game, sending a message to server
 
-        :param id : the room id of lobby game
-        :param name : the name of the player
+        :param identification: the room id of lobby game
+        :type identification: str
+        :param name: the name of the player
+        :type name: str
 
         """
-        data = {"START_THE_GAME": True, "ROOM_ID": id, "NAME":name}
-        data = json.dumps (data)
-        self.sock.sendall (data.encode ())
+        data = {"START_THE_GAME": True, "ROOM_ID": identification, "NAME": name}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
 
     def end_turn(self):
         """
         Called when player's turn is over. It resets player turn token, the
-        amount of rolls, and ability to roll dice.
+        amount of rolls, and ability to roll dice. Sends message to server
+        informing other players your turn is over.
         """
         if self.my_player.turn_token:
             print("********************ENDTURN******************************")
@@ -263,8 +267,6 @@ class Connection:
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
             self.my_player.rolls_taken = 0
-            # self.my_player.turns_total = 0
-            # self.my_player.rolls_total = 0
             msg = {"Colour": self.my_player.colour, "turnOver": True}
             data = json.dumps(msg)
             self.sock.sendall(data.encode())
@@ -326,7 +328,8 @@ class Connection:
     def win_condition(self):
         """
         Called when players meet's the winning conditions. Sends message
-        ``"Player_Won": "my colour"`` to server and creates an end screen.
+        ``"Player_Won": "my colour"`` to server and creates new thread to
+        produce an end screen.
         """
         data = {"Player_Won": self.my_player.colour}
         time.sleep(0.2)
@@ -342,9 +345,11 @@ class Connection:
         Creates a TKinter window which shows the scores of each player
 
         :param names: list of player names
+        :type names: list
         :param scores: list of scores
+        :type scores: list
         :param label:  text to be shown on scoreboard
-
+        :type label: str
         """
         player_list = []
         colours = ["red", "green", "yellow", "blue"]
