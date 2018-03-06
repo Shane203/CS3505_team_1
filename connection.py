@@ -268,6 +268,30 @@ class Connection:
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
+    def send_join_lobby_message(self,room_id):
+        """
+        Called when user join the lobby.
+
+        :param room_id: the room_id of the lobby game
+        :type room_id: int
+
+        """
+        data = {"GET_IN_LOBBY": True, "ROOM_ID": int(room_id)}
+        data = json.dumps (data)
+        self.sock.sendall (data.encode ())
+
+    def send_leave_lobby(self,room_id):
+        """
+        Called when user leave the lobby.
+
+        :param room_id: the room_id of the lobby game
+        :type room_id: int
+
+        """
+        data = {"LEAVE_THE_LOBBY": True, "ROOM_ID": int (room_id)}
+        data = json.dumps (data)
+        self.sock.sendall (data.encode ())
+
     def end_turn(self):
         """
         Called when player's turn is over. It resets player turn token, the

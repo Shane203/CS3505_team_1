@@ -52,6 +52,8 @@ class Game:
         self._names = ["None"]*self._max_players
         self.room_code = code
         self.id = next (self.id_generator)
+        self.player_num_enter_lobby = 0
+        self.player_num_press_start = 0
 
     def is_public_game(self):
         if self.room_code == "":
@@ -66,7 +68,11 @@ class Game:
     def inGame(self):
         return self._inGame
     def names(self):
-        return self._names
+        name_array = []
+        for i in range (self.num_of_players ()):
+            if self._inGame[i]:
+                name_array.append (self._names[i])
+        return name_array
     def add(self,connection): #adds "connection" to the list of connections self.clients
         if len(self.clients()) <self.max_players():
             self._clients += [connection]
@@ -79,8 +85,6 @@ class Game:
         return len (self._clients)
                 
     def is_full(self):
-        print(self.num_of_players())
-        print(self.max_players())
         return self.num_of_players() == self.max_players()
 
     def forward(self,jsonmsg):
@@ -221,6 +225,7 @@ class Games:
                 return game.num_of_players()
 
 
+
     def join_game_connection(self,connection,client_address):
         print("successfully start the thread")
         try:
@@ -242,14 +247,14 @@ class Games:
                     Public_array = []
                     for game in self.all_games:
                         ID_array.append (game.id)
-                        num_array.append (game.num_of_players ())
+                        num_array.append (game.player_num_enter_lobby)
                         Public_array.append (game.is_public_game ())
                     data = {"ID": ID_array, "NUM": num_array, "IS_PUBLIC": Public_array}
                     print (data)
                     data = json.dumps (data)
                     connection.sendall (data.encode())
                 elif "check_game" in msg:
-                    data = {"ROOM_ID":msg["check_game"],"RESULT":self.check_if_game_started(msg["check_game"]),"player_number":self.find_num_of_players_by_id(msg["check_game"])}
+                    data = {"ROOM_ID":msg["check_game"],"RESULT":self.check_if_game_started(msg["check_game"] or self.get_game_by_id (msg["check_game"]).player_num_enter_lobby == 4),"player_number":self.get_game_by_id (msg["check_game"]).player_num_enter_lobby}
                     data = json.dumps (data)
                     connection.sendall (data.encode ())
                 elif "check_room_code" in msg:
@@ -260,7 +265,7 @@ class Games:
                             print("t")
                             exists = True
                             data = {"exists": True, "room_code": game.room_code,
-                                    "num_of_players": game.num_of_players(), "game_id": game.id}
+                                    "num_of_players": game.player_num_enter_lobby, "game_id": game.id}
                             data = json.dumps(data)
                             connection.sendall(data.encode())
                             break
@@ -273,8 +278,21 @@ class Games:
                         data = json.dumps(data)
                         connection.sendall(data.encode())
                     continue
+                elif "GET_IN_LOBBY" in msg:
+                    self.get_game_by_id(msg["ROOM_ID"]).player_num_enter_lobby += 1
+                elif "LEAVE_THE_LOBBY" in msg:
+                    self.get_game_by_id(msg["ROOM_ID"]).player_num_enter_lobby -= 1
+                    if self.get_game_by_id (msg["ROOM_ID"]).player_num_press_start == self.get_game_by_id (
+                            msg["ROOM_ID"]).player_num_enter_lobby:
+                        self.get_game_by_id (msg["ROOM_ID"])._max_players = self.get_game_by_id (
+                            msg["ROOM_ID"]).player_num_press_start
+
                 elif "START_THE_GAME" in msg:
+                    self.get_game_by_id (msg["ROOM_ID"]).player_num_press_start += 1
                     try:
+                        if self.get_game_by_id (msg["ROOM_ID"]).player_num_press_start == self.get_game_by_id(msg["ROOM_ID"]).player_num_enter_lobby:
+                            self.get_game_by_id (msg["ROOM_ID"])._max_players = self.get_game_by_id (msg["ROOM_ID"]).player_num_press_start
+
                         _thread.start_new_thread (self.get_game_by_id(msg["ROOM_ID"]).ConnectionHandler,
                                                   (connection,
                                                    client_address,msg["NAME"]))  # Starts a new thread for each connection.
@@ -284,17 +302,7 @@ class Games:
                     while True:# i am not sure if i can break here?
                         pass
         except sockerr:
-            print (colour, " left the game")
-            bye = {"byebye": True, "Colour": colour}
-            self.inGame ()[index] = False
-            self.forward (bye)
-            sleep (.25)
-            if index == self.token:
-                self.nextPlayer ()
-                data = {"Colour": self.colours[self.token], "turnToken": True}
-                print (data)
-                self.forward (data)
-                print ("Player left, so we moved the token on!")
+            pass
 
 
 
