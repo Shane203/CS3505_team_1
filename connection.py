@@ -21,9 +21,8 @@ class Connection:
             :arg board: The board object
             :arg my_player: Player object
             :arg current: Current player
-            :arg all_pieces: Array of all pieces.
-
-    """
+            :arg all_pieces: Array of all pieces
+        """
 
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
@@ -141,7 +140,6 @@ class Connection:
         """
         This method is called when the timer has run out of time. It will
         automatically roll dice or move random piece when timer runs out.
-
         """
         if self.my_player.turn_token:
             # If able to, it will roll dice.
@@ -173,7 +171,6 @@ class Connection:
         """
         Connects client to server, creates thread to listen for incoming
         message.
-
         """
         try:
             # Tries to connect to the Server.
@@ -196,7 +193,6 @@ class Connection:
         :type num: int
         :param roll: value of dice roll
         :type roll: int
-
         """
         data = {"Movement": num, "Moveforward": roll,
                 "Colour": self.my_player.colour}
@@ -212,7 +208,6 @@ class Connection:
         :type num: int
         :param pos: position of piece on board
         :type pos: int
-
         """
         data = {"Sendout": num, "pos": pos}
         data = json.dumps(data)
@@ -259,7 +254,6 @@ class Connection:
         :type identification: str
         :param name: the name of the player
         :type name: str
-
         """
         data = {"START_THE_GAME": True, "ROOM_ID": identification, "NAME": name}
         data = json.dumps(data)
@@ -270,7 +264,6 @@ class Connection:
         Called when player's turn is over. It resets player turn token, the
         amount of rolls, and ability to roll dice. Sends message to server
         informing other players your turn is over.
-
         """
         if self.my_player.turn_token:
             print("********************ENDTURN******************************")
@@ -290,7 +283,6 @@ class Connection:
         ``pieces.movable`` to ``False``. Checks if player should end turn,
         Otherwise allows player another dice roll.
         Checks if all player's pieces on home run, allowing player to win.
-
         """
         final_pos = 0  # Check if all four pieces in home run
         first_piece = 0  # Position in index of player's first piece
@@ -314,7 +306,6 @@ class Connection:
         Checks if any or all players pieces can be played.
 
         :return: Array of playable pieces to be used by ``def time_out()``
-
         """
         flag = False  # flag: Checks if any piece movable
         self.my_player.movable_pieces_array = []
@@ -345,7 +336,6 @@ class Connection:
         Called when players meet's the winning conditions. Sends message
         ``"Player_Won": "my colour"`` to server and creates new thread to
         produce an end screen.
-
         """
         data = {"Player_Won": self.my_player.colour}
         time.sleep(0.2)
