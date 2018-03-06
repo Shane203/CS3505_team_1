@@ -28,10 +28,17 @@ class Ludo(object):
         self.genie_owner = None
         self.starting_point = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
         self.cs = ["red", "green", "yellow", "blue"]
-        self.colour_to_img = {"red": c.RED_PIECE, "green": c.GREEN_PIECE, "yellow": c.YELLOW_PIECE, "blue": c.BLUE_PIECE}
-        self.all_pieces = [Piece(self.cs[c], num, self.colour_to_img[self.cs[c]], self.starting_point[self.cs[c]]) for c in range(4) for num in range(1, 5)]
-        self.board = Board(self.genie_owner, self.my_player, self.all_pieces, self.colour_to_img)
-        self.connection = Connection(self.board, self.my_player, None, self.all_pieces)
+        self.colour_to_img = {"red": c.RED_PIECE, "green":
+                              c.GREEN_PIECE, "yellow":
+                              c.YELLOW_PIECE, "blue": c.BLUE_PIECE}
+        self.all_pieces = [Piece(self.cs[c], num,
+                                 self.colour_to_img[self.cs[c]],
+                                 self.starting_point[self.cs[c]])
+                           for c in range(4) for num in range(1, 5)]
+        self.board = Board(self.genie_owner, self.my_player,
+                           self.all_pieces, self.colour_to_img)
+        self.connection = Connection(self.board, self.my_player, None,
+                                     self.all_pieces)
         self.current_player = self.connection.current_player
         self.clock = pygame.time.Clock()
         self.IN = 1
@@ -51,7 +58,8 @@ class Ludo(object):
         """
         create_dicts()
         pygame.init()
-        pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN, pygame.QUIT])
+        pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN,
+                                  pygame.QUIT])
         self.board.add_connection(self.connection)
         self.connection.sock.connect ((self.connection.server_address))
         self.connection.form.run ()
@@ -69,16 +77,19 @@ class Ludo(object):
                 if j>6:
                     j -= 1 
                 elif j<=6:
-                    pygame.mixer.Sound.play(c.TIMEOUT_WARNING)#show the time clock sound
+                    # Show the time clock sound
+                    pygame.mixer.Sound.play(c.TIMEOUT_WARNING)
                     j -= 1
                 self.p.put(str(j))
                 if not self.connection.q.empty():
-                    data = self.connection.q.get()  # receive a data and reset the timer
+                    data = self.connection.q.get()
+                    # Receive a data and reset the timer
                     if data == "already push a button":
                         j = self.time_limited + 1
                         continue
                 time.sleep(1)
-            self.connection.time_out()# invoke the timeout function on the connection side .
+            # invoke the timeout function on the connection side .
+            self.connection.time_out()
 
     def terminate(self):
         """Quit game if user closes window."""
@@ -127,19 +138,32 @@ class Ludo(object):
         :param y: The x coordinate of the click.
         :type y: int.
         """
-        for num in range(self.connection.my_player.low_range, self.connection.my_player.low_range + 4): #e.g for "red" - range(0, 4), for "green" - range(4, 8)
-            piece = self.connection.my_player.my_pieces[num - self.connection.my_player.low_range] #gets index 0-3 to use my_pieces.
+        for num in range(self.connection.my_player.low_range,
+                         self.connection.my_player.low_range + 4):
+            #e.g for "red" - range(0, 4), for "green" - range(4, 8)
+            piece = self.connection.my_player.\
+                    my_pieces[num - self.connection.my_player.low_range]
+            # Gets index 0-3 to use my_pieces.
             pos = piece.get_position()
             if piece.movable:
                 if piece.image.get_width() == 64:
-                    if pos is not None and piece.image.get_rect(topleft=(coOrds[pos][0]-7, coOrds[pos][1]-25)).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
+                    # If you clicked a piece, move them (if you rolled)
+                    if pos is not None and piece.image.get_rect(\
+                        topleft=(coOrds[pos][0]-7, coOrds[pos][1]-25)).\
+                        collidepoint(x, y): 
                         self.click_piece(num, piece)
                         break
-                    elif piece.image.get_rect(topleft=(self.board.home_coords[num])).collidepoint(x, y) and self.connection.my_player.roll == 6: #If you clicked a piece in home and you rolled 6, move them out.
+                    # If you clicked a piece in home and you rolled 6, move them out.
+                    elif piece.image.get_rect(\
+                        topleft=(self.board.home_coords[num])).\
+                        collidepoint(x, y) and self.connection.my_player\
+                        .roll == 6:
                         self.click_piece(num, piece)
                         break
                 else:
-                    if piece.image.get_rect(topleft=(coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): #If you clicked a piece, move them (if you rolled)
+                    #If you clicked a piece, move them (if you rolled)
+                    if piece.image.get_rect(topleft=(\
+                        coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y): 
                         self.click_piece(num, piece)
                         break
 
@@ -181,7 +205,8 @@ class Ludo(object):
         It draws the board, pieces and the buttons. It also shows the diceS
         rolling animation.
         """
-        _thread.start_new_thread(self.connection.chat.start, (self.connection.my_player.name,))
+        _thread.start_new_thread(self.connection.chat.start, \
+                                 (self.connection.my_player.name,))
         MUTE = False
         SOUND = c.SOUND_OPEN
         while True:
@@ -203,20 +228,24 @@ class Ludo(object):
                         if event.key == pygame.K_h:
                             self.board.move_piece(3, 1)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
-                        if self.connection.my_player.turn_token is True and self.connection.my_player.diceroll_token is False:
+                        if self.connection.my_player.turn_token is True \
+                           and self.connection.my_player.diceroll_token is False:
                             x, y = event.pos
                             self.check_click(x, y)
-                        elif sound_icon_rect.collidepoint(event.pos) and not MUTE:
+                        elif sound_icon_rect.collidepoint(event.pos) and \
+                             not MUTE:
                             MUTE, SOUND = self.pause()
                         elif sound_icon_rect.collidepoint(event.pos) and MUTE:
                             MUTE, SOUND = self.unpause() 
                 SCREEN.fill(c.WHITE)  # Paint the background white.
-                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))  # Draw wooden background.
+                # Draw wooden background.
+                SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))  
                 sound_icon = pygame.Surface((50, 50))
                 sound_icon_rect = sound_icon.get_rect(topleft=(1000, 700))
                 SCREEN.blit(SOUND,sound_icon_rect)  # Draw the sound icon.
                 self.board.draw_board(self.colour_check)
-                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE # For flashing.
+                # For flashing.
+                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
                 self.board.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)  # Draw scoreboard
                 self.board.PLAYER_FIELD.draw()
                 OUTPUT = self.board.ROLL_BUTTON.click()  # Check if roll button was clicked.
@@ -224,7 +253,8 @@ class Ludo(object):
                     # If clicked roll dice.
                     self.board.dice_object.dice.roll_dice_gif(900, 230)
                 # Display the dice number rolled.
-                self.board.dice_object.display_dice(900, 230, self.connection.current_dice)
+                self.board.dice_object.display_dice(\
+                    900, 230, self.connection.current_dice)
                 # Draw the countdown timer.
                 if not self.p.empty():
                     message = self.p.get()  # receive a data and reset the timer
