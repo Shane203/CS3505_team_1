@@ -9,7 +9,6 @@ BOX_SIZE = 50
 
 pygame.init()
 
-#Need Screen here to use .convert_alpha()
 SCREEN = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT), RESIZABLE)
 
 MOVE_PIECE = pygame.mixer.Sound('sound/Move.wav')

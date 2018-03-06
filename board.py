@@ -14,11 +14,15 @@ class Board:
     then the size of the pieces is changed. It also checks if a piece has
     killed and opponents piece.
 
-    Args:
-        :arg genie_owner: The player who has the genie.
-        :arg my_player: Your player object.
-        :arg all_pieces: All the pieces on the board.
-        :arg colour_to_img: Dictionary that map player colour to images.
+    :param genie_owner: The colour of player who has the genie.
+    :type genie_owner: str
+    :param my_player: Your player object.
+    :type my_player: instance object
+    :param all_pieces: All the pieces on the board.
+    :type all_pieces: list
+    :param colour_to_img: Dictionary that map player colour to images.
+    :type colour_to_img: dict
+
     """
 
     def __init__(self, genie_owner, my_player, all_pieces, colour_to_img):

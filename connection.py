@@ -13,15 +13,18 @@ from chat import ChatBox
 
 class Connection:
     """
-        Connection is used to receive all communication from the server to this
-        client and vice versa. All dynamic action by client occurs through
-        Connection.py.
+    Connection is used to receive all communication from the server to this
+    client and vice versa. All dynamic action by client occurs through
+    Connection.py.
 
-        Args:
-            :arg board: The board object
-            :arg my_player: Player object
-            :arg current: Current player
-            :arg all_pieces: Array of all pieces.
+    :param board: The board object
+    :type board: instance object
+    :param my_player: The player object
+    :type my_player: instance object
+    :param current: Current player
+    :type current: str
+    :param all_pieces: Array of all pieces.
+    :type all_pieces: list
 
     """
 

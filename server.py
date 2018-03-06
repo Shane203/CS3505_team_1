@@ -14,7 +14,34 @@ import itertools
 
 #Objective: Send colour + 
 
-class Game: #A simple class that keeps a list of current client connections. This allows the threads, which are created by each connection, to broadcast a message to all connections.
+
+class Game:
+    """
+    A class that keeps a list of current client connections. This allows the
+    threads, which are created by each connection, to broadcast a message to all
+    connections.
+
+    :param code:
+    :type code:
+
+    :var self._clients: list of client sockets
+    :type self._clients:
+    :var self.colours:
+    :type self.colours:
+    :var self._max_players:
+    :type self._max_players:
+    :var self._inGame:
+    :type self._inGame:
+    :var self.token:
+    :type self.token:
+    :var self._names:
+    :type self._names:
+    :var self.room_code:
+    :type self.room_code:
+    :var self.id:
+    :type self.id:
+
+    """
     id_generator = itertools.count (1)
     def __init__(self, code=""):
         self._clients= []

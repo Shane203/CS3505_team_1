@@ -8,14 +8,19 @@ class Box(object):
     """
     This class is used to produce boxes to represent information to players
 
-    Args:
-        :arg msg: Message to appear in the box.
-        :arg x: x coordinate of the top left-hand corner of the box.
-        :arg y: y coordinate of the top left-hand corner of the box.
-        :arg w: width of the box.
-        :arg h: height of the box.
-        :arg c: colour of the box
-        :arg s: size of the border line of the box, default 0.
+    :param msg: Message to appear in the box.
+    :param x: x coordinate of the top left-hand corner of the box.
+    :type x: int
+    :param y: y coordinate of the top left-hand corner of the box.
+    :type y: int
+    :param w: width of the box.
+    :type w: int
+    :param h: height of the box.
+    :type h: int
+    :param c: colour of the box
+    :type c: int
+    :param s: size of the border line of the box, default 0.
+    :type s: int
 
     """
     def __init__(self, msg, x, y, w, h, c, s=0):

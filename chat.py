@@ -7,9 +7,10 @@ from tkinter.scrolledtext import ScrolledText
 class ChatBox():
     """
     Creates a chat object/window.
-    It allows mutiple playes to chat with each other if they wish to.
-    
-    :param sock: This is the socket through which messages will be sent/recieved.
+    It allows multiple player to chat with each other if they wish to.
+
+    :param sock: This is the socket through which messages will be
+                 sent/received.
     :type sock: python socket
     """
     def __init__(self,sock):

@@ -6,13 +6,16 @@ class Player(object):
     attributes, like ``all_pieces`` and ``names`` that are used to draw pieces
     and ``scores`` that don't belong to this client and therefore wouldn't have
     access to.
-    
-    Args:
-        :arg colour: The colour used to represent player and all their pieces.
-        :arg name: The name displayed with player's score and chat messages.
-        :arg all_pieces: A list of all Piece objects in the game currently.
-        :arg names: The list of all player names. Needed to display the score
-             board.
+
+    :param colour: The colour used to represent player and all their pieces.
+    :type colour: str
+    :param name: The name displayed with player's score and chat messages.
+    :type name: str
+    :param all_pieces: A list of all Piece objects in the game currently.
+    :type all_pieces: list
+    :param names: The list of all player names. Needed to display the score
+           board.
+    :type names: list
     """
     def __init__(self, colour, name, all_pieces, names):
         self.colour = colour

@@ -1,6 +1,9 @@
 from box_and_button import Box
 from constants import BLACK
+
+
 class ScoreBoard():
+
     def __init__(self):
         self._rows = 1
         self._cols = 2
