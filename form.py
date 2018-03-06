@@ -220,8 +220,8 @@ class Form:
         # list_box.pack(side="top", fill="both", expand=True)
         join_game = Button (frame, width=30, text="Join Game", command=lambda: self.check_selected ())
         # Drawing each widget on to the frame
-        self.root.minsize (width=220, height=315)
-        self.root.maxsize (width=220, height=315)
+        self.root.minsize (width=220, height=345)
+        self.root.maxsize (width=220, height=345)
         self.root.configure (background="white")
 
         frame.pack ()
