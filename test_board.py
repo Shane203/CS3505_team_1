@@ -116,6 +116,17 @@ class TestClient(unittest.TestCase):
         self.assertEqual(self.board.get_low_range("green"), 4)
         self.assertEqual(self.board.get_low_range("yellow"), 8)
         self.assertEqual(self.board.get_low_range("blue"), 12)
+
+    def test_score(self):
+        score_list = self.board.get_score(self.all_pieces)
+        self.assertIsInstance(score_list[0], int)
+        expected_value = [0, 0, 0, 0]
+        self.assertEqual(score_list, expected_value)
+        piece = self.all_pieces[0]
+        piece.set_steps_from_start(5)
+        score_list_2 = self.board.get_score(self.all_pieces)
+        expected_value = [5, 0, 0, 0]
+        self.assertEqual(score_list_2, expected_value)
                 
 if __name__ == '__main__':
     unittest.main()
