@@ -146,8 +146,9 @@ class Game:
             self._names[self.num_of_players()-1]= name
             print("is full?")
             print(self.is_full())
-            if self.is_full(): #If there are 4 players connected, start a game
-                self.StartGame()
+            while self.is_full() != True: #If there are 4 players connected, start a game
+                continue
+            self.StartGame()
             while True:
                 jsonmsg = None
                 data = connection.recv(4096).decode() #Get data from client
