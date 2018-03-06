@@ -21,6 +21,10 @@ class TestClient(unittest.TestCase):
         self.chat.start(name)
         self.assertEqual(self.chat.name, name)
         self.assertIsInstance(self.chat.root, Tk)
+        self.assertIsInstance(self.chat.frame, Tk)
+        self.assertIsInstance(self.chat.msg, Tk)
+        self.assertIsInstance(self.chat.recvd, Tk)
+        
         
 
     def test_new_message(self):
