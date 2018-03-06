@@ -37,8 +37,10 @@ class Connection:
         self.ALL_PIECES = all_pieces
         self.q = Queue()
         # Creates a form object
-        self.form = Form("rules.txt")
+        self.form = Form ("rules.txt", self)
         self.chat = ChatBox(self.sock)
+        self.roomNumber = ""
+        self.colours = ["red", "green", "yellow", "blue"]
 
     def connection_handler(self):
         """
@@ -164,7 +166,7 @@ class Connection:
             else:
                 self.end_turn()
 
-    def connect_to_server(self, name):
+    def connect_to_server(self):
         """
         Connects client to server, creates thread to listen for incoming
         message.
@@ -173,7 +175,6 @@ class Connection:
         """
         try:
             # Tries to connect to the Server.
-            self.sock.connect(self.server_address)
             _thread.start_new_thread(self.connection_handler, ())
 
         except ConnectionRefusedError:
@@ -184,9 +185,6 @@ class Connection:
         except AttributeError:
             print("Error! An error has occurred. Please try again later.")
         # Sends your name to the server.
-        data = {"name": str(name)}
-        data = json.dumps(data)
-        self.sock.sendall(data.encode())
 
     def send_movement(self, num, roll):
         """
@@ -210,6 +208,49 @@ class Connection:
         data = {"Sendout": num, "pos": pos}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
+
+    def send_check_if_game_is_started(self,room_id):
+        """
+        it should be called when user try the join a game
+
+        :param room_id: the room  id of lobby game
+
+        """
+        data = {"check_game": room_id}
+        data = json.dumps (data)
+        self.sock.sendall (data.encode ())
+
+    def send_join_public_game(self):
+        """
+        it should be called when user press the button "Join Public Game"
+
+        """
+        data = "show_game_list"
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
+
+    def send_create_game(self,room_code):
+        """
+        it should bu call when user press the button "create"
+
+        :param room_code : the room_code of the lobby game
+
+        """
+        data = {"create_game": room_code}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
+
+    def send_strat_the_game(self, id ,name):
+        """
+        it should bu call when user send message to server and ask to start a game
+
+        :param id : the room id of lobby game
+        :param name : the name of the player
+
+        """
+        data = {"START_THE_GAME": True, "ROOM_ID": id, "NAME":name}
+        data = json.dumps (data)
+        self.sock.sendall (data.encode ())
 
     def end_turn(self):
         """
@@ -294,8 +335,7 @@ class Connection:
         _thread.start_new_thread(self.end_screen,
                                  (self.my_player.names,
                                   self.board.get_score(self.ALL_PIECES),
-                                  "Congrautulation You Won!!"))
-
+                                  "You Won!!"))
 
     def end_screen(self, names, scores, label):
         """
@@ -313,15 +353,17 @@ class Connection:
             player_list += [player]
         player_list = sorted(player_list, key=lambda e: e[1], reverse=True)
         root = Tk()
-        root.title("Game Finished!")
+        root.resizable(0, 0)
         root.configure(background='white')
-        title = Label(root,height=2, bg="white", text=label)
-        title.pack(padx=15,pady=20,fill=X)
+        # The text area where all received messages go.
+        title = Label(height=2, bg="white", text=label)
+        title.grid(row=0, column=1, columnspan=3)
         for i in range(len(player_list)):
-            name = Label(root,height=2, width=8, text=player_list[i][0],
+            name = Label(height=2, width=8, text=player_list[i][0],
                          bg=player_list[i][2])
-            name.pack(padx=15,pady=20,fill=X)
-            score = Label(root,height=2, width=8, text=str(player_list[i][1]),
+            name.grid(padx=5, row=i + 1, column=0, columnspan=2)
+            score = Label(height=2, width=8, text=str(player_list[i][1]),
                           bg=player_list[i][2])
-            score.pack(padx=15,pady=20,fill=X)
+            score.grid(row=i + 1, column=2, columnspan=2)
+        root.title("Game Finished!")
         root.mainloop()
