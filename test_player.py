@@ -14,7 +14,6 @@ class TestClient(unittest.TestCase):
     def test_initial_values(self):
         self.assertEqual(self.player.colour, "red")
         self.assertEqual(self.player.name, "Team_1")
-        self.assertEqual(self.player.turnstaken, 0)
         self.assertFalse(self.player.turn_token)
         self.assertEqual(self.player.rolls_taken, 0)
         self.assertFalse(self.player.special_move)
