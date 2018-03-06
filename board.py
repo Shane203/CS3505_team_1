@@ -14,12 +14,16 @@ class Board:
     then the size of the pieces is changed. It also checks if a piece has
     killed and opponents piece.
 
-    Args:
-        genie_owner: The player who has the genie.
-        my_player: Your player object.
-        all_pieces: All the pieces on the board.
-        colour_to_img: Dictionary that map player colour to images.
-        """
+    :param genie_owner: The colour of player who has the genie.
+    :type genie_owner: str
+    :param my_player: Your player object.
+    :type my_player: instance object
+    :param all_pieces: All the pieces on the board.
+    :type all_pieces: list
+    :param colour_to_img: Dictionary that map player colour to images.
+    :type colour_to_img: dict
+
+    """
 
     def __init__(self, genie_owner, my_player, all_pieces, colour_to_img):
         """Takes in genie_owner, my_player, all_pieces, colour_to_img as
@@ -42,6 +46,9 @@ class Board:
     def add_connection(self, connection):
         """Adds the connection to the board. It creates a new dice object,
             a roll button and the current_player whose turn it is.
+
+        :param connection: connection object, linking this to board.
+        :type connection: instance object
         """
         self.connection = connection
         self.dice_object = Dice(connection, self.my_player)
@@ -56,6 +63,11 @@ class Board:
         rolled on the dice. It also draws the pieces as they move each step.
         After the piece has move it checks if there is a conflict with another
         piece on the board.
+
+        :param piece_num: Number in index of ``ALL_PIECE`` of this piece
+        :type piece_num: int
+        :param step: Number of steps/moves by this piece
+        :type step: int
         """
         pygame.mixer.Sound.play(MOVE_PIECE)
         moving_piece = self.ALL_PIECES[piece_num]
@@ -89,7 +101,7 @@ class Board:
 
     def draw_arrows_and_stars(self):
         """Draws the arrows and stars on the board. It also calls the
-            draw_boxes function. The arrows are drawn using pygames draw
+            ``draw_boxes`` function. The arrows are drawn using pygames draw
             function. The arrow images are blit on to the board.
         """
         pygame.draw.polygon(SCREEN, RED, (CENTRE, TOP_LEFT, BOTTOM_LEFT), 0)
@@ -176,6 +188,7 @@ class Board:
         It goes through all the pieces on the board and draw it in their
         position. If there is a conflict their size changes.
         The pieces flash is they are movable depending on the dice roll.
+
         """
         piece_in = {}
         temp = None
@@ -222,6 +235,9 @@ class Board:
         and the circles as home bases for the pieces.
 
         It then draw the pieces, genie, roll button and displays dice.
+
+        :param check: Indicates if the player and their pieces are flashing.
+        :type check: int
         """
         self.draw_arrows_and_stars()
 
@@ -302,6 +318,9 @@ class Board:
         spot then kill the piece by calling the death_function. Also
         call the check_many_pieces to check if there are other pieces
         that are in conflicting positions.
+
+        :param moving_piece: instance of moving piece
+        :type moving_piece: instance object
         """
         for piece in self.ALL_PIECES:
             equal_pos = moving_piece.get_position() == piece.get_position()
@@ -320,6 +339,9 @@ class Board:
 
     def check_many_pieces(self, moving_piece):
         """Checks if there is a conflict in position.
+
+        :param moving_piece: instance of moving piece
+        :type moving_piece: instance object
         """
         for num in range(16):
             piece = self.ALL_PIECES[num]
@@ -334,8 +356,12 @@ class Board:
         moving_piece.image = self.COLOUR_TO_IMG[moving_piece.colour]
 
     def death_function(self, piece):
-        """Sends the piece back to its starting position.
+        """
+        Sends the piece back to its starting position.
         It retraces its steps all the way back.
+
+        :param piece: instance of this piece
+        :type piece: instance object
         """
         pygame.mixer.Sound.play(KILL_PIECE)
         piece.image = self.COLOUR_TO_IMG[piece.colour]
@@ -349,7 +375,12 @@ class Board:
         self.connection.my_player.special_move = True
 
     def disconnect_function(self, colour):
-        """Sends the piece back to its starting position."""
+        """
+        Sends the piece back to its starting position.
+
+        :param colour: colour of player of disconnected player
+        :type colour: str
+        """
         low_range = self.get_low_range(colour)
         for num in range(low_range, low_range + 4):
             piece = self.ALL_PIECES[num]
@@ -360,6 +391,13 @@ class Board:
             piece.set_steps_from_start(0)
 
     def get_low_range(self, colour):
+        """
+        Return low range of player that has disconnected.
+
+        :param colour: Colour of this player.
+        :type colour: str
+        :return: int representing low range of particular colour
+        """
         if colour == "red":
             return 0
         elif colour == "green":
@@ -370,6 +408,22 @@ class Board:
             return 12
 
     def draw_scoreboard(self, list_of_pieces, x, y, w, h):
+        """
+        Draws the score board that represent the score of each player. It
+        dynamically alter the positions of each player according to their score.
+
+        :param list_of_pieces: A list of all pieces
+        :type list_of_pieces: list
+        :param x: Left position
+        :type x: int
+        :param y: Top position
+        :type y: int
+        :param w: Width
+        :type w: int
+        :param h: Height
+        :type h: int
+        :return: A graphical scoreboard
+        """
         name = Box("Name", x, y, w, h, BLACK, 1)
         x += w
         score = Box("Score", x, y, w, h, BLACK, 1)
@@ -396,8 +450,8 @@ class Board:
             color = color_to_color[i[1]]
             y += h
             x = 900
-            name_field = Box(self.connection.my_player.names[colors.index(i[1])],
-                             x, y, w, h, color)
+            name_field = Box(self.connection.my_player.names[colors.index(i[1])]
+                             , x, y, w, h, color)
             name_field.draw()
             out_line_box = Box("", x, y, w, h, BLACK, 1)
             out_line_box.draw()
@@ -418,7 +472,9 @@ class Board:
         # Returns a list of the scores in order: [red, green, yellow, blue]
 
     def get_score(self, list_of_pieces):
-        # Returns a list of the scores in order: [red, green, yellow, blue]
+        """
+        Returns a list of the scores in order: ``red, green, yellow, blue``
+        """
         red_score = 0
         blue_score = 0
         green_score = 0
