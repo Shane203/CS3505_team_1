@@ -208,7 +208,7 @@ class Connection:
         Sends message to server informing other players that you are sending out
         one of your pieces.
 
-         :param num: number of piece in ``ALL_PIECES`` array
+        :param num: number of piece in ``ALL_PIECES`` array
         :type num: int
         :param pos: position of piece on board
         :type pos: int
