@@ -267,7 +267,7 @@ def main():
     ludo = Ludo()
     ludo.setup()
     try:
-        _thread.start_new_thread(ludo.draw_Time_Out, ())
+        _thread.start_new_thread(ludo.draw_time_out, ())
         ludo.run()
     except OSError:
         print("Error! Server offline.")
