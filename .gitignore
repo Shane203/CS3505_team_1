@@ -1,1 +1,6 @@
 __pycache__
+RSTFile
+.idea
+_static
+_templates
+_build/doctrees

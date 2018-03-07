@@ -6,12 +6,14 @@ import pygame
 
 
 class Dice(object):
+    """
+    This class controls all functionality representing the dice.
+
+    :param connection: connection to the server
+    :type connection: instance object
+    """
     def __init__(self, connection):
-        """Initialisation
-        
-        :param connection: connection to the server
-        :type connection: instance object
-        """
+        """Initialisation"""
         self.connection = connection
 
     def dice_rule(self):
