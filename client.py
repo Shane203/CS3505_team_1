@@ -237,7 +237,7 @@ class Ludo(object):
                 # Draw wooden background.
                 c.SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
                 sound_icon = pygame.Surface((50, 50))
-                sound_icon_rect = sound_icon.get_rect(topleft=(1000, 700))
+                sound_icon_rect = sound_icon.get_rect(topleft=(1100, 700))
                 c.SCREEN.blit(sound, sound_icon_rect)  # Draw the sound icon.
                 self.board.draw_board(self.colour_check)
                 # For flashing.
@@ -256,7 +256,7 @@ class Ludo(object):
                     message = self.p.get()  # receive a data and reset the timer
                     if message != "time":
                         self.text = self.font.render(message, True, (0, 128, 0))
-                c.SCREEN.blit(self.text, (900, 20))
+                c.SCREEN.blit(self.text, (1100, 20))
                 pygame.display.update()
                 self.clock.tick(c.FPS)
             except pygame.error as error:

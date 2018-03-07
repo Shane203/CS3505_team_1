@@ -46,7 +46,7 @@ class Game:
     def __init__(self, code=""):
         self._clients= []
         self.colours=["red","green","yellow","blue"]
-        self._max_players = 4
+        self._max_players = 1
         self._inGame = [False] * self._max_players
         self.token = 0 #the index of which player's turn it is.
         self._names = ["None"]*self._max_players
@@ -311,7 +311,7 @@ if __name__ == "__main__":  # If this file is being executed as the top layer, s
     games = Games()  # Creates instance of class
     try:
         sock = socket (AF_INET, SOCK_STREAM)  # Creates TCP server socket.
-        server_address = (getfqdn (), 10001)  # Sets values for host- the current domain name and port number 10000.
+        server_address = (gethostbyname (gethostname ()) , 10001)  # Sets values for host- the current domain name and port number 10000.
         ipaddr = gethostbyname (gethostname ())  # IP Address of the current machine.
         print ('*** Server starting on %s port %s ***' % server_address)
         print ('IP address is %s' % ipaddr)
