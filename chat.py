@@ -24,7 +24,7 @@ class ChatBox():
         :param msg: New message recieved from other player
         :type msg: String.
         """
-        string = msg["Name"] + ": " + msg["msg"] # concatenate name + message
+        string = msg["name"] + ": " + msg["chat_msg"] # concatenate name + message
         self.recvd.insert("end","%s \n"%string) # shows the message on the screen
         self.recvd.see(END) # always shows last line recieved
     
@@ -36,7 +36,7 @@ class ChatBox():
         :type event: Key Press Event.
         """
         if self.msg.get().strip() != "": # validates empty string
-            message = {"Name":self.name,"msg":self.msg.get()} # sets message to be sent
+            message = {"name":self.name,"chat_msg":self.msg.get()} # sets message to be sent
             message = json.dumps(message) # converts it in json form
             self.sock.sendall(message.encode()) # sends message to server
             self.msg.delete(0, 'end') # clear the variable
