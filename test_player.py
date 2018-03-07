@@ -1,5 +1,5 @@
 import unittest
-from player import Player
+from Team_1_player import Player
 import constants as c
 from piece import Piece
 

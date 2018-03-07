@@ -2,7 +2,7 @@ import unittest
 from board import Board
 from constants import *
 from piece import Piece
-from player import Player
+from Team_1_player import Player
 from box_and_button import Box
 from box_and_button import Button
 from dice import Dice

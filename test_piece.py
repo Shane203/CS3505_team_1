@@ -2,7 +2,7 @@ import unittest
 from piece import Piece
 import constants as c
 import pygame
-from player import Player
+from Team_1_player import Player
 
 class TestClient(unittest.TestCase):
     def setUp(self):

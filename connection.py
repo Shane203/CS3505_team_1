@@ -3,7 +3,7 @@ from constants import ROLL_TO_IMG, LOW_RANGES, GENIE_BIG, LAMP_BIG, SCREEN
 from random import randint
 import json
 import _thread
-from player import Player
+from Team_1_player import Player
 import time
 from queue import Queue
 from form import Form
