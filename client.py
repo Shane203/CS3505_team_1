@@ -263,12 +263,16 @@ class Ludo(object):
                 print(error)
                 continue
 
-if __name__ == "__main__":
-    LUDO = Ludo()
-    LUDO.setup()
+def main():
+    ludo = Ludo()
+    ludo.setup()
     try:
-        _thread.start_new_thread(LUDO.draw_time_out, ())
-    except:
-        print("unable to start a new thread")
+        _thread.start_new_thread(ludo.draw_Time_Out, ())
+        ludo.run()
+    except OSError:
+        print("Error! Server offline.")
 
-    LUDO.run()
+
+if __name__ == "__main__":
+    main()
+
