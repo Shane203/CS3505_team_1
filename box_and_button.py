@@ -59,7 +59,7 @@ class Box(object):
         """Draws the box which will display information to the player."""
         pygame.draw.rect(SCREEN, self._c, (self._x, self._y, self._w, self._h),
                          self._s)
-        small_text = pygame.font.SysFont("arialblack", 20)
+        small_text = pygame.font.SysFont("Arial", 20)
         text_surf, text_rect = self.text_objects(self._msg, small_text)
         text_rect.center = ((self._x + (self._w/2)), (self._y+(self._h/2)))
         SCREEN.blit(text_surf, text_rect)
@@ -93,7 +93,7 @@ class Button(Box):
         else:
             pygame.draw.rect(SCREEN, self._c,
                              (self._x, self._y, self._w, self._h), self._s)
-        small_text = pygame.font.SysFont("arialblack", 20)
+        small_text = pygame.font.SysFont("Arial", 20)
         text_surf, text_rect = self.text_objects(self._msg, small_text)
         text_rect.center = ((self._x + (self._w/2)), (self._y+(self._h/2)))
         SCREEN.blit(text_surf, text_rect)

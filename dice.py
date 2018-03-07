@@ -62,7 +62,7 @@ class Dice():
             self.connection.my_player.diceroll_token = False
             bias = self.check_for_bias()
             # Constructs a msg to send to the server.
-            msg = {"colour": self.connection.my_player.colour,
+            msg = {"Colour": self.connection.my_player.colour,
                    "roll": True, "bias": bias}
             # Plays the sound for the dice roll
             pygame.mixer.Sound.play(ROLL_DICE)
