@@ -52,6 +52,8 @@ class Game:
         self._names = ["None"]*self._max_players
         self._room_code = code
         self._game_id = next(self.id_generator)
+        self.player_num_enter_lobby = 0
+        self.player_num_press_start = 0
 
     def is_public_game(self):
         """Return True if instance is a public game."""
@@ -276,6 +278,7 @@ class Games:
     def listen(self):
         """listens for incoming connections and passes them to a new thread."""
         self.sock.listen(10)
+        print("ddd")
         while True:
             connection = self.sock.accept()[0]
             try:
@@ -383,7 +386,7 @@ class Games:
                     data = json.dumps(data)
                     connection.sendall(data.encode())
                 elif "check_game" in msg:
-                    data = {"ROOM_ID": msg["check_game"], "result": self.check_if_game_started(
+                    data = {"game_id": msg["check_game"], "result": self.check_if_game_started(
                         msg["check_game"]), "player_number": self.find_num_of_players_by_id(msg["check_game"])}
                     data = json.dumps(data)
                     connection.sendall(data.encode())
@@ -411,14 +414,14 @@ class Games:
                         connection.sendall(data.encode())
                     continue
                 elif "in_lobby" in msg:
-                    self.get_game_by_id(msg["ROOM_ID"]).player_num_enter_lobby += 1
+                    self.get_game_by_id(msg["game_id"]).player_num_enter_lobby += 1
                 elif "leave_lobby" in msg:
-                    cur_game = self.get_game_by_id(msg["ROOM_ID"])
+                    cur_game = self.get_game_by_id(msg["game_id"])
                     cur_game.player_num_enter_lobby -= 1
-                    if cur_gamw.player_num_press_start == cur_game.player_num_enter_lobby:
+                    if cur_game.player_num_press_start == cur_game.player_num_enter_lobby:
                        cur_game._max_players = cur_game.player_num_press_start
                 elif "click_start" in msg:
-                    self.get_game_by_id(msg["ROOM_ID"]).player_num_press_start += 1
+                    self.get_game_by_id(msg["game_id"]).player_num_press_start += 1
                 elif "start_game" in msg:
                     try:
                         self.get_game_by_id(msg["room_code"]).connection_handler(connection, msg["name"])
@@ -430,7 +433,7 @@ class Games:
             connection.close()
 
 
-def main():
+if __name__ == "__main__":
     """Start the Server for Ludo.
 
     Creates an instance of Games with Port Number 10001 and calls its method to handle requests.
@@ -438,11 +441,9 @@ def main():
 
     try:
         games = Games(10001)  # Creates instance of class
+        print("here")
         games.listen()
     except OSError:
         print("OS Error: Port number already in use or another server process may be running")
         sys.exit()
 
-
-if __name__ == "_main__":
-    main()
