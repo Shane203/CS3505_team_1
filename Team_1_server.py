@@ -88,7 +88,11 @@ class Game:
         return name_array
 
     def add(self, connection):
-        """Add new player/ connection to the game."""
+        """Add new player/ connection to the game.
+
+        :param connection: Connection Object
+        :type connection: instance object
+        """
         if len(self.clients()) < self.max_players():
             self._clients += [connection]
             self.in_game()[len(self._clients)-1] = "connected"

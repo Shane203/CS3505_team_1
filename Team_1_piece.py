@@ -6,11 +6,10 @@ class Piece(object):
     and sets piece steps_from_start. It also does checks to make sure if the
     piece movement is legal or not.
 
-    Args:
-        colour: The colour of the piece.
-        number: The number of the piece.
-        image: The image the piece shows on the board.
-        start: The piece's starting position.
+    :param colour: The colour of the piece.
+    :param number: The number of the piece.
+    :param image: The image the piece shows on the board.
+    :param start: The piece's starting position.
     """
     def __init__(self, colour, number, image, start):
         self.number = number

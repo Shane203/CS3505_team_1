@@ -18,6 +18,35 @@ class Ludo(object):
     the score board and the timer.
 
     It also holds the main run function which runs the game.
+
+    :var self.my_player: Instance of Player object.
+    :var self.genie_owner: Value representing owner of genie.
+    :var self.starting_point: List represent starting position of each player
+    :var self.colour_list: List of colours.
+    :var self.colour_to_img: Image representing colour
+    :var self.all_pieces: List of all pieces
+    :var self.board: Instance of board object
+    :var self.connection:  Instance of connection
+    :var self.current_player: Current player
+    :var self.colour_check: Check if flashing.
+    :var self.time_limited: Amount of time before automatic movement/roll
+    :var self.p: Value from server for time function to activate.
+    :var self.font: Type of font
+    :var self.text: Text of time function
+    :type self.my_player: instance object
+    :type self.genie_owner: str
+    :type self.starting_point: dict
+    :type self.colour_list: list
+    :type self.colour_to_img: str
+    :type self.all_pieces: list
+    :type self.board: instance object
+    :type self.connection: instance object
+    :type self.current_player: str
+    :type self.colour_check: str
+    :type self.time_limited: int
+    :type self.p: string
+    :type self.font: list
+    :type self.text: list
     """
 
     def __init__(self):
@@ -150,7 +179,8 @@ class Ludo(object):
                                      coOrds[pos][1] - 25)).collidepoint(x, y):
                         self.click_piece(num)
                         break
-                    # If you clicked a piece in home and you rolled 6, move them out.
+                    # If you clicked a piece in home and you rolled 6, move
+                    # them out.
                     elif piece.image.get_rect(
                             topleft=(self.board.home_coords[num])). \
                             collidepoint(x, y) and self.connection.my_player \
@@ -166,9 +196,9 @@ class Ludo(object):
 
     def click_piece(self, num):
         """
-        After a dice is rolled, if the player clicks a movable piece, call click_piece.
-        It calls the move_piece function, it also sends what piece was moved
-        to the server.
+        After a dice is rolled, if the player clicks a movable piece, call
+        click_piece. It calls the move_piece function, it also sends what piece
+        was moved to the server.
 
         :param num: the number of the piece.
         :type num: int.
@@ -224,7 +254,8 @@ class Ludo(object):
                             self.board.move_piece(3, 1)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if self.connection.my_player.turn_token is True \
-                                and self.connection.my_player.diceroll_token is False:
+                                and self.connection.my_player.diceroll_token \
+                                is False:
                             x, y = event.pos
                             self.check_click(x, y)
                         elif sound_icon_rect.collidepoint(event.pos) and \
@@ -241,9 +272,11 @@ class Ludo(object):
                 self.board.draw_board(self.colour_check)
                 # For flashing.
                 self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
-                self.board.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)  # Draw scoreboard
+                # Draw scoreboard
+                self.board.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
                 self.board.PLAYER_FIELD.draw()
-                output = self.board.ROLL_BUTTON.click()  # Check if roll button was clicked.
+                output = self.board.ROLL_BUTTON.click()
+                # Check if roll button was clicked.
                 if output is not None:
                     # If clicked roll dice.
                     self.board.dice_object.roll_dice_gif(900, 230)
