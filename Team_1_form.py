@@ -313,7 +313,7 @@ class Form:
         print (msg)
         id_array = msg["game_id"]
         num_array = msg["num"]
-        num = num_array[id_array.index(game_id)]
+        num = num_array[id_array.index(int(game_id))]
         self.lobby(lobby_type,room_code,num,game_id)
 
     def lobby(self, lobby_type, room_code, player_number, game_id):
