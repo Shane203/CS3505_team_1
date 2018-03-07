@@ -200,7 +200,7 @@ class Games:
     def __init__(self):
         self.all_games = []
         self.lobby_room_player_number = dict()
-        self.lobby_room_connection_array = []
+        self.lobby_room_connection_array = [[]*4]*10
 
     def create_new_game(self,code=""):
         game = Game(code)
@@ -229,7 +229,7 @@ class Games:
                 return game.num_of_players()
 
     def lobby_send_to_all(self,game_id,num_of_player):
-        for connection in self.lobby_room_connection_array[int(game_id)-1]:
+        for connection in self.lobby_room_connection_array[int(game_id)]:
             jsonmsg ={"player_number_in_lobby":int(num_of_player)}
             string = json.dumps (jsonmsg)
             connection.sendall(string.encode())
@@ -291,12 +291,12 @@ class Games:
                 elif "GET_IN_LOBBY" in msg:
                     self.get_game_by_id(msg["ROOM_ID"]).player_num_enter_lobby += 1
                     self.lobby_room_player_number[int(msg["ROOM_ID"])] += 1
-                    self.lobby_room_connection_array[int(msg["ROOM_ID"])-1].append(connection)
+                    self.lobby_room_connection_array[int(msg["ROOM_ID"])].append(connection)
                     self.lobby_send_to_all(msg["ROOM_ID"],self.lobby_room_player_number[int(msg["ROOM_ID"])])
                 elif "LEAVE_THE_LOBBY" in msg:
                     self.get_game_by_id(msg["ROOM_ID"]).player_num_enter_lobby -= 1
                     self.lobby_room_player_number[int (msg["ROOM_ID"])] -= 1
-                    self.lobby_room_connection_array[int (msg["ROOM_ID"]) - 1].remove(connection)
+                    self.lobby_room_connection_array[int (msg["ROOM_ID"])].remove(connection)
                     self.lobby_send_to_all (msg["ROOM_ID"], self.lobby_room_player_number[int (msg["ROOM_ID"])])
                     if self.get_game_by_id (msg["ROOM_ID"]).player_num_press_start == self.get_game_by_id (
                             msg["ROOM_ID"]).player_num_enter_lobby:

@@ -125,12 +125,14 @@ class Form:
 
     def check_conflict(self,name,id):
         self.connection.send_check_if_game_is_started (int(id))
-        data = self.connection.sock.recv (4096).decode ()  # decodes received data.
-        msg = json.loads (data)
-        if msg["RESULT"]:
+        self.connection.game_id = id
+        self.connection.player_name = name
+        sleep(1)
+        if self.connection.public_room_is_full:
             self.public_room_is_full()
+            return
         else:
-            self.start_game(name,int(id))
+            self.root.destroy()
 
     def check_selected(self):
         if self.player_number != None:
@@ -296,7 +298,7 @@ class Form:
 
     def lobby(self, lobby_type, room_code, player_number, room_id):
         self.connection.send_join_lobby_message(room_id)
-
+        _thread.start_new_thread (self.connection.lobby_connection_handler, ())
         """One function for each type of lobby becasue they're all so similar."""
         # Same setup for each new page
         self.root.destroy ()
@@ -327,8 +329,8 @@ class Form:
             self.current_page = "private_lobby"
             label = Label (frame, width=30, text=("Room Code: " + str (room_code)))
             room_label = Label (frame, width=30, text="", fg="black")
-        in_lobby = Label (frame, width=30, textvariable=self.connection.var,fg="black")  # take in number of players in that game
-        in_lobby.pack()
+        in_lobby = Label (frame, width=30, text=("In Lobby: %s/4" % (str (player_number))),
+                          fg="black")  # take in number of players in that game
         print (room_id)
         start_game = Button (frame, width=30, text="Start Game",
                              command=lambda: self.check_conflict (name_entry.get (), int (room_id)))
@@ -479,7 +481,7 @@ class Form:
             data = self.connection.sock.recv (4096).decode ()  # accepts the id of your newly created game
             msg = json.loads (data)
             print (msg)
-            self.lobby ("create", code, msg["player_number"]+1, msg["room_id"], )
+            self.lobby ("create", code, msg["player_number"]+1, msg["room_id"])
 
     def show_rules(self):
         # Produces a document of the rules of the ludo game.

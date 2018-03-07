@@ -49,6 +49,9 @@ class Connection:
         self.colours = ["red", "green", "yellow", "blue"]
         self.var = StringVar()
         self.var.set("hello")
+        self.public_room_is_full = False
+        self.player_name = None
+        self.game_id = None
 
     def change_stringVar(self,num):
         str1 = "player in Lobby is "
@@ -77,7 +80,14 @@ class Connection:
                 _thread.exit_thread()
             if "player_number_in_lobby" in msg:
                 num = msg["player_number_in_lobby"]
+                print(num)
                 self.change_stringVar(num)
+            if "RESULT" in msg :
+                if msg["RESULT"]:
+                    self.public_room_is_full= True
+                else:
+                    self.public_room_is_full = False
+                    self.send_strat_the_game(self.game_id,self.player_name)
 
     def connection_handler(self):
         """
@@ -289,6 +299,7 @@ class Connection:
         data = {"START_THE_GAME": True, "ROOM_ID": identification, "NAME": name}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
+        print("successfully send start game")
 
     def send_join_lobby_message(self,room_id):
         """
@@ -436,5 +447,5 @@ class Connection:
             score = Label(height=2, width=8, text=str(player_list[i][1]),
                           bg=player_list[i][2])
             score.grid(row=i + 1, column=2, columnspan=2)
-        root.title("Game Finished!")
+         .title("Game Finished!")
         root.mainloop()
