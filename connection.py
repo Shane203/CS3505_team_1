@@ -327,7 +327,7 @@ class Connection:
                 final_pos += 1
                 if final_pos == 4:
                     self.win_condition()
-                    return  # Return from end_roll, prevent skipping nxt player.
+                    return  # Return from end_roll, prevent skipping next player.
         if (self.my_player.roll != 6 or self.my_player.rolls_taken == 3) \
                 and self.my_player.special_move is False:
             self.end_turn()
