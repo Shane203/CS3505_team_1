@@ -28,7 +28,7 @@ class ChatBox(object):
         self.recvd.insert("end", "%s \n" % string)  # shows the message on the screen
         self.recvd.see(END)  # always shows last line recieved
     
-    def send(self):
+    def send(self, event):
         """ 
         sends a json message to server when you press "Return" key to send a message
         """
