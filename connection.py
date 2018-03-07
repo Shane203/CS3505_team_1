@@ -381,17 +381,13 @@ class Connection:
                                  (self.my_player.names,
                                   self.board.get_score(self.ALL_PIECES),
                                   "You Won!!"))
-
     def end_screen(self, names, scores, label):
         """
         Creates a TKinter window which shows the scores of each player
 
         :param names: list of player names
-        :type names: list
         :param scores: list of scores
-        :type scores: list
         :param label:  text to be shown on scoreboard
-        :type label: str
 
         """
         player_list = []
@@ -401,17 +397,16 @@ class Connection:
             player_list += [player]
         player_list = sorted(player_list, key=lambda e: e[1], reverse=True)
         root = Tk()
-        root.resizable(0, 0)
-        root.configure(background='white')
-        # The text area where all received messages go.
-        title = Label(height=2, bg="white", text=label)
-        title.grid(row=0, column=1, columnspan=3)
-        for i in range(len(player_list)):
-            name = Label(height=2, width=8, text=player_list[i][0],
-                         bg=player_list[i][2])
-            name.grid(padx=5, row=i + 1, column=0, columnspan=2)
-            score = Label(height=2, width=8, text=str(player_list[i][1]),
-                          bg=player_list[i][2])
-            score.grid(row=i + 1, column=2, columnspan=2)
         root.title("Game Finished!")
+        root.configure(background='white')
+        title = Label(root,height=2, bg="white", text=label)
+        title.pack(padx=15,pady=20,fill=X)
+        for i in range(len(player_list)):
+            name = Label(root,height=2, width=8, text=player_list[i][0],
+                         bg=player_list[i][2])
+            name.pack(side=LEFT,padx=15,pady=20,fill=X)
+            score = Label(root,height=2, width=8, text=str(player_list[i][1]),
+                          bg=player_list[i][2])
+            score.pack(side=RIGHT,padx=15,pady=20,fill=X)
         root.mainloop()
+
