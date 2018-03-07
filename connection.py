@@ -47,6 +47,7 @@ class Connection:
         self.chat = ChatBox(self.sock)
         self.roomNumber = ""
         self.colours = ["red", "green", "yellow", "blue"]
+        self._num_finished = 0
 
     def connection_handler(self):
         """
@@ -63,6 +64,7 @@ class Connection:
             data = self.sock.recv(4096).decode()  # decodes received data.
             print(data)
             msg = json.loads(data)
+            print(msg)
             # Tell the time out function to reset the time.
             self.q.put("already push a button")
             # Start implies it is the first message of the game.
@@ -155,9 +157,10 @@ class Connection:
                     randint(0, len(self.my_player.movable_pieces_array) - 1)]
                 # If random piece is not on board, move onto board
                 if self.ALL_PIECES[random_piece] is None:
-                    self.board.move_piece(random_piece, self.my_player.roll)
-                    self.send_out(random_piece, self.my_player.start)
-                    time.sleep(0.5)
+                    if self.my_player.roll == 6:
+                        self.board.move_piece(random_piece, self.my_player.roll)
+                        self.send_movement(random_piece, self.my_player.roll)
+                        time.sleep(0.5)
                 # Else move random playable piece on board.
                 else:
                     self.board.move_piece(random_piece, self.my_player.roll)
@@ -351,21 +354,32 @@ class Connection:
         produce an end screen.
 
         """
-        data = {"Player_Won": self.my_player.colour}
+
+        data = {"finished": self.my_player.colour}
+        self._num_finished +=1
+        place = self._num_finished
+        string = "Congratulations, you are "
+        if place ==1:
+            string += "1st"
+        elif place == 2:
+            string += "2nd"
+        elif place == 3:
+            string += "3rd"
+        else:
+            string += "4th"
         time.sleep(0.2)
         data = json.dumps(data)
         self.sock.sendall(data.encode())
         _thread.start_new_thread(self.end_screen,
                                  (self.my_player.names,
-                                  self.board.get_score(self.ALL_PIECES),
-                                  "You Won!!"))
+                                  self.board.get_score(self.ALL_PIECES), string))
 
-    def end_screen(self, names, scores, label):
+    def end_screen(self, names, scores, string):
         """
         Creates a TKinter window which shows the scores of each player
         :param names: list of player names
         :param scores: list of scores
-        :param label:  text to be shown on scoreboard
+        :param string:  text to be shown on scoreboard
         """
         player_list = []
         colours = ["red", "green", "yellow", "blue"]
@@ -376,7 +390,7 @@ class Connection:
         root = Tk()
         root.title("Game Finished!")
         root.configure(background='white')
-        title = Label(root, height=2, bg="white", text=label)
+        title = Label(root, height=2, bg="white", text=string)
         title.pack(padx=15, pady=20, fill=X)
         for i in range(len(player_list)):
             name = Label(root, height=2, width=8, text=player_list[i][0],
