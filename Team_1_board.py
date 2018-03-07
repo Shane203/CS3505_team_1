@@ -244,12 +244,13 @@ class Board:
                 (BOX_SIZE * 9 + INDENT_BOARD, INDENT_BOARD),
                 (BOX_SIZE * 9 + INDENT_BOARD, BOX_SIZE * 9 + INDENT_BOARD),
                 (INDENT_BOARD, BOX_SIZE * 9 + INDENT_BOARD)]
-        radius = 28
+        radius = 28  # Radius of the circles
         home_size = BOX_SIZE * 6
         for i in range(4):
             white_box_x = home[i][0] + BOX_SIZE
             white_box_y = home[i][1] + BOX_SIZE
-            white_box_size = BOX_SIZE * 4
+            white_box_size = BOX_SIZE * 4  # Size of the whote box.
+            # Check if home base should flash.
             if self.current_player == "red" and colours[
                     i] == RED and check > FPS * 6:
                 pygame.draw.rect(SCREEN, ORANGE,
@@ -276,26 +277,32 @@ class Board:
             pygame.draw.rect(SCREEN, BLACK, (
                 white_box_x, white_box_y, white_box_size, white_box_size), 1)
 
-            circle_1x = white_box_x + BOX_SIZE
-            circle_1y = white_box_y + BOX_SIZE
-            circle_2x = white_box_x + (BOX_SIZE * 3)
-            circle_2y = white_box_y + (BOX_SIZE * 3)
+            circle_1x = white_box_x + BOX_SIZE  # X of the left circles.
+            circle_1y = white_box_y + BOX_SIZE  # Y of the top circles.
+            circle_2x = white_box_x + (BOX_SIZE * 3)  # X of the right circles.
+            circle_2y = white_box_y + (BOX_SIZE * 3)  # Y of the bottom circles.
 
+            # Draw the top left circle.
             pygame.draw.circle(SCREEN, colours[i], (circle_1x, circle_1y),
                                radius, 0)
             pygame.draw.circle(SCREEN, BLACK, (circle_1x, circle_1y), radius, 1)
 
+            # Draw the top right circle.
             pygame.draw.circle(SCREEN, colours[i], (circle_2x, circle_1y),
                                radius, 0)
             pygame.draw.circle(SCREEN, BLACK, (circle_2x, circle_1y), radius, 1)
-
+            
+            # Draw the bottom left circle.
             pygame.draw.circle(SCREEN, colours[i], (circle_1x, circle_2y),
                                radius, 0)
             pygame.draw.circle(SCREEN, BLACK, (circle_1x, circle_2y), radius, 1)
 
+            # Draw the bottom right circle.
             pygame.draw.circle(SCREEN, colours[i], (circle_2x, circle_2y),
                                radius, 0)
             pygame.draw.circle(SCREEN, BLACK, (circle_2x, circle_2y), radius, 1)
+
+            # Co-rodinates of the home position.
             if len(self.home_coords) < 15:
                 self.home_coords += [(circle_1x - 32, circle_1y - 64),
                                      (circle_2x - 32, circle_1y - 64),
