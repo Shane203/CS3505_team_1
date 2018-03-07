@@ -384,7 +384,7 @@ class Games:
                     public_array = []
                     for game in self.all_games:
                         id_array.append(game.game_id())
-                        num_array.append(game.num_of_players())
+                        num_array.append(game.player_num_enter_lobby)
                         public_array.append(game.is_public_game())
                     data = {"game_id": id_array, "num": num_array,
                             "is_public": public_array}

@@ -144,6 +144,7 @@ class Form:
                 self.public_room_is_full()
             else:
                 self.player_number = int(msg["player_number"])+1
+                self.connection.send_join_lobby_message (self.game_id)
                 self.lobby("public", "", self.player_number, self.game_id)
 
     def public_room_is_full(self):
@@ -159,7 +160,7 @@ class Form:
 
         # This is the part that varies between pages
         no_room = Label(frame, width=30,
-                        text="Current Room is full", fg="black")
+                        text="Current Room is full or deleted", fg="black")
         try_again = Label(
             frame, width=30, text="Please try another room", fg="black")
 
@@ -301,8 +302,21 @@ class Form:
         back.configure(background="red")
         self.root.mainloop()
 
+    def update(self,lobby_type, room_code, player_number, game_id):
+        # send message to the server
+        self.connection.send_join_public_game ()
+
+        # receive message from the server
+        # decodes received data.
+        data = self.connection.sock.recv (4096).decode ()
+        msg = json.loads (data)
+        print (msg)
+        id_array = msg["game_id"]
+        num_array = msg["num"]
+        num = num_array[id_array.index(game_id)]
+        self.lobby(lobby_type,room_code,num,game_id)
+
     def lobby(self, lobby_type, room_code, player_number, game_id):
-        self.connection.send_join_lobby_message(game_id)
 
         """One function for each type of lobby becasue they're all so similar."""
         # Same setup for each new page
@@ -310,10 +324,6 @@ class Form:
         self.root = Tk()
         self.root.title("Ludo")
         frame = Frame(self.root)
-
-        ludo_label = Label(frame, text="Ludo", fg="black")
-        blank = Label(frame, text="", fg="black")
-        back = Button(frame, text="Back", command=lambda: self.back(game_id))
 
         # This is the part that varies between pages
         name_label = Label(frame, text="Player Name:", fg="black")
@@ -338,15 +348,22 @@ class Form:
             label = Label(frame, width=30, text=(
                 "Room Code: " + str(room_code)))
             room_label = Label(frame, width=30, text="", fg="black")
+
+        ludo_label = Label (frame, text="Ludo", fg="black")
+        blank = Label (frame, text="", fg="black")
+        back = Button (frame, text="Back", command=lambda: self.back (game_id))
         in_lobby = Label(frame, width=30, text=("In Lobby: %s/4" % (str(player_number))),
                          fg="black")  # take in number of players in that game
         print(game_id)
         start_game = Button(frame, width=30, text="Start Game",
                             command=lambda: self.check_conflict(name_entry.get(), int(game_id)))
 
+        update = Button(frame, width=30, text="Updating Message",
+                            command=lambda: self.update(lobby_type, room_code, player_number, game_id))
+
         # Drawing each widget on to the frame
-        self.root.minsize(width=220, height=230)
-        self.root.maxsize(width=220, height=230)
+        self.root.minsize(width=220, height=260)
+        self.root.maxsize(width=220, height=260)
         self.root.configure(background="white")
 
         frame.pack()
@@ -375,7 +392,10 @@ class Form:
         start_game.grid(row=7, column=1, columnspan=2)
         start_game.configure(background="lightgreen")
 
-        back.grid(row=8, column=1)
+        update.grid (row=8, column=1, columnspan=2)
+        update.configure (background="lightgreen")
+
+        back.grid(row=9, column=1)
         back.configure(background="red")
         self.root.mainloop()
 
@@ -483,11 +503,13 @@ class Form:
                 if check_type == "create":
                     self.already_exists(code)
                 elif check_type == "join":
+                    self.connection.send_join_lobby_message(msg["game_id"])
                     self.lobby("private", msg["room_code"],
-                               msg["num_of_players"], msg["game_id"])
+                               msg["num_of_players"]+1, msg["game_id"])
             else:
                 if check_type == "create":
                     # Automatically creates new game server-side if one didn't exist
+                    self.connection.send_join_lobby_message (msg["new_game_id"])
                     self.lobby("create", code, 1, msg["new_game_id"])
                 elif check_type == "join":
                     self.no_room()
@@ -497,6 +519,7 @@ class Form:
             data = self.connection.sock.recv(4096).decode()
             msg = json.loads(data)
             print(msg)
+            self.connection.send_join_lobby_message (msg["game_id"])
             self.lobby("create", code,
                        msg["player_number"]+1, msg["game_id"], )
 
@@ -520,9 +543,13 @@ class Form:
         elif self.current_page == "private_lobby":
             self.connection.send_leave_lobby(game_id)
             self.join_private()
-        elif self.current_page == "already_exists" or self.current_page == "create_lobby":
+        elif self.current_page == "already_exists":
             self.create_game()
+        elif self.current_page == "create_lobby":
+            self.connection.send_leave_lobby (game_id)
+            self.create_game ()
         elif self.current_page == "public_lobby":
+
             self.connection.send_leave_lobby(game_id)
             self.join_public()
         elif self.current_page == "public_room_is_full":
