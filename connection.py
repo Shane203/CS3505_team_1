@@ -3,7 +3,7 @@ from constants import ROLL_TO_IMG, LOW_RANGES, GENIE_BIG, LAMP_BIG, SCREEN
 from random import randint
 import json
 import _thread
-from Team_1_player import Player
+from player import Player
 import time
 from queue import Queue
 from form import Form
@@ -66,28 +66,28 @@ class Connection:
             # Tell the time out function to reset the time.
             self.q.put("already push a button")
             # Start implies it is the first message of the game.
-            # The message comes in the form {"start":True,"Colour":<colour>}
+            # The message comes in the form {"start":True,"colour":<colour>}
             if "start" in msg:
                 names = msg["names"]
-                self.my_player = Player(msg["Colour"],
-                                        names[colors.index(msg["Colour"])],
+                self.my_player = Player(msg["colour"],
+                                        names[colors.index(msg["colour"])],
                                         self.ALL_PIECES, names)
                 self.board.my_player = self.my_player
                 print(self.my_player.name, self.my_player.colour)
             # This tells all games which player's turn it is.
             # Messages come of the form {"turn_token":True,"Colour":<colour>}.
-            if "turnToken" in msg:
+            if "turn_token" in msg:
                 # If msg["Colour"] is client's colour, then it is their turn.
-                if msg["Colour"] == self.my_player.colour:
+                if msg["colour"] == self.my_player.colour:
                     self.board.PLAYER_FIELD.set_msg("MY TURN")
                     self.my_player.turn_token = True
                     self.my_player.diceroll_token = True
                 else:
                     self.board.PLAYER_FIELD.set_msg(
                         self.my_player.names[colors.index(msg[
-                                                        "Colour"])] + "'s turn")
-                self.current_player = msg["Colour"]
-                self.board.current_player = msg["Colour"]
+                                                        "colour"])] + "'s turn")
+                self.current_player = msg["colour"]
+                self.board.current_player = msg["colour"]
             # This message is a response to pressing the "ROLL" button.
             # It comes in the form {"dicenum":<between 1-6>,"Colour":<colour>}
             if "dicenum" in msg:
@@ -102,43 +102,40 @@ class Connection:
                 if genie_status == "take" and self.board.genie_owner is None:
                     # If you roll to take the genie and no one currently has it
                     SCREEN.blit(GENIE_BIG, (950, 50))
-                    self.board.genie_owner = msg["Colour"]  # Take the genie
-                    for num in range((LOW_RANGES[msg["Colour"]]),
-                                     (LOW_RANGES[msg["Colour"]]) + 4):
+                    self.board.genie_owner = msg["colour"]  # Take the genie
+                    for num in range((LOW_RANGES[msg["colour"]]),
+                                     (LOW_RANGES[msg["colour"]]) + 4):
                         self.ALL_PIECES[num].genie = True
                 elif genie_status == "return" and \
-                        self.board.genie_owner == msg["Colour"]:
+                        self.board.genie_owner == msg["colour"]:
                     # If you roll to give back the genie and you own it
                     SCREEN.blit(LAMP_BIG, (950, 50))
                     # The genie goes back to the centre
                     self.board.genie_owner = None
-                    for num in range((LOW_RANGES[msg["Colour"]]),
-                                     (LOW_RANGES[msg["Colour"]]) + 4):
+                    for num in range((LOW_RANGES[msg["colour"]]),
+                                     (LOW_RANGES[msg["colour"]]) + 4):
                         self.ALL_PIECES[num].genie = False
                 self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
                 # If the dicenum is for this player, then react accordingly.
-                if msg["Colour"] == self.my_player.colour:
+                if msg["colour"] == self.my_player.colour:
                     self.pieces_playable()
             # This message is broadcasted if a player moves a piece.
             # As the player moves it's own pieces, they only react to other
-            if "Movement" in msg and msg["Colour"] != self.my_player.colour:
+            if "movement" in msg and msg["colour"] != self.my_player.colour:
                 # It comes in the form {"Movement":<piecenum>,
-                # "Moveforward":<number-of-steps-to-move>,"Colour":<colour>}
+                # "Moveforward":<number-of-steps-to-move>,"colour":<colour>}
                 # player's movements.
-                print("in here, piece should move")
-                steps = msg["Moveforward"]
-                num = msg["Movement"]
+                steps = msg["steps_forward"]
+                num = msg["movement"]
                 self.board.move_piece(num, steps)
                 if self.my_player.roll == 6:
-                    self.my_player.diceroll_token is True
-            if "Player_Won" in msg and msg["Colour"] != self.my_player.colour:
-                print(msg)
+                    self.my_player.diceroll_token = True
+            if "finished" in msg and msg["colour"] != self.my_player.colour:
                 self.win_condition()
-            if "msg" in msg:
+            if "chat_msg" in msg:
                 self.chat.new_message(msg)
             if "disconnected" in msg:
-                print(Player, msg["Colour"], "disconnected")
-                self.board.disconnect_function(msg["Colour"])
+                self.board.disconnect_function(msg["colour"])
 
     def time_out(self):
         """
@@ -158,14 +155,12 @@ class Connection:
                     randint(0, len(self.my_player.movable_pieces_array) - 1)]
                 # If random piece is not on board, move onto board
                 if self.ALL_PIECES[random_piece] is None:
-                    print("from home")
                     self.board.move_piece(random_piece, self.my_player.roll)
                     self.send_out(random_piece, self.my_player.start)
                     time.sleep(0.5)
                 # Else move random playable piece on board.
                 else:
                     self.board.move_piece(random_piece, self.my_player.roll)
-                    print("from board")
                     self.send_movement(random_piece, self.my_player.roll)
                     time.sleep(0.5)
                 self.end_roll()
@@ -185,7 +180,7 @@ class Connection:
         except ConnectionRefusedError:
             print("Error: Connection refused. Server may be "
                   "unavailable or offline.")
-        except AttributeError:
+        except OSError:
             print("Error: Port Number may already be in use.")
         except AttributeError:
             print("Error! An error has occurred. Please try again later.")
@@ -201,35 +196,20 @@ class Connection:
         :type roll: int
 
         """
-        data = {"Movement": num, "Moveforward": roll,
-                "Colour": self.my_player.colour}
+        data = {"movement": num, "steps_forward": roll,
+                "colour": self.my_player.colour}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
-    def send_out(self, num, pos):
-        """
-        Sends message to server informing other players that you are sending out
-        one of your pieces.
-
-        :param num: number of piece in ``ALL_PIECES`` array
-        :type num: int
-        :param pos: position of piece on board
-        :type pos: int
-
-        """
-        data = {"Sendout": num, "pos": pos}
-        data = json.dumps(data)
-        self.sock.sendall(data.encode())
-
-    def send_check_if_game_is_started(self, room_id):
+    def send_check_if_game_is_started(self, game_id):
         """
         Called when client tries to join a game. Sends message to server.
 
-        :param room_id: the room  id of lobby game
-        :type room_id: str
+        :param game_id: the room  id of lobby game
+        :type game_id: str
 
         """
-        data = {"check_game": room_id}
+        data = {"check_game": game_id}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
@@ -264,33 +244,31 @@ class Connection:
         :type name: str
 
         """
-        data = {"START_THE_GAME": True, "ROOM_ID": identification, "NAME": name}
+        data = {"start_game": True, "room_code": identification, "name": name}
         data = json.dumps(data)
         self.sock.sendall(data.encode())
 
-    def send_join_lobby_message(self,room_id):
+    def send_join_lobby_message(self, game_id):
+        """Called when user join the lobby.
+
+        :param game_id: the game_id of the lobby game
+        :type game_id: int
         """
-        Called when user join the lobby.
 
-        :param room_id: the room_id of the lobby game
-        :type room_id: int
+        data = {"in_lobby": True, "game_id": int(game_id)}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
 
+    def send_leave_lobby(self, game_id):
+        """Called when user leave the lobby.
+
+        :param game_id: the game_id of the lobby game
+        :type game_id: int
         """
-        data = {"GET_IN_LOBBY": True, "ROOM_ID": int(room_id)}
-        data = json.dumps (data)
-        self.sock.sendall (data.encode ())
 
-    def send_leave_lobby(self,room_id):
-        """
-        Called when user leave the lobby.
-
-        :param room_id: the room_id of the lobby game
-        :type room_id: int
-
-        """
-        data = {"LEAVE_THE_LOBBY": True, "ROOM_ID": int (room_id)}
-        data = json.dumps (data)
-        self.sock.sendall (data.encode ())
+        data = {"leave_lobby": True, "game_id": int(game_id)}
+        data = json.dumps(data)
+        self.sock.sendall(data.encode())
 
     def end_turn(self):
         """
@@ -305,7 +283,9 @@ class Connection:
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
             self.my_player.rolls_taken = 0
-            msg = {"Colour": self.my_player.colour, "turnOver": True}
+            # self.my_player.turns_total = 0
+            # self.my_player.rolls_total = 0
+            msg = {"colour": self.my_player.colour, "turn_over": True}
             data = json.dumps(msg)
             self.sock.sendall(data.encode())
 
@@ -327,12 +307,10 @@ class Connection:
                 final_pos += 1
                 if final_pos == 4:
                     self.win_condition()
-                    return  # Return from end_roll, prevent skipping next player.
         if (self.my_player.roll != 6 or self.my_player.rolls_taken == 3) \
                 and self.my_player.special_move is False:
             self.end_turn()
         else:
-            print("Next roll of dice")
             self.my_player.diceroll_token = True
 
     def pieces_playable(self):
@@ -381,14 +359,13 @@ class Connection:
                                  (self.my_player.names,
                                   self.board.get_score(self.ALL_PIECES),
                                   "You Won!!"))
+
     def end_screen(self, names, scores, label):
         """
         Creates a TKinter window which shows the scores of each player
-
         :param names: list of player names
         :param scores: list of scores
         :param label:  text to be shown on scoreboard
-
         """
         player_list = []
         colours = ["red", "green", "yellow", "blue"]
@@ -399,14 +376,13 @@ class Connection:
         root = Tk()
         root.title("Game Finished!")
         root.configure(background='white')
-        title = Label(root,height=2, bg="white", text=label)
-        title.pack(padx=15,pady=20,fill=X)
+        title = Label(root, height=2, bg="white", text=label)
+        title.pack(padx=15, pady=20, fill=X)
         for i in range(len(player_list)):
-            name = Label(root,height=2, width=8, text=player_list[i][0],
+            name = Label(root, height=2, width=8, text=player_list[i][0],
                          bg=player_list[i][2])
-            name.pack(side=LEFT,padx=15,pady=20,fill=X)
-            score = Label(root,height=2, width=8, text=str(player_list[i][1]),
+            name.pack(side=LEFT, padx=15, pady=20, fill=X)
+            score = Label(root, height=2, width=8, text=str(player_list[i][1]),
                           bg=player_list[i][2])
-            score.pack(side=RIGHT,padx=15,pady=20,fill=X)
+            score.pack(side=RIGHT, padx=15, pady=20, fill=X)
         root.mainloop()
-
