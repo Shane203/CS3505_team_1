@@ -303,7 +303,7 @@ class Games:
                     while True:# i am not sure if i can break here?
                         pass
         except sockerr:
-            pass
+            print("error")
 
 
 
