@@ -305,8 +305,6 @@ class Connection:
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
             self.my_player.rolls_taken = 0
-            # self.my_player.turns_total = 0
-            # self.my_player.rolls_total = 0
             msg = {"Colour": self.my_player.colour, "turnOver": True}
             data = json.dumps(msg)
             self.sock.sendall(data.encode())
@@ -329,6 +327,7 @@ class Connection:
                 final_pos += 1
                 if final_pos == 4:
                     self.win_condition()
+                    return  # Return from end_roll, prevent skipping nxt player.
         if (self.my_player.roll != 6 or self.my_player.rolls_taken == 3) \
                 and self.my_player.special_move is False:
             self.end_turn()
