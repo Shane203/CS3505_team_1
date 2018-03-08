@@ -116,6 +116,7 @@ class Connection:
                                      (LOW_RANGES[msg["colour"]]) + 4):
                         self.ALL_PIECES[num].genie = False
                 self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
+                self.board.dice_object.roll_dice_gif(900, 230)
                 # If the dicenum is for this player, then react accordingly.
                 if msg["colour"] == self.my_player.colour:
                     self.pieces_playable()
