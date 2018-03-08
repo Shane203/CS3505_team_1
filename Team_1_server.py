@@ -113,7 +113,7 @@ class Game:
 
     def is_full(self):
         """Return True if the Game is full."""
-        return self.num_of_players() == self.max_players()
+        return self.player_num_press_start == self.max_players()
 
     def forward(self, jsonmsg):
         """Forward a JSON object to all clients.
@@ -151,7 +151,7 @@ class Game:
                  {"colour": "green", "start": True, "names": self.names()},
                  {"colour": "yellow", "start": True, "names": self.names()},
                  {"colour": "blue", "start": True, "names": self.names()}]
-        for i in range(self.num_of_players()):
+        for i in range(self.player_num_press_start):
             self.sendto(start[i], i)
             print("sent start to ", i)
         sleep(1)
@@ -217,15 +217,18 @@ class Game:
             print("is full?")
             print(self.is_full())
             while not self.is_full():  # Loop until all players have pressed start
-                print("here")
                 continue
             self.start_game()
             while True:
                 jsonmsg = None
                 data = connection.recv(4096).decode()  # Get data from client
-                print(data)
                 data = data.split("}")
+                print("down")
+                print (data)
+                print("up")
                 for msg in data:
+                    print(data)
+                    print(len(msg))
                     if len(msg) > 1:
                         msg += "}"
                         msg = json.loads(msg)
@@ -238,6 +241,7 @@ class Game:
                             genie_status = self.roll_genie()
                             jsonmsg = {
                                 "colour": msg["colour"], "dicenum": num, "genie_result": genie_status}
+                            print(jsonmsg)
                         elif "turn_over" in msg and index == self.token:
                             self.next_player()
                             jsonmsg = {
@@ -254,8 +258,8 @@ class Game:
                             self.next_player()
                             jsonmsg = {
                                 "colour": self.colours[self.token], "turn_token": True}
-                        if jsonmsg:
-                            self.forward(jsonmsg)
+                        print(jsonmsg)
+                        self.forward(jsonmsg)
 
         except sockerr:
             print(client_colour, " left the game.")
@@ -429,13 +433,13 @@ class Games:
                         cur_game._max_players = cur_game.player_num_press_start
                 elif "start_game" in msg:
                     self.get_game_by_id(msg["game_id"]).player_num_press_start += 1
+                    if self.get_game_by_id (msg["game_id"]).player_num_press_start == self.get_game_by_id (msg["game_id"]).player_num_enter_lobby:
+                        self.get_game_by_id (msg["game_id"])._max_players = self.get_game_by_id (msg["game_id"]).player_num_press_start
                     try:
-                        if self.get_game_by_id(msg["game_id"]).player_num_press_start ==\
-                                self.get_game_by_id(msg["game_id"]).player_num_enter_lobby:
-                            self.get_game_by_id(msg["game_id"])._max_players =\
-                                self.get_game_by_id(msg["game_id"]).player_num_press_start
                         _thread.start_new_thread(self.get_game_by_id(msg["game_id"]).connection_handler,
                                                  (connection, msg["name"]))
+                        while True:
+                            continue
                         # Starts a new thread for each connection.
                     except InterruptedError:
                         print("Error! The signal has been interrupted.")
