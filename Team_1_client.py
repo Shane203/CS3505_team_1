@@ -262,14 +262,6 @@ class Ludo(object):
                 self.board.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
                 self.board.PLAYER_FIELD.draw()
                 output = self.board.ROLL_BUTTON.click()
-                # Check if roll button was clicked.
-                if output is not None:
-                    # If clicked roll dice.
-                    self.board.dice_object.roll_dice_gif(900, 230)
-                # Display the dice number rolled.
-                self.board.dice_object.display_dice(
-                    900, 230, self.connection.current_dice)
-                # Draw the countdown timer.
                 if not self.p.empty():
                     message = self.p.get()  # receive a data and reset the timer
                     if message != "time":
