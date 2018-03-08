@@ -84,8 +84,7 @@ class Ludo(object):
         """
         create_dicts()
         pygame.init()
-        pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN,
-                                  pygame.QUIT])
+        pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.QUIT])
         self.board.add_connection(self.connection)
         self.connection.sock.connect(self.connection.server_address)
         self.connection.form.run()
@@ -239,19 +238,6 @@ class Ludo(object):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.terminate()
-                    elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_a:
-                            self.board.move_piece(1, 1)
-                        if event.key == pygame.K_s:
-                            self.board.move_piece(4, 6)
-                        if event.key == pygame.K_d:
-                            self.board.move_piece(8, 1)
-                        if event.key == pygame.K_f:
-                            self.board.move_piece(12, 1)
-                        if event.key == pygame.K_g:
-                            self.board.move_piece(2, 1)
-                        if event.key == pygame.K_h:
-                            self.board.move_piece(3, 1)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if self.connection.my_player.turn_token is True \
                                 and self.connection.my_player.diceroll_token \
