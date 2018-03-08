@@ -67,7 +67,8 @@ class Connection:
             msg = json.loads(data)
             print(msg)
             # Tell the time out function to reset the time.
-            self.q.put("already push a button")
+            if "chat_msg" not in msg:
+                self.q.put("already push a button")
             # Start implies it is the first message of the game.
             # The message comes in the form {"start":True,"colour":<colour>}
             if "start" in msg:
@@ -393,10 +394,8 @@ class Connection:
         title = Label(root, height=2, bg="white", text=string)
         title.pack(padx=15, pady=20, fill=X)
         for i in range(len(player_list)):
-            name = Label(root, height=2, width=8, text=player_list[i][0],
+            string = "%-10s %-3i" % (player_list[i][0], player_list[i][1])
+            line = Label(root, height=2, width=8, text=string,
                          bg=player_list[i][2])
-            name.pack(side=LEFT, padx=15, pady=20, fill=X)
-            score = Label(root, height=2, width=8, text=str(player_list[i][1]),
-                          bg=player_list[i][2])
-            score.pack(side=RIGHT, padx=15, pady=20, fill=X)
+            line.pack(padx=15, pady=20, fill=X)
         root.mainloop()

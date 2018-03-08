@@ -218,6 +218,7 @@ class Game:
             print(self.is_full())
             while not self.is_full():  # Loop until all players have pressed start
                 continue
+            sleep(1)
             self.start_game()
             while True:
                 jsonmsg = None
