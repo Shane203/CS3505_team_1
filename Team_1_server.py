@@ -162,7 +162,7 @@ class Game:
         """Roll the pseudo-dice to determine the genie feature
 
         :return: Status of the Genie.
-        :rtype: string."""
+        :type: string."""
         result = randint(1, 6)
         genie_status = None
         if result == 1:
@@ -175,7 +175,7 @@ class Game:
         """Return a random number between 1 and 6.
 
         :return: returns Dice Roll (1-6)
-        :rtype: int."""
+        :type: int."""
         return randint(1, 6)
 
     def roll_biased_dice(self):
@@ -185,7 +185,7 @@ class Game:
         Higher percentage of rolling >5 (considered a 6).
 
         :return: returns Dice Roll (1-8)
-        :rtype: int.
+        :type: int.
         """
         return randint(1, 8)
 
@@ -304,7 +304,7 @@ class Games:
         :param code: The room code of the game.
         :type code: string.
         :return: a new Game with the code 'code'.
-        :rtype: Game object instance.
+        :type: Game object instance.
         """
         game = Game(code)
         self.all_games.append(game)
@@ -315,8 +315,6 @@ class Games:
 
         :param room_code: The room id.
         :type room_code: string.
-        :return : if the game is started
-        :rtype: bool.
         """
         for game in self.all_games:
             if game.game_id() == room_code:
@@ -328,8 +326,6 @@ class Games:
 
         :param game_id: The game ID
         :type game_id: string.
-        :return : The instance of the game.
-        :rtype: Game instance or None
                 """
         for game in self.all_games:
             if game.game_id() == game_id:
@@ -337,11 +333,7 @@ class Games:
         return None
 
     def get_public_games_ids(self):
-        """ Return list of public game ID's.
-
-        :return: List of Game instance ID's.
-        :rtype: List of strings.
-        """
+        """ Return list of public game ID's."""
         id_array = []
         for game in self.all_games:
             if game.is_public_game() and not game.is_full():
@@ -353,8 +345,6 @@ class Games:
 
         :param game_id: The Game's ID.
         :type game_id: string.
-        :return: Number of players of the game with ID 'game_id'.
-        :rtype: int.
         """
         for game in self.all_games:
             if game.game_id() == game_id:
