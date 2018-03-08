@@ -51,7 +51,7 @@ class ChatBox(object):
         self.frame = Frame(self.root)  # create a frame on the window
         self.msg = Entry(self.frame, width=50, font=('TkDefaultFont', 11))  # Where the Client enters the message
         self.msg.configure(bg='pink')  # set background colour of textfield
-        self.recvd = ScrolledText(self.frame, height=30, width=50)  # The text area where all received messages go.
+        self.recvd = ScrolledText(self.frame, height=29, width=50)  # The text area where all received messages go.
         self.recvd.configure(bg='lightblue')  # set background colour of received messages
         self.root.title("Chat")  # set title of window to chat
         self.root.minsize(500, 500)  # minimum size of tkinter window
