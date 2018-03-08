@@ -395,8 +395,8 @@ class Connection:
         for i in range(len(player_list)):
             name = Label(root, height=2, width=8, text=player_list[i][0],
                          bg=player_list[i][2])
-            name.pack(side=LEFT, padx=15, pady=20, fill=X)
+            name.pack(padx=15, pady=20, fill=X)
             score = Label(root, height=2, width=8, text=str(player_list[i][1]),
                           bg=player_list[i][2])
-            score.pack(side=RIGHT, padx=15, pady=20, fill=X)
+            score.pack(padx=15, pady=20, fill=X)
         root.mainloop()
