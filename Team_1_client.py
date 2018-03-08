@@ -153,15 +153,15 @@ class Ludo(object):
         pygame.mixer.music.load("sound/BGM.mp3")
         pygame.mixer.music.play(-1)
 
-    def check_click(self, x, y):
+    def check_click(self, x_value, y_value):
         """If there is a click after a dice has been rolled check all my_player
         pieces. If piece is movable check the size of the piece to set the
         clickable coordinates.
 
-        :param x: The x coordinate of the click.
-        :type x: int.
-        :param y: The x coordinate of the click.
-        :type y: int.
+        :param x_value: The x_value coordinate of the click.
+        :type x_value: int.
+        :param y_value: The x_value coordinate of the click.
+        :type y_value: int.
         """
         for num in range(self.connection.my_player.low_range,
                          self.connection.my_player.low_range + 4):
@@ -175,21 +175,21 @@ class Ludo(object):
                     # If you clicked a piece, move them (if you rolled)
                     if pos is not None and piece.image.get_rect(
                             topleft=(coOrds[pos][0] - 7,
-                                     coOrds[pos][1] - 25)).collidepoint(x, y):
+                                     coOrds[pos][1] - 25)).collidepoint(x_value, y_value):
                         self.click_piece(num)
                         break
                     # If you clicked a piece in home and you rolled 6, move
                     # them out.
                     elif piece.image.get_rect(
                             topleft=(self.board.home_coords[num])). \
-                            collidepoint(x, y) and self.connection.my_player \
+                            collidepoint(x_value, y_value) and self.connection.my_player \
                             .roll == 6:
                         self.click_piece(num)
                         break
                 else:
                     # If you clicked a piece, move them (if you rolled)
                     if piece.image.get_rect(topleft=(
-                            coOrds[pos][0], coOrds[pos][1])).collidepoint(x, y):
+                            coOrds[pos][0], coOrds[pos][1])).collidepoint(x_value, y_value):
                         self.click_piece(num)
                         break
 
@@ -242,8 +242,8 @@ class Ludo(object):
                         if self.connection.my_player.turn_token is True \
                                 and self.connection.my_player.diceroll_token \
                                 is False:
-                            x, y = event.pos
-                            self.check_click(x, y)
+                            x_value, y_value = event.pos
+                            self.check_click(x_value, y_value)
                         elif sound_icon_rect.collidepoint(event.pos) and \
                                 not mute:
                             mute, sound = self.pause()
