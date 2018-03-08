@@ -77,5 +77,4 @@ BRIGHTGREEN = (0, 255, 0)  # 00FF00
 FPS = 10
 COLOUR_TO_IMG = {"red": RED_PIECE, "green": GREEN_PIECE, "yellow": YELLOW_PIECE, "blue": BLUE_PIECE}
 
-FLASH_RATE = FPS * 8
 IN = 1
