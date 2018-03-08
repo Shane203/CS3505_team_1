@@ -257,7 +257,7 @@ class Ludo(object):
                 c.SCREEN.blit(sound, sound_icon_rect)  # Draw the sound icon.
                 self.board.draw_board(self.colour_check)
                 # For flashing.
-                self.colour_check = (self.colour_check + 1) % c.FLASH_RATE
+                self.colour_check = (self.colour_check + 1) % c.FPS
                 # Draw scoreboard
                 self.board.draw_scoreboard(self.all_pieces, 900, 500, 100, 30)
                 self.board.PLAYER_FIELD.draw()
