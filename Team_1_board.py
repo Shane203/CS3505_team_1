@@ -194,7 +194,7 @@ class Board:
             piece_pos = piece.get_position()
             # If pieces are movable flash orange.
             if piece.colour == self.current_player and piece.movable \
-                    and check > FPS * 2:
+                    and (check < FPS/4 or (FPS/2 < check < 3*FPS/4)):
                 temp = piece.image
                 if piece.image.get_width() != 64:
                     piece.image = ORANGE_PIECE_32
@@ -252,19 +252,19 @@ class Board:
             white_box_size = BOX_SIZE * 4  # Size of the whote box.
             # Check if home base should flash.
             if self.current_player == "red" and colours[
-                    i] == RED and check > FPS * 6:
+                    i] == RED and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
                 pygame.draw.rect(SCREEN, ORANGE,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "green" and colours[
-                    i] == GREEN and check > FPS * 6:
+                    i] == GREEN and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
                 pygame.draw.rect(SCREEN, LGREEN,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "yellow" and colours[
-                    i] == YELLOW and check > FPS * 6:
+                    i] == YELLOW and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
                 pygame.draw.rect(SCREEN, LYELLOW,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "blue" and colours[
-                    i] == BLUE and check > FPS * 6:
+                    i] == BLUE and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
                 pygame.draw.rect(SCREEN, LBLUE,
                                  (home[i][0], home[i][1], home_size, home_size))
             else:
