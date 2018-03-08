@@ -17,6 +17,7 @@ class Form:
     def __init__(self, rules_file, connection):
         self.connection = connection
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.filename = rules_file
         self.current_page = None
         self.game_id = None
@@ -32,6 +33,7 @@ class Form:
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         self.current_page = "home_page"
         frame = Frame(self.root)
@@ -191,6 +193,7 @@ class Form:
         """
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         self.current_page = "public_room_is_full"
         frame = Frame(self.root)
@@ -234,6 +237,7 @@ class Form:
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         self.current_page = "join_public"
         frame = Frame(self.root)
@@ -300,6 +304,7 @@ class Form:
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         self.current_page = "join_private"
         frame = Frame(self.root)
@@ -387,6 +392,7 @@ class Form:
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         frame = Frame(self.root)
 
@@ -472,6 +478,7 @@ class Form:
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         self.current_page = "no_room"
         frame = Frame(self.root)
@@ -520,6 +527,7 @@ class Form:
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Ludo")
         self.current_page = "already_exists"
         frame = Frame(self.root)
@@ -625,6 +633,7 @@ class Form:
         file = open(self.filename, "r")
         data = file.read()
         self.root = Tk()
+        self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Rules")
         w = Label(self.root, text=data, fg="black", bg="red")
         w.pack()
