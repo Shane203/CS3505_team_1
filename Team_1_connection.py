@@ -67,7 +67,8 @@ class Connection:
             msg = json.loads(data)
             print(msg)
             # Tell the time out function to reset the time.
-            self.q.put("already push a button")
+            if "chat_msg" not in msg:
+                self.q.put("already push a button")
             # Start implies it is the first message of the game.
             # The message comes in the form {"start":True,"colour":<colour>}
             if "start" in msg:
