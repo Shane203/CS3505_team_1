@@ -47,7 +47,6 @@ class Dice(object):
             return True
         # Else forces client to end their turn.
         else:
-            print("No more turns")
             self.connection.end_turn()
             return False
 
