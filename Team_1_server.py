@@ -223,9 +223,6 @@ class Game:
                 jsonmsg = None
                 data = connection.recv(4096).decode()  # Get data from client
                 data = data.split("}")
-                print("down")
-                print (data)
-                print("up")
                 for msg in data:
                     print(data)
                     print(len(msg))
@@ -258,8 +255,8 @@ class Game:
                             self.next_player()
                             jsonmsg = {
                                 "colour": self.colours[self.token], "turn_token": True}
-                        print(jsonmsg)
-                        self.forward(jsonmsg)
+                        if jsonmsg:
+                            self.forward(jsonmsg)
 
         except sockerr:
             print(client_colour, " left the game.")
