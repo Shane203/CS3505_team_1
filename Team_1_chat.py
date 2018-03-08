@@ -47,6 +47,7 @@ class ChatBox(object):
         """
         self.name = name  # set name to the name entered in form
         self.root = Tk()  # creates tkinter window
+        self.root.geometry('+%d+%d' % (1000, 0))
         self.frame = Frame(self.root)  # create a frame on the window
         self.msg = Entry(self.frame, width=50, font=('TkDefaultFont', 11))  # Where the Client enters the message
         self.msg.configure(bg='pink')  # set background colour of textfield

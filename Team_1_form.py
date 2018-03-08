@@ -144,14 +144,9 @@ class Form:
         """
         widget = event.widget
         selection = widget.curselection()
-        print("widget ", widget, "selection", selection)
         string = widget.get(selection)
-        print("string", string)
         self.game_id = string.split(" ")[1]
-        print("self.gane_id ", self.game_id)
         self.player_number = string.split(" ")[3]
-        print(self.game_id)
-        print(self.player_number)
 
     def check_conflict(self, name, game_id):
         """
@@ -257,7 +252,6 @@ class Form:
         # decodes received data.
         data = self.connection.sock.recv(4096).decode()
         msg = json.loads(data)
-        print(msg)
         id_array = msg["game_id"]
         num_array = msg["num"]
         is_public_array = msg["is_public"]
@@ -370,7 +364,6 @@ class Form:
         # decodes received data.
         data = self.connection.sock.recv(4096).decode()
         msg = json.loads(data)
-        print(msg)
         id_array = msg["game_id"]
         num_array = msg["num"]
         num = num_array[id_array.index(int(game_id))]
@@ -425,7 +418,6 @@ class Form:
         back = Button(frame, text="Back", command=lambda: self.back(game_id))
         in_lobby = Label(frame, width=30, text=("In Lobby: %s/4" % (str(player_number))),
                          fg="black")  # take in number of players in that game
-        print(game_id)
         start_game = Button(frame, width=30, text="Start Game",
                             command=lambda: self.check_conflict(name_entry.get(), int(game_id)))
 
@@ -597,7 +589,6 @@ class Form:
             # only get game.num when you go to lobby
             # decodes received data.
             data = self.connection.sock.recv(4096).decode()
-            print(data)
             msg = json.loads(data)
             exists = msg["exists"]
             if exists:
@@ -620,7 +611,6 @@ class Form:
             # accepts the id of your newly created game
             data = self.connection.sock.recv(4096).decode()
             msg = json.loads(data)
-            print(msg)
             self.connection.send_join_lobby_message(msg["game_id"])
             self.lobby("create", code,
                        msg["player_number"] + 1, msg["game_id"], )

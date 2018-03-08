@@ -63,9 +63,7 @@ class Connection:
         colors = ["red", "green", "yellow", "blue"]
         while True:
             data = self.sock.recv(4096).decode()  # decodes received data.
-            print(data)
             msg = json.loads(data)
-            print(msg)
             # Tell the time out function to reset the time.
             if "chat_msg" not in msg:
                 self.q.put("already push a button")
@@ -77,7 +75,6 @@ class Connection:
                                         names[colors.index(msg["colour"])],
                                         self.ALL_PIECES, names)
                 self.board.my_player = self.my_player
-                print(self.my_player.name, self.my_player.colour)
             # This tells all games which player's turn it is.
             # Messages come of the form {"turn_token":True,"Colour":<colour>}.
             if "turn_token" in msg:
@@ -98,7 +95,6 @@ class Connection:
                 roll = msg["dicenum"]
                 #  This is for the biased dice roll
                 if roll > 5:
-                    print("roll ===============", roll)
                     roll = 6
                 self.my_player.roll = roll  # Assigned value of dice roll
                 # genie_status is either "take", "return" or None
@@ -283,7 +279,6 @@ class Connection:
 
         """
         if self.my_player.turn_token:
-            print("********************ENDTURN******************************")
             self.my_player.turn_token = False
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
@@ -342,7 +337,6 @@ class Connection:
             elif piece_pos is None and self.my_player.roll != 6:
                 piece.movable = False
             else:
-                print("Highlight", piece)
                 piece.movable = True
                 self.my_player.movable_pieces_array.append(num)
                 flag = True
@@ -389,6 +383,7 @@ class Connection:
             player_list += [player]
         player_list = sorted(player_list, key=lambda e: e[1], reverse=True)
         root = Tk()
+        root.geometry('+%d+%d' % (100, 100))
         root.title("Game Finished!")
         root.configure(background='white')
         title = Label(root, height=2, bg="white", text=string)
