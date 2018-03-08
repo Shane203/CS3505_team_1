@@ -396,6 +396,9 @@ class Games:
                     data = {"game_id": msg["check_game"], "result": (self.check_if_game_started(
                         msg["check_game"]) or self.get_game_by_id(msg["check_game"]).player_num_enter_lobby == 4),
                             "player_number": self.get_game_by_id(msg["check_game"]).player_num_enter_lobby}
+                    print("check ", self.check_if_game_started(msg["check_game"]))
+                    print("num_lobby", self.get_game_by_id(msg["check_game"]).player_num_enter_lobby == 4)
+                    print("data ", data)
                     data = json.dumps(data)
                     connection.sendall(data.encode())
                 elif "check_room_code" in msg:
@@ -426,7 +429,9 @@ class Games:
                 elif "leave_lobby" in msg:
                     cur_game = self.get_game_by_id(msg["game_id"])
                     cur_game.player_num_enter_lobby -= 1
-                    if cur_game.player_num_press_start == cur_game.player_num_enter_lobby:
+                    if cur_game.player_num_enter_lobby == 0:
+                        self.all_games.remove(cur_game)
+                    elif (cur_game.player_num_press_start == cur_game.player_num_enter_lobby) and (cur_game.player_num_enter_lobby != 0):
                         cur_game._max_players = cur_game.player_num_press_start
                 elif "start_game" in msg:
                     self.get_game_by_id(msg["game_id"]).player_num_press_start += 1
