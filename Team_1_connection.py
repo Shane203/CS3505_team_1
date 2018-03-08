@@ -283,8 +283,6 @@ class Connection:
             self.my_player.diceroll_token = False
             self.my_player.roll = 0
             self.my_player.rolls_taken = 0
-            # self.my_player.turns_total = 0
-            # self.my_player.rolls_total = 0
             msg = {"colour": self.my_player.colour, "turn_over": True}
             data = json.dumps(msg)
             self.sock.sendall(data.encode())
