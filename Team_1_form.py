@@ -4,6 +4,16 @@ import json
 
 
 class Form:
+    """
+     This class is used to produce all the tkinter screens that will be used by
+     the client to enter, exit the lobby, game and show the end screen.
+
+     :param rules_file:
+     :type rules_file: str
+     :param connection: object connecting this class to the connection.
+     :type connection: instance object
+     """
+
     def __init__(self, rules_file, connection):
         self.connection = connection
         self.root = Tk()
@@ -14,6 +24,11 @@ class Form:
         self.player_number = None
 
     def home_page(self):
+        """
+        This function produces the home page window that provide options to
+        the player, concerning what type of game and if they wish to join a
+        lobby
+        """
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -62,6 +77,10 @@ class Form:
         self.root.mainloop()
 
     def create_game(self):
+        """
+        Shows tk window allowing player to create a new game after the player
+        clicks the create game button.
+        """
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -115,6 +134,12 @@ class Form:
         self.root.mainloop()
 
     def on_click(self, event):
+        """
+        Selects the widget after it is clicked
+
+        :param event: An event object gained by clicking on a public game
+        :type event: event object
+        """
         widget = event.widget
         selection = widget.curselection()
         print("widget ", widget, "selection", selection)
@@ -127,6 +152,14 @@ class Form:
         print(self.player_number)
 
     def check_conflict(self, name, game_id):
+        """
+        Checks for a conflict.
+
+        :param name: name of player
+        :type name: str
+        :param game_id: identification for this game
+        :type game_id: int
+        """
         self.connection.send_check_if_game_is_started(int(game_id))
         # decodes received data.
         data = self.connection.sock.recv(4096).decode()
@@ -137,6 +170,9 @@ class Form:
             self.start_game(name, int(game_id))
 
     def check_selected(self):
+        """
+        Checks which type of game was selected by the client.
+        """
         if self.player_number is not None:
             self.connection.send_check_if_game_is_started(int(self.game_id))
             # decodes received data.
@@ -150,6 +186,9 @@ class Form:
                 self.lobby("public", "", self.player_number, self.game_id)
 
     def public_room_is_full(self):
+        """
+        Informs the player if the room is full by displaying text.
+        """
         self.root.destroy()
         self.root = Tk()
         self.root.title("Ludo")
@@ -191,6 +230,7 @@ class Form:
         self.root.mainloop()
 
     def join_public(self):
+        """Shows public games to  which player can join"""
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -256,6 +296,7 @@ class Form:
         self.root.mainloop()
 
     def join_private(self):
+        """Shows options when client clicks on private game"""
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -305,6 +346,18 @@ class Form:
         self.root.mainloop()
 
     def update(self, lobby_type, room_code, game_id):
+        """
+        This is invoked when the update button is pressed, updating the info
+        provided to the tk window about the number of players currently in a
+        room.
+
+        :param lobby_type: The type of lobby
+        :type lobby_type: str
+        :param room_code: The identification for this room
+        :type room_code: str
+        :param game_id: The identification for this game
+        :type game_id: int
+        """
         # send message to the server
         self.connection.send_join_public_game()
 
@@ -319,8 +372,18 @@ class Form:
         self.lobby(lobby_type, room_code, num, game_id)
 
     def lobby(self, lobby_type, room_code, player_number, game_id):
+        """
+        This function is used as the main tk window for each type of lobby.
 
-        """One function for each type of lobby becasue they're all so similar."""
+        :param lobby_type: The type of lobby chosen
+        :type lobby_type: str
+        :param room_code: Code for the room
+        :type room_code: str
+        :param player_number: Number of players
+        :type player_number: int
+        :param game_id: The identification of this game.
+        :type game_id: int
+        """
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -402,6 +465,10 @@ class Form:
         self.root.mainloop()
 
     def no_room(self):
+        """
+        Invoked if no room is available, this will inform the client that their
+        is no room.
+        """
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -444,6 +511,12 @@ class Form:
         self.root.mainloop()
 
     def already_exists(self, code):
+        """
+        Inform the player that this room already exits.
+
+        :param code: room code
+        :type code: str
+        """
         # Same setup for each new page
         self.root.destroy()
         self.root = Tk()
@@ -486,11 +559,29 @@ class Form:
         self.root.mainloop()
 
     def start_game(self, name, game_id):
+        """
+        Invoked when a room had met the amount of players necessary for a game.
+        This removes the tk window and begins the game.
+
+        :param name: Name of game.
+        :type name: str
+        :param game_id: Identification for this game.
+        :type game_id: int
+        """
         if len(name) != 0:
             self.connection.send_start_the_game(game_id, name)
             self.root.destroy()
 
     def check_room_code(self, check_type, code):
+        """
+        Checks if the room is private, public, if is exists or not and if your
+        code is correct if it is private.
+
+        :param check_type: Checks which window the clients has come from.
+        :type check_type: str
+        :param code: Password for a private sever.
+        :type code: str
+        """
         if code != "":  # for private game
             data = {"check_room_code": str(code), "check_type": check_type}
             data = json.dumps(data)
@@ -510,7 +601,8 @@ class Form:
                                msg["num_of_players"] + 1, msg["game_id"])
             else:
                 if check_type == "create":
-                    # Automatically creates new game server-side if one didn't exist
+                    # Automatically creates new game server-side if one
+                    # didn't exist
                     self.connection.send_join_lobby_message(msg["new_game_id"])
                     self.lobby("create", code, 1, msg["new_game_id"])
                 elif check_type == "join":
@@ -526,8 +618,10 @@ class Form:
                        msg["player_number"] + 1, msg["game_id"], )
 
     def show_rules(self):
-        # Produces a document of the rules of the ludo game.
-        # Pops up a separate page, so there's no self.root.destroy()
+        """
+        Produces a document of the rules of the ludo game.
+        Pops up a separate page, so there's no ``self.root.destroy()``
+        """
         file = open(self.filename, "r")
         data = file.read()
         self.root = Tk()
@@ -537,6 +631,9 @@ class Form:
         self.root.mainloop()
 
     def back(self, game_id=None):
+        """
+        Go back from current tk window after pressing back button.
+        """
         if self.current_page == "create_game" or self.current_page == "join_public" or \
                 self.current_page == "join_private":
             self.home_page()
@@ -558,4 +655,5 @@ class Form:
             self.home_page()
 
     def run(self):
+        """Runs the form"""
         self.home_page()
