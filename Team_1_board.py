@@ -252,19 +252,19 @@ class Board:
             white_box_size = BOX_SIZE * 4  # Size of the whote box.
             # Check if home base should flash.
             if self.current_player == "red" and colours[
-                    i] == RED and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
+                    i] == RED and check > FPS/2:
                 pygame.draw.rect(SCREEN, ORANGE,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "green" and colours[
-                    i] == GREEN and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
+                    i] == GREEN and check > FPS/2:
                 pygame.draw.rect(SCREEN, LGREEN,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "yellow" and colours[
-                    i] == YELLOW and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
+                    i] == YELLOW and check > FPS/2:
                 pygame.draw.rect(SCREEN, LYELLOW,
                                  (home[i][0], home[i][1], home_size, home_size))
             elif self.current_player == "blue" and colours[
-                    i] == BLUE and ((FPS/4 < check < FPS/2) or check > 3*FPS/4):
+                    i] == BLUE and check > FPS/2:
                 pygame.draw.rect(SCREEN, LBLUE,
                                  (home[i][0], home[i][1], home_size, home_size))
             else:
