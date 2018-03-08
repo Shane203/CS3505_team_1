@@ -123,8 +123,9 @@ class Game:
         :type jsonmsg: dict.
         """
         string = json.dumps(jsonmsg)
+        print("Forwarding: ",string)
         for i in range(self.max_players()):
-            # Condition accepts True and None(won) players.
+            # If player is connected or finished, forward to them.
             if self.in_game()[i] != "disconnected":
                 self._clients[i].sendall(string.encode())
 
@@ -138,7 +139,7 @@ class Game:
         :type index: int.
         """
         string = json.dumps(jsonmsg)
-        print(string)
+        print("%s sent to %s" % (string,self.colours[index]))
         self.clients()[index].sendall(string.encode())
 
     def start_game(self):
@@ -151,9 +152,9 @@ class Game:
                  {"colour": "green", "start": True, "names": self.names()},
                  {"colour": "yellow", "start": True, "names": self.names()},
                  {"colour": "blue", "start": True, "names": self.names()}]
+        print("*Starting Game*")
         for i in range(self.player_num_press_start):
             self.sendto(start[i], i)
-            print("sent start to ", i)
         sleep(1)
         token = {"colour": self.colours[0], "turn_token": True}
         self.forward(token)
@@ -214,8 +215,6 @@ class Game:
         client_colour, index = self.add(connection)
         try:
             self._names[self.num_of_players()-1] = name
-            print("is full?")
-            print(self.is_full())
             while not self.is_full():  # Loop until all players have pressed start
                 continue
             sleep(1)
@@ -223,10 +222,9 @@ class Game:
             while True:
                 jsonmsg = None
                 data = connection.recv(4096).decode()  # Get data from client
+                print("Received: ",data)
                 data = data.split("}")
                 for msg in data:
-                    print(data)
-                    print(len(msg))
                     if len(msg) > 1:
                         msg += "}"
                         msg = json.loads(msg)
@@ -239,14 +237,11 @@ class Game:
                             genie_status = self.roll_genie()
                             jsonmsg = {
                                 "colour": msg["colour"], "dicenum": num, "genie_result": genie_status}
-                            print(jsonmsg)
                         elif "turn_over" in msg and index == self.token:
                             self.next_player()
                             jsonmsg = {
                                 "colour": self.colours[self.token], "turn_token": True}
-                            print("iT is now the turn of   ",
-                                  self.colours[self.token])
-                        # If the JSON message is Sendout or Movement, simply forward it unchanged to all other clients.
+                        # If the JSON message is for chat or movement, simply forward to all clients.
                         elif "movement" in msg:
                             jsonmsg = msg
                         elif "chat_msg" in msg:
@@ -268,7 +263,6 @@ class Game:
             if index == self.token:
                 self.next_player()
                 data = {"colour": self.colours[self.token], "turn_token": True}
-                print(data)
                 self.forward(data)
                 print("Player left, so we moved the token on!")
 
@@ -361,13 +355,12 @@ class Games:
                 data = connection.recv(4096)  # Get data from client
                 # decode and create dict from data
                 msg = json.loads(data.decode())
-                print(msg)
+                print("Received: ",msg)
                 if "create_game" in msg:  # it should followed with name
                     this_game = self.create_new_game(msg["create_game"])
                     jsonmsg = {"player_number": this_game.num_of_players(
                     ), "game_id": this_game.game_id(), "room_code": this_game.room_code()}
                     string = json.dumps(jsonmsg)
-                    print(string)
                     connection.sendall(string.encode())
                     continue
                 elif "show_game_list" in msg:
@@ -380,24 +373,18 @@ class Games:
                         public_array.append(game.is_public_game())
                     data = {"game_id": id_array, "num": num_array,
                             "is_public": public_array}
-                    print(data)
                     data = json.dumps(data)
                     connection.sendall(data.encode())
                 elif "check_game" in msg:
                     data = {"game_id": msg["check_game"], "result": (self.check_if_game_started(
                         msg["check_game"]) or self.get_game_by_id(msg["check_game"]).player_num_enter_lobby == 4),
                             "player_number": self.get_game_by_id(msg["check_game"]).player_num_enter_lobby}
-                    print("check ", self.check_if_game_started(msg["check_game"]))
-                    print("num_lobby", self.get_game_by_id(msg["check_game"]).player_num_enter_lobby == 4)
-                    print("data ", data)
                     data = json.dumps(data)
                     connection.sendall(data.encode())
                 elif "check_room_code" in msg:
-                    print(msg)
                     exists = False
                     for game in self.all_games:
                         if game.room_code() == msg["check_room_code"]:
-                            print("t")
                             exists = True
                             data = {"exists": True, "room_code": game.room_code(),
                                     "num_of_players": game.player_num_enter_lobby, "game_id": game.game_id()}
@@ -449,8 +436,7 @@ if __name__ == "__main__":
     """
 
     try:
-        games = Games(10001)  # Creates instance of class
-        print("here")
+        games = Games(10000)  # Creates instance of class
         games.listen()
     except OSError:
         print("OS Error: Port number already in use or another server process may be running")
