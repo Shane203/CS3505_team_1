@@ -1,0 +1,319 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Team_1_form module &#8212; Team One 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Team_1_piece module" href="Team_1_piece.html" />
+    <link rel="prev" title="Team_1_dice module" href="Team_1_dice.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_piece.html" title="Team_1_piece module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_dice.html" title="Team_1_dice module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Team_1_form">
+<span id="team-1-form-module"></span><h1>Team_1_form module<a class="headerlink" href="#module-Team_1_form" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Team_1_form.Form">
+<em class="property">class </em><code class="descclassname">Team_1_form.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>rules_file</em>, <em>connection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is used to produce all the tkinter screens that will be used by
+the client to enter, exit the lobby, game and show the end screen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rules_file</strong> (<em>str</em>) – </li>
+<li><strong>connection</strong> (<em>instance object</em>) – object connecting this class to the connection.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Team_1_form.Form.already_exists">
+<code class="descname">already_exists</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.already_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.already_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inform the player that this room already exits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>code</strong> (<em>str</em>) – room code</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.back">
+<code class="descname">back</code><span class="sig-paren">(</span><em>game_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.back"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go back from current tk window after pressing back button.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.check_conflict">
+<code class="descname">check_conflict</code><span class="sig-paren">(</span><em>name</em>, <em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.check_conflict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.check_conflict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for a conflict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – name of player</li>
+<li><strong>game_id</strong> (<em>int</em>) – identification for this game</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.check_room_code">
+<code class="descname">check_room_code</code><span class="sig-paren">(</span><em>check_type</em>, <em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.check_room_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.check_room_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the room is private, public, if is exists or not and if your
+code is correct if it is private.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>check_type</strong> (<em>str</em>) – Checks which window the clients has come from.</li>
+<li><strong>code</strong> (<em>str</em>) – Password for a private sever.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.check_selected">
+<code class="descname">check_selected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.check_selected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.check_selected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks which type of game was selected by the client.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.create_game">
+<code class="descname">create_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.create_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.create_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows tk window allowing player to create a new game after the player
+clicks the create game button.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.home_page">
+<code class="descname">home_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.home_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.home_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function produces the home page window that provide options to
+the player, concerning what type of game and if they wish to join a
+lobby</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.join_private">
+<code class="descname">join_private</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.join_private"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.join_private" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows options when client clicks on private game</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.join_public">
+<code class="descname">join_public</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.join_public"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.join_public" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows public games to  which player can join</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.lobby">
+<code class="descname">lobby</code><span class="sig-paren">(</span><em>lobby_type</em>, <em>room_code</em>, <em>player_number</em>, <em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.lobby"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.lobby" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used as the main tk window for each type of lobby.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lobby_type</strong> (<em>str</em>) – The type of lobby chosen</li>
+<li><strong>room_code</strong> (<em>str</em>) – Code for the room</li>
+<li><strong>player_number</strong> (<em>int</em>) – Number of players</li>
+<li><strong>game_id</strong> (<em>int</em>) – The identification of this game.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.no_room">
+<code class="descname">no_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.no_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.no_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked if no room is available, this will inform the client that their
+is no room.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.on_click">
+<code class="descname">on_click</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.on_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.on_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects the widget after it is clicked</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> (<em>event object</em>) – An event object gained by clicking on a public game</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.public_room_is_full">
+<code class="descname">public_room_is_full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.public_room_is_full"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.public_room_is_full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Informs the player if the room is full by displaying text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the form</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.show_rules">
+<code class="descname">show_rules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.show_rules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.show_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a document of the rules of the ludo game.
+Pops up a separate page, so there’s no <code class="docutils literal notranslate"><span class="pre">self.root.destroy()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.start_game">
+<code class="descname">start_game</code><span class="sig-paren">(</span><em>name</em>, <em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.start_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.start_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when a room had met the amount of players necessary for a game.
+This removes the tk window and begins the game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of game.</li>
+<li><strong>game_id</strong> (<em>int</em>) – Identification for this game.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_form.Form.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>lobby_type</em>, <em>room_code</em>, <em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_form.html#Form.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_form.Form.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is invoked when the update button is pressed, updating the info
+provided to the tk window about the number of players currently in a
+room.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lobby_type</strong> (<em>str</em>) – The type of lobby</li>
+<li><strong>room_code</strong> (<em>str</em>) – The identification for this room</li>
+<li><strong>game_id</strong> (<em>int</em>) – The identification for this game</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Team_1_dice.html"
+                        title="previous chapter">Team_1_dice module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Team_1_piece.html"
+                        title="next chapter">Team_1_piece module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/RSTFile/Team_1_form.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_piece.html" title="Team_1_piece module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_dice.html" title="Team_1_dice module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>

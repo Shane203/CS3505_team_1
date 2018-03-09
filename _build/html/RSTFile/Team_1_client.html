@@ -1,0 +1,236 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Team_1_client module &#8212; Team One 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Team_1_connection module" href="Team_1_connection.html" />
+    <link rel="prev" title="Team_1_chat module" href="Team_1_chat.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_connection.html" title="Team_1_connection module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_chat.html" title="Team_1_chat module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Team_1_client">
+<span id="team-1-client-module"></span><h1>Team_1_client module<a class="headerlink" href="#module-Team_1_client" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Team_1_client.Ludo">
+<em class="property">class </em><code class="descclassname">Team_1_client.</code><code class="descname">Ludo</code><a class="reference internal" href="../_modules/Team_1_client.html#Ludo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the main Ludo class.</p>
+<p>It initialises my_player, genie_owner, all_pieces, board, connection,
+the score board and the timer.</p>
+<p>It also holds the main run function which runs the game.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>self.my_player</strong> – Instance of Player object.</li>
+<li><strong>self.genie_owner</strong> – Value representing owner of genie.</li>
+<li><strong>self.starting_point</strong> – List represent starting position of each player</li>
+<li><strong>self.colour_list</strong> – List of colours.</li>
+<li><strong>self.colour_to_img</strong> – Image representing colour</li>
+<li><strong>self.all_pieces</strong> – List of all pieces</li>
+<li><strong>self.board</strong> – Instance of board object</li>
+<li><strong>self.connection</strong> – Instance of connection</li>
+<li><strong>self.current_player</strong> – Current player</li>
+<li><strong>self.colour_check</strong> – Check if flashing.</li>
+<li><strong>self.time_limited</strong> – Amount of time before automatic movement/roll</li>
+<li><strong>self.p</strong> – Value from server for time function to activate.</li>
+<li><strong>self.font</strong> – Type of font</li>
+<li><strong>self.text</strong> – Text of time function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Team_1_client.Ludo.bgm">
+<code class="descname">bgm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.bgm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.bgm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the frequency, loads the background music and plays it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.check_click">
+<code class="descname">check_click</code><span class="sig-paren">(</span><em>x_value</em>, <em>y_value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.check_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.check_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>If there is a click after a dice has been rolled check all my_player
+pieces. If piece is movable check the size of the piece to set the
+clickable coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_value</strong> (<em>int.</em>) – The x_value coordinate of the click.</li>
+<li><strong>y_value</strong> (<em>int.</em>) – The x_value coordinate of the click.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.click_piece">
+<code class="descname">click_piece</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.click_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.click_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>After a dice is rolled, if the player clicks a movable piece, call
+click_piece. It calls the move_piece function, it also sends what piece
+was moved to the server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num</strong> (<em>int.</em>) – the number of the piece.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.draw_time_out">
+<code class="descname">draw_time_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.draw_time_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.draw_time_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the timer which counts down until it reaches 0. When this
+happens it goes back to its original number and counts down again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.pause">
+<code class="descname">pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.pause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pauses all music and sounds.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main game method.
+It draws the board, pieces and the buttons. It also shows the diceS
+rolling animation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.setup">
+<code class="descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the coo-rdinate dictionary for the board, initialises
+pygame. It also blocks out some pygame events so the queue doesn’t
+overflow from unneeded events such as MOUSEMOTION. It also setups
+attributes in board, connects to the server and shows the start
+screen.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.show_start_screen">
+<code class="descname">show_start_screen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.show_start_screen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.show_start_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows the start screen whent game first starts.</p>
+<p>It shows the word LUDO in flashing colours. Once the player
+connects to the server, the screen goes away.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.terminate">
+<code class="descname">terminate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.terminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quit game if user closes window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_client.Ludo.unpause">
+<code class="descname">unpause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_client.html#Ludo.unpause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_client.Ludo.unpause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpauses all music and sounds.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Team_1_chat.html"
+                        title="previous chapter">Team_1_chat module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Team_1_connection.html"
+                        title="next chapter">Team_1_connection module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/RSTFile/Team_1_client.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_connection.html" title="Team_1_connection module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_chat.html" title="Team_1_chat module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>

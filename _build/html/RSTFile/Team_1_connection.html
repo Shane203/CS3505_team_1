@@ -1,0 +1,303 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Team_1_connection module &#8212; Team One 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Team_1_constants module" href="Team_1_constants.html" />
+    <link rel="prev" title="Team_1_client module" href="Team_1_client.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_constants.html" title="Team_1_constants module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_client.html" title="Team_1_client module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Team_1_connection">
+<span id="team-1-connection-module"></span><h1>Team_1_connection module<a class="headerlink" href="#module-Team_1_connection" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Team_1_connection.Connection">
+<em class="property">class </em><code class="descclassname">Team_1_connection.</code><code class="descname">Connection</code><span class="sig-paren">(</span><em>board</em>, <em>my_player</em>, <em>current</em>, <em>all_pieces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Connection is used to receive all communication from the server to this
+client and vice versa. All dynamic action by client occurs through
+Connection.py.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>board</strong> (<em>instance object</em>) – The board object</li>
+<li><strong>my_player</strong> (<em>instance object</em>) – The player object</li>
+<li><strong>current</strong> (<em>str</em>) – Current player</li>
+<li><strong>all_pieces</strong> (<em>list</em>) – Array of all pieces.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Team_1_connection.Connection.connect_to_server">
+<code class="descname">connect_to_server</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.connect_to_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.connect_to_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects client to server, creates thread to listen for incoming
+message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.connection_handler">
+<code class="descname">connection_handler</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.connection_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.connection_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function controls all data received from the server, and updates
+the client-side program according to the received <code class="docutils literal notranslate"><span class="pre">JSON</span></code> messages.</p>
+<p>When referring to <code class="docutils literal notranslate"><span class="pre">JSON</span></code> message comments, if the symbols <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code>
+are used, it implies that the data is dynamic, and what will be
+in there depends on the player colour, roll of the dice etc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.end_roll">
+<code class="descname">end_roll</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.end_roll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.end_roll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when player has finished movement of piece. Resets all player’s
+<code class="docutils literal notranslate"><span class="pre">pieces.movable</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Checks if player should end turn,
+Otherwise allows player another dice roll.
+Checks if all player’s pieces on home run, allowing player to win.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.end_screen">
+<code class="descname">end_screen</code><span class="sig-paren">(</span><em>names</em>, <em>scores</em>, <em>string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.end_screen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.end_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a TKinter window which shows the scores of each player
+:param names: list of player names
+:param scores: list of scores
+:param string:  text to be shown on scoreboard</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.end_turn">
+<code class="descname">end_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.end_turn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.end_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when player’s turn is over. It resets player turn token, the
+amount of rolls, and ability to roll dice. Sends message to server
+informing other players your turn is over.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.pieces_playable">
+<code class="descname">pieces_playable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.pieces_playable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.pieces_playable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if any or all players pieces can be played.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Array of playable pieces to be used by <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">time_out()</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_check_if_game_is_started">
+<code class="descname">send_check_if_game_is_started</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_check_if_game_is_started"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_check_if_game_is_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when client tries to join a game. Sends message to server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>game_id</strong> (<em>str</em>) – the room  id of lobby game</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_create_game">
+<code class="descname">send_create_game</code><span class="sig-paren">(</span><em>room_code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_create_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_create_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when user press the button “create” during lobby, informs server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>room_code</strong> (<em>str</em>) – the room_code of the lobby game</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_join_lobby_message">
+<code class="descname">send_join_lobby_message</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_join_lobby_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_join_lobby_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when user join the lobby.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>game_id</strong> (<em>int</em>) – the game_id of the lobby game</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_join_public_game">
+<code class="descname">send_join_public_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_join_public_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_join_public_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when user press the button “Join Public Game”, informing server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_leave_lobby">
+<code class="descname">send_leave_lobby</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_leave_lobby"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_leave_lobby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when user leave the lobby.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>game_id</strong> (<em>int</em>) – the game_id of the lobby game</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_movement">
+<code class="descname">send_movement</code><span class="sig-paren">(</span><em>num</em>, <em>roll</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_movement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_movement" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Announces to other players that one of your pieces is moving</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num</strong> (<em>int</em>) – number of piece in <code class="docutils literal notranslate"><span class="pre">ALL_PIECES</span></code> array</li>
+<li><strong>roll</strong> (<em>int</em>) – value of dice roll</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.send_start_the_game">
+<code class="descname">send_start_the_game</code><span class="sig-paren">(</span><em>game_id</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.send_start_the_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.send_start_the_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when client asks to start a game, sending a message to server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>identification</strong> (<em>str</em>) – the room id of lobby game</li>
+<li><strong>name</strong> (<em>str</em>) – the name of the player</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.time_out">
+<code class="descname">time_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.time_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.time_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when the timer has run out of time. It will
+automatically roll dice or move random piece when timer runs out.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_connection.Connection.win_condition">
+<code class="descname">win_condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_connection.html#Connection.win_condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_connection.Connection.win_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when players meet’s the winning conditions. Sends message
+<code class="docutils literal notranslate"><span class="pre">&quot;Player_Won&quot;:</span> <span class="pre">&quot;my</span> <span class="pre">colour&quot;</span></code> to server and creates new thread to
+produce an end screen.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Team_1_client.html"
+                        title="previous chapter">Team_1_client module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Team_1_constants.html"
+                        title="next chapter">Team_1_constants module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/RSTFile/Team_1_connection.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_constants.html" title="Team_1_constants module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_client.html" title="Team_1_client module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>

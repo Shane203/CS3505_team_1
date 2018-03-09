@@ -1,0 +1,328 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Team_1_board module &#8212; Team One 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Team_1_box_and_button module" href="Team_1_box_and_button.html" />
+    <link rel="prev" title="CS3505_team_1" href="modules.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_box_and_button.html" title="Team_1_box_and_button module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="CS3505_team_1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Team_1_board">
+<span id="team-1-board-module"></span><h1>Team_1_board module<a class="headerlink" href="#module-Team_1_board" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Team_1_board.Board">
+<em class="property">class </em><code class="descclassname">Team_1_board.</code><code class="descname">Board</code><span class="sig-paren">(</span><em>my_player</em>, <em>all_pieces</em>, <em>colour_to_img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Draws the main Ludo board and the moving pieces.</p>
+<p>It also checks if two pieces are on the same spot. If that is the case,
+then the size of the pieces is changed. It also checks if a piece has
+killed and opponents piece.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>my_player</strong> (<em>instance object</em>) – Your player object.</li>
+<li><strong>all_pieces</strong> (<em>list</em>) – All the pieces on the board.</li>
+<li><strong>colour_to_img</strong> (<em>dict</em>) – Dictionary that map player colour to images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Team_1_board.Board.add_connection">
+<code class="descname">add_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.add_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.add_connection" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Adds the connection to the board. It creates a new dice object,</dt>
+<dd>a roll button and the current_player whose turn it is.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connection</strong> (<em>instance object</em>) – connection object, linking this to board.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.check_conflict">
+<code class="descname">check_conflict</code><span class="sig-paren">(</span><em>moving_piece</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.check_conflict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.check_conflict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if two pieces are in the same position.</p>
+<p>Goes through all the pieces on the board and checks if there is
+a conflict. If there is and the opponents piece is not in a safe
+spot then kill the piece by calling the death_function. Also
+call the check_many_pieces to check if there are other pieces
+that are in conflicting positions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>moving_piece</strong> (<em>instance object</em>) – instance of moving piece</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.check_many_pieces">
+<code class="descname">check_many_pieces</code><span class="sig-paren">(</span><em>moving_piece</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.check_many_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.check_many_pieces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if there is a conflict in position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>moving_piece</strong> (<em>instance object</em>) – instance of moving piece</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.death_function">
+<code class="descname">death_function</code><span class="sig-paren">(</span><em>piece</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.death_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.death_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the piece back to its starting position.
+It retraces its steps all the way back.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>piece</strong> (<em>instance object</em>) – instance of this piece</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.disconnect_function">
+<code class="descname">disconnect_function</code><span class="sig-paren">(</span><em>colour</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.disconnect_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.disconnect_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the piece back to its starting position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>colour</strong> (<em>str</em>) – colour of player of disconnected player</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.draw_arrows_and_stars">
+<code class="descname">draw_arrows_and_stars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.draw_arrows_and_stars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.draw_arrows_and_stars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the arrows and stars on the board. It also calls the
+<code class="docutils literal notranslate"><span class="pre">draw_boxes</span></code> function. The arrows are drawn using pygame’s draw
+function. The arrow images are blit on to the board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.draw_board">
+<code class="descname">draw_board</code><span class="sig-paren">(</span><em>check</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.draw_board"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.draw_board" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the main board.</p>
+<p>It calls the draw_arrows_and_stars function. It also draws the rectangle
+and the circles as home bases for the pieces.</p>
+<p>It then draw the pieces, genie, roll button and displays dice.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>check</strong> (<em>int</em>) – Indicates if the player and their pieces are flashing.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.draw_boxes">
+<code class="descname">draw_boxes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.draw_boxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.draw_boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws rectangles for each position on the board using the boc_pos
+list. It also blits star images on the board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.draw_genie">
+<code class="descname">draw_genie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.draw_genie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.draw_genie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the genie on the board depending on who has the genie.
+If no-one has the genie, a lamp is placed in the middle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.draw_pieces">
+<code class="descname">draw_pieces</code><span class="sig-paren">(</span><em>check=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.draw_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.draw_pieces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the pieces on the board.</p>
+<p>It goes through all the pieces on the board and draw it in their
+position. If there is a conflict their size changes.
+The pieces flash is they are movable depending on the dice roll.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.draw_scoreboard">
+<code class="descname">draw_scoreboard</code><span class="sig-paren">(</span><em>list_of_pieces</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.draw_scoreboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.draw_scoreboard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the score board that represent the score of each player. It
+dynamically alter the positions of each player according to their score.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list_of_pieces</strong> (<em>list</em>) – A list of all pieces</li>
+<li><strong>x</strong> (<em>int</em>) – Left position</li>
+<li><strong>y</strong> (<em>int</em>) – Top position</li>
+<li><strong>w</strong> (<em>int</em>) – Width</li>
+<li><strong>h</strong> (<em>int</em>) – Height</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A graphical scoreboard</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.get_low_range">
+<code class="descname">get_low_range</code><span class="sig-paren">(</span><em>colour</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.get_low_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.get_low_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return low range of player that has disconnected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>colour</strong> (<em>str</em>) – Colour of this player.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">int representing low range of particular colour</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.get_score">
+<code class="descname">get_score</code><span class="sig-paren">(</span><em>list_of_pieces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.get_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.get_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the scores in order: <code class="docutils literal notranslate"><span class="pre">red,</span> <span class="pre">green,</span> <span class="pre">yellow,</span> <span class="pre">blue</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_board.Board.move_piece">
+<code class="descname">move_piece</code><span class="sig-paren">(</span><em>piece_num</em>, <em>step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_board.html#Board.move_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_board.Board.move_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>This moves the piece assuming the piece is movable.</p>
+<p>If the piece is in the home position, it can onl be moved if a 6 is
+rolled on the dice. It also draws the pieces as they move each step.
+After the piece has move it checks if there is a conflict with another
+piece on the board.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>piece_num</strong> (<em>int</em>) – Number in index of <code class="docutils literal notranslate"><span class="pre">ALL_PIECE</span></code> of this piece</li>
+<li><strong>step</strong> (<em>int</em>) – Number of steps/moves by this piece</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">CS3505_team_1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Team_1_box_and_button.html"
+                        title="next chapter">Team_1_box_and_button module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/RSTFile/Team_1_board.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_box_and_button.html" title="Team_1_box_and_button module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="CS3505_team_1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>
