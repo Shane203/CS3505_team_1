@@ -4,3 +4,7 @@ RSTFile
 _static
 _templates
 _build/doctrees
+conf.py
+index.rst
+make.bat
+Makefile

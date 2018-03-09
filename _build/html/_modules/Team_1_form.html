@@ -42,9 +42,20 @@
 
 
 <div class="viewcode-block" id="Form"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form">[docs]</a><span class="k">class</span> <span class="nc">Form</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     This class is used to produce all the tkinter screens that will be used by</span>
+<span class="sd">     the client to enter, exit the lobby, game and show the end screen.</span>
+
+<span class="sd">     :param rules_file:</span>
+<span class="sd">     :type rules_file: str</span>
+<span class="sd">     :param connection: object connecting this class to the connection.</span>
+<span class="sd">     :type connection: instance object</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rules_file</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">rules_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">game_id</span> <span class="o">=</span> <span class="kc">None</span>
@@ -52,9 +63,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">player_number</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Form.home_page"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.home_page">[docs]</a>    <span class="k">def</span> <span class="nf">home_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function produces the home page window that provide options to</span>
+<span class="sd">        the player, concerning what type of game and if they wish to join a</span>
+<span class="sd">        lobby</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;home_page&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
@@ -100,6 +117,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.create_game"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.create_game">[docs]</a>    <span class="k">def</span> <span class="nf">create_game</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shows tk window allowing player to create a new game after the player</span>
+<span class="sd">        clicks the create game button.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
@@ -152,17 +173,28 @@
         <span class="n">back</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">background</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Form.on_double_click"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.on_double_click">[docs]</a>    <span class="k">def</span> <span class="nf">on_double_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<div class="viewcode-block" id="Form.on_click"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.on_click">[docs]</a>    <span class="k">def</span> <span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects the widget after it is clicked</span>
+
+<span class="sd">        :param event: An event object gained by clicking on a public game</span>
+<span class="sd">        :type event: event object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">widget</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">widget</span>
         <span class="n">selection</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">curselection</span><span class="p">()</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">game_id</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_id</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">player_number</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_id</span><span class="p">)</span></div>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_number</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Form.check_conflict"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.check_conflict">[docs]</a>    <span class="k">def</span> <span class="nf">check_conflict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks for a conflict.</span>
+
+<span class="sd">        :param name: name of player</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param game_id: identification for this game</span>
+<span class="sd">        :type game_id: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_check_if_game_is_started</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">game_id</span><span class="p">))</span>
         <span class="c1"># decodes received data.</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
@@ -173,20 +205,28 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">start_game</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">game_id</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Form.check_selected"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.check_selected">[docs]</a>    <span class="k">def</span> <span class="nf">check_selected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks which type of game was selected by the client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_check_if_game_is_started</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_id</span><span class="p">))</span>
             <span class="c1"># decodes received data.</span>
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">public_room_is_full</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">player_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;player_number&quot;</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;player_number&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_join_lobby_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_id</span><span class="p">)</span></div>
                 <span class="bp">self</span><span class="o">.</span><span class="n">lobby</span><span class="p">(</span><span class="s2">&quot;public&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Form.public_room_is_full"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.public_room_is_full">[docs]</a>    <span class="k">def</span> <span class="nf">public_room_is_full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Informs the player if the room is full by displaying text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;public_room_is_full&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
@@ -197,7 +237,7 @@
 
         <span class="c1"># This is the part that varies between pages</span>
         <span class="n">no_room</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-                        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Current Room is full&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+                        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Current Room is full or deleted&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
         <span class="n">try_again</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span>
             <span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Please try another room&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
 
@@ -226,9 +266,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.join_public"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.join_public">[docs]</a>    <span class="k">def</span> <span class="nf">join_public</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shows public games to  which player can join&quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;join_public&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
@@ -248,7 +290,6 @@
         <span class="c1"># decodes received data.</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="n">id_array</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">]</span>
         <span class="n">num_array</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">]</span>
         <span class="n">is_public_array</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;is_public&quot;</span><span class="p">]</span>
@@ -260,7 +301,7 @@
                 <span class="k">if</span> <span class="n">is_public_array</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
                     <span class="n">list_box</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;Game </span><span class="si">%s</span><span class="s2"> --- </span><span class="si">%s</span><span class="s2"> / 4 in lobby&quot;</span> <span class="o">%</span>
                                     <span class="p">(</span><span class="n">id_array</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">num_array</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
-        <span class="n">list_box</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Double-Button-1&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_double_click</span><span class="p">)</span>
+        <span class="n">list_box</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;&lt;ListboxSelect&gt;&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_click</span><span class="p">)</span>
         <span class="c1"># list_box.pack(side=&quot;top&quot;, fill=&quot;both&quot;, expand=True)</span>
         <span class="n">join_game</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Join Game&quot;</span><span class="p">,</span>
                            <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_selected</span><span class="p">())</span>
@@ -291,9 +332,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.join_private"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.join_private">[docs]</a>    <span class="k">def</span> <span class="nf">join_private</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shows options when client clicks on private game&quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;join_private&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
@@ -339,19 +382,50 @@
         <span class="n">back</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">background</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Form.lobby"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.lobby">[docs]</a>    <span class="k">def</span> <span class="nf">lobby</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lobby_type</span><span class="p">,</span> <span class="n">room_code</span><span class="p">,</span> <span class="n">player_number</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_join_lobby_message</span><span class="p">(</span><span class="n">game_id</span><span class="p">)</span>
+<div class="viewcode-block" id="Form.update"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lobby_type</span><span class="p">,</span> <span class="n">room_code</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is invoked when the update button is pressed, updating the info</span>
+<span class="sd">        provided to the tk window about the number of players currently in a</span>
+<span class="sd">        room.</span>
 
-        <span class="sd">&quot;&quot;&quot;One function for each type of lobby becasue they&#39;re all so similar.&quot;&quot;&quot;</span>
+<span class="sd">        :param lobby_type: The type of lobby</span>
+<span class="sd">        :type lobby_type: str</span>
+<span class="sd">        :param room_code: The identification for this room</span>
+<span class="sd">        :type room_code: str</span>
+<span class="sd">        :param game_id: The identification for this game</span>
+<span class="sd">        :type game_id: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># send message to the server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_join_public_game</span><span class="p">()</span>
+
+        <span class="c1"># receive message from the server</span>
+        <span class="c1"># decodes received data.</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">id_array</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">]</span>
+        <span class="n">num_array</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">]</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">num_array</span><span class="p">[</span><span class="n">id_array</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">game_id</span><span class="p">))]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lobby</span><span class="p">(</span><span class="n">lobby_type</span><span class="p">,</span> <span class="n">room_code</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">game_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Form.lobby"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.lobby">[docs]</a>    <span class="k">def</span> <span class="nf">lobby</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lobby_type</span><span class="p">,</span> <span class="n">room_code</span><span class="p">,</span> <span class="n">player_number</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is used as the main tk window for each type of lobby.</span>
+
+<span class="sd">        :param lobby_type: The type of lobby chosen</span>
+<span class="sd">        :type lobby_type: str</span>
+<span class="sd">        :param room_code: Code for the room</span>
+<span class="sd">        :type room_code: str</span>
+<span class="sd">        :param player_number: Number of players</span>
+<span class="sd">        :type player_number: int</span>
+<span class="sd">        :param game_id: The identification of this game.</span>
+<span class="sd">        :type game_id: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
-
-        <span class="n">ludo_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Ludo&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
-        <span class="n">blank</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
-        <span class="n">back</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Back&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">back</span><span class="p">(</span><span class="n">game_id</span><span class="p">))</span>
 
         <span class="c1"># This is the part that varies between pages</span>
         <span class="n">name_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Player Name:&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
@@ -366,7 +440,7 @@
                 <span class="n">label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
                               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;New Private Game created&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
                 <span class="n">room_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">(</span>
-                    <span class="s2">&quot;Room Code: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">room_code</span><span class="p">)),</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+                        <span class="s2">&quot;Room Code: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">room_code</span><span class="p">)),</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">lobby_type</span> <span class="o">==</span> <span class="s2">&quot;public&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;public_lobby&quot;</span>
             <span class="n">label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Game &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">room_code</span><span class="p">)))</span>
@@ -374,17 +448,23 @@
         <span class="k">elif</span> <span class="n">lobby_type</span> <span class="o">==</span> <span class="s2">&quot;private&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;private_lobby&quot;</span>
             <span class="n">label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;Room Code: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">room_code</span><span class="p">)))</span>
+                    <span class="s2">&quot;Room Code: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">room_code</span><span class="p">)))</span>
             <span class="n">room_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+        <span class="n">ludo_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Ludo&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">blank</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Back&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">back</span><span class="p">(</span><span class="n">game_id</span><span class="p">))</span>
         <span class="n">in_lobby</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;In Lobby: </span><span class="si">%s</span><span class="s2">/4&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">player_number</span><span class="p">))),</span>
                          <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>  <span class="c1"># take in number of players in that game</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">game_id</span><span class="p">)</span>
         <span class="n">start_game</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Start Game&quot;</span><span class="p">,</span>
                             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_conflict</span><span class="p">(</span><span class="n">name_entry</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="nb">int</span><span class="p">(</span><span class="n">game_id</span><span class="p">)))</span>
 
+        <span class="n">update</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Updating Message&quot;</span><span class="p">,</span>
+                        <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lobby_type</span><span class="p">,</span> <span class="n">room_code</span><span class="p">,</span> <span class="n">game_id</span><span class="p">))</span>
+
         <span class="c1"># Drawing each widget on to the frame</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">minsize</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">230</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">maxsize</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">230</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">minsize</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">260</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">maxsize</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">260</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">background</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
 
         <span class="n">frame</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
@@ -413,14 +493,22 @@
         <span class="n">start_game</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">start_game</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">background</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">)</span>
 
-        <span class="n">back</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">update</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">update</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">background</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">)</span>
+
+        <span class="n">back</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">back</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">background</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.no_room"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.no_room">[docs]</a>    <span class="k">def</span> <span class="nf">no_room</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invoked if no room is available, this will inform the client that their</span>
+<span class="sd">        is no room.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;no_room&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
@@ -460,9 +548,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.already_exists"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.already_exists">[docs]</a>    <span class="k">def</span> <span class="nf">already_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inform the player that this room already exits.</span>
+
+<span class="sd">        :param code: room code</span>
+<span class="sd">        :type code: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Same setup for each new page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ludo&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">=</span> <span class="s2">&quot;already_exists&quot;</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
@@ -473,7 +568,7 @@
 
         <span class="c1"># This is the part that varies between pages</span>
         <span class="n">exists</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Room Code </span><span class="si">%s</span><span class="s2"> already exists&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">code</span><span class="p">))),</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+                <span class="s2">&quot;Room Code </span><span class="si">%s</span><span class="s2"> already exists&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">code</span><span class="p">))),</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
         <span class="n">try_again</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span>
             <span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Please try another room code&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
 
@@ -502,11 +597,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.start_game"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.start_game">[docs]</a>    <span class="k">def</span> <span class="nf">start_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invoked when a room had met the amount of players necessary for a game.</span>
+<span class="sd">        This removes the tk window and begins the game.</span>
+
+<span class="sd">        :param name: Name of game.</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param game_id: Identification for this game.</span>
+<span class="sd">        :type game_id: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_start_the_game</span><span class="p">(</span><span class="n">game_id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
             <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.check_room_code"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.check_room_code">[docs]</a>    <span class="k">def</span> <span class="nf">check_room_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_type</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if the room is private, public, if is exists or not and if your</span>
+<span class="sd">        code is correct if it is private.</span>
+
+<span class="sd">        :param check_type: Checks which window the clients has come from.</span>
+<span class="sd">        :type check_type: str</span>
+<span class="sd">        :param code: Password for a private sever.</span>
+<span class="sd">        :type code: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">code</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>  <span class="c1"># for private game</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;check_room_code&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">code</span><span class="p">),</span> <span class="s2">&quot;check_type&quot;</span><span class="p">:</span> <span class="n">check_type</span><span class="p">}</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -514,18 +627,20 @@
             <span class="c1"># only get game.num when you go to lobby</span>
             <span class="c1"># decodes received data.</span>
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">exists</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;exists&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">check_type</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">already_exists</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">check_type</span> <span class="o">==</span> <span class="s2">&quot;join&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_join_lobby_message</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">lobby</span><span class="p">(</span><span class="s2">&quot;private&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;room_code&quot;</span><span class="p">],</span>
-                               <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;num_of_players&quot;</span><span class="p">],</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span>
+                               <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;num_of_players&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">check_type</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
-                    <span class="c1"># Automatically creates new game server-side if one didn&#39;t exist</span>
+                    <span class="c1"># Automatically creates new game server-side if one</span>
+                    <span class="c1"># didn&#39;t exist</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_join_lobby_message</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;new_game_id&quot;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">lobby</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;new_game_id&quot;</span><span class="p">])</span>
                 <span class="k">elif</span> <span class="n">check_type</span> <span class="o">==</span> <span class="s2">&quot;join&quot;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">no_room</span><span class="p">()</span>
@@ -534,22 +649,28 @@
             <span class="c1"># accepts the id of your newly created game</span>
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_join_lobby_message</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lobby</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span></div>
-                       <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;player_number&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">],</span> <span class="p">)</span>
+                       <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;player_number&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">],</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="Form.show_rules"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.show_rules">[docs]</a>    <span class="k">def</span> <span class="nf">show_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Produces a document of the rules of the ludo game.</span>
-        <span class="c1"># Pops up a separate page, so there&#39;s no self.root.destroy()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Produces a document of the rules of the ludo game.</span>
+<span class="sd">        Pops up a separate page, so there&#39;s no ``self.root.destroy()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s1">&#39;+</span><span class="si">%d</span><span class="s1">+</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Rules&quot;</span><span class="p">)</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
         <span class="n">w</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Form.back"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.back">[docs]</a>    <span class="k">def</span> <span class="nf">back</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Go back from current tk window after pressing back button.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;create_game&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;join_public&quot;</span> <span class="ow">or</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;join_private&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">home_page</span><span class="p">()</span>
@@ -558,15 +679,20 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;private_lobby&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_leave_lobby</span><span class="p">(</span><span class="n">game_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">join_private</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;already_exists&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;create_lobby&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;already_exists&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_game</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;create_lobby&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_leave_lobby</span><span class="p">(</span><span class="n">game_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">create_game</span><span class="p">()</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;public_lobby&quot;</span><span class="p">:</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_leave_lobby</span><span class="p">(</span><span class="n">game_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">join_public</span><span class="p">()</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">==</span> <span class="s2">&quot;public_room_is_full&quot;</span><span class="p">:</span></div>
             <span class="bp">self</span><span class="o">.</span><span class="n">home_page</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Form.run"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+<div class="viewcode-block" id="Form.run"><a class="viewcode-back" href="../RSTFile/Team_1_form.html#Team_1_form.Form.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Runs the form&quot;&quot;&quot;</span></div></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">home_page</span><span class="p">()</span>
 </pre></div>
 
