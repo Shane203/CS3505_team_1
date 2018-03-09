@@ -11,33 +11,6 @@ from Team_1_board import Board
 from Team_1_connection import Connection
 
 
-def bgm():
-    """Sets the frequency, loads the background music and plays it."""
-    pygame.mixer.pre_init(44100, 16, 2, 4096)
-    pygame.mixer.music.load("sound/BGM.mp3")
-    pygame.mixer.music.play(-1)
-
-
-def pause():
-    """Pauses all music and sounds."""
-    pygame.mixer.music.pause()
-    c.MOVE_PIECE.set_volume(0.0)
-    c.ROLL_DICE.set_volume(0.0)
-    c.TIMEOUT_WARNING.set_volume(0.0)
-    c.KILL_PIECE.set_volume(0.0)
-    return True, c.SOUND_MUTE
-
-
-def un_pause():
-    """Un-pauses all music and sounds."""
-    pygame.mixer.music.unpause()
-    c.MOVE_PIECE.set_volume(1.0)
-    c.ROLL_DICE.set_volume(1.0)
-    c.TIMEOUT_WARNING.set_volume(1.0)
-    c.KILL_PIECE.set_volume(1.0)
-    return False, c.SOUND_OPEN
-
-
 class Ludo(object):
     """This is the main Ludo class.
 
@@ -117,7 +90,7 @@ class Ludo(object):
         self.connection.form.run()
         self.connection.connect_to_server()
         self.show_start_screen()
-        bgm()
+        self.bgm()
 
     def draw_time_out(self):  # time out function on the client side
         """Draws the timer which counts down until it reaches 0. When this
@@ -174,6 +147,12 @@ class Ludo(object):
             pygame.display.update()
             fps_clock.tick(5)
 
+    def bgm(self):
+        """Sets the frequency, loads the background music and plays it."""
+        pygame.mixer.pre_init(44100, 16, 2, 4096)
+        pygame.mixer.music.load("sound/BGM.mp3")
+        pygame.mixer.music.play(-1)
+
     def check_click(self, x_value, y_value):
         """If there is a click after a dice has been rolled check all my_player
         pieces. If piece is movable check the size of the piece to set the
@@ -227,6 +206,24 @@ class Ludo(object):
         self.connection.send_movement(num, self.connection.my_player.roll)
         self.connection.end_roll()
 
+    def pause(self):
+        """Pauses all music and sounds."""
+        pygame.mixer.music.pause()
+        c.MOVE_PIECE.set_volume(0.0)
+        c.ROLL_DICE.set_volume(0.0)
+        c.TIMEOUT_WARNING.set_volume(0.0)
+        c.KILL_PIECE.set_volume(0.0)
+        return True, c.SOUND_MUTE
+
+    def unpause(self):
+        """Unpauses all music and sounds."""
+        pygame.mixer.music.unpause()
+        c.MOVE_PIECE.set_volume(1.0)
+        c.ROLL_DICE.set_volume(1.0)
+        c.TIMEOUT_WARNING.set_volume(1.0)
+        c.KILL_PIECE.set_volume(1.0)
+        return False, c.SOUND_OPEN
+
     def run(self):
         """This is the main game method.
         It draws the board, pieces and the buttons. It also shows the diceS
@@ -249,9 +246,9 @@ class Ludo(object):
                             self.check_click(x_value, y_value)
                         elif sound_icon_rect.collidepoint(event.pos) and \
                                 not mute:
-                            mute, sound = pause()
+                            mute, sound = self.pause()
                         elif sound_icon_rect.collidepoint(event.pos) and mute:
-                            mute, sound = un_pause()
+                            mute, sound = self.unpause()
                 c.SCREEN.fill(c.WHITE)  # Paint the background white.
                 # Draw wooden background.
                 c.SCREEN.blit(c.BG, (c.INDENT_BOARD, c.INDENT_BOARD))
