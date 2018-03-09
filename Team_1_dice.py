@@ -68,8 +68,6 @@ class Dice(object):
             # Sends the 'msg' to the server.
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
-            # Generates the roll dice animation.
-            self.roll_dice_gif(900, 230)
 
     def check_for_bias(self):
         """Checks for bias in the player's pieces. This happens if the player
