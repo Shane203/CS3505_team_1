@@ -63,10 +63,10 @@ class Connection:
         colors = ["red", "green", "yellow", "blue"]
         while True:
             data = self.sock.recv(4096).decode()  # decodes received data.
-            print ("Received: ", data)
-            data = data.split ("}")
+            print("Received: ", data)
+            data = data.split("}")
             for msg in data:
-                if len (msg) > 1:
+                if len(msg) > 1:
                     msg += "}"
                     msg = json.loads(msg)
                     # Tell the time out function to reset the time.
@@ -91,7 +91,7 @@ class Connection:
                         else:
                             self.board.PLAYER_FIELD.set_msg(
                                 self.my_player.names[colors.index(msg[
-                                                                "colour"])] + "'s turn")
+                                                        "colour"])] + "'s turn")
                         self.current_player = msg["colour"]
                         self.board.current_player = msg["colour"]
                     # This message is a response to pressing the "ROLL" button.

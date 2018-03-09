@@ -68,7 +68,6 @@ class Dice(object):
             # Sends the 'msg' to the server.
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
-            
 
     def check_for_bias(self):
         """Checks for bias in the player's pieces. This happens if the player
@@ -84,9 +83,9 @@ class Dice(object):
         return True
 
     def roll_dice_gif(self, x, y):
-        """Displays a rolling dice animation when the 'ROLL' button is pressed 
+        """Displays a rolling dice animation when the 'ROLL' button is pressed
         and before the resulting dice image is displayed.
-         
+
         :param x: x coordinate of image to be displayed in animation.
         :param y: y coordinate of image to be displayed in animation.
         """
