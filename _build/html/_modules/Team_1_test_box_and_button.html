@@ -42,6 +42,10 @@
 
 
 <div class="viewcode-block" id="TestBoxAndButton"><a class="viewcode-back" href="../RSTFile/Team_1_test_box_and_button.html#Team_1_test_box_and_button.TestBoxAndButton">[docs]</a><span class="k">class</span> <span class="nc">TestBoxAndButton</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestBoxAndButton.tearDownClass"><a class="viewcode-back" href="../RSTFile/Team_1_test_box_and_button.html#Team_1_test_box_and_button.TestBoxAndButton.tearDownClass">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span></div>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+        
 <div class="viewcode-block" id="TestBoxAndButton.test_box_initialisation_without_s"><a class="viewcode-back" href="../RSTFile/Team_1_test_box_and_button.html#Team_1_test_box_and_button.TestBoxAndButton.test_box_initialisation_without_s">[docs]</a>    <span class="k">def</span> <span class="nf">test_box_initialisation_without_s</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">box1</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">box1</span><span class="o">.</span><span class="n">_msg</span><span class="p">)</span>

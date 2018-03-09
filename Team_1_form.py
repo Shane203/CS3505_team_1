@@ -392,7 +392,7 @@ class Form:
             if len(room_code) == 0:
                 label = Label(frame, width=30,
                               text="New Public Game created", fg="black")
-                room_label = Label(frame, width=30, text="", fg="black")
+                room_label = Label(frame, width=30, text=("Game " + str(game_id)), fg="black")
             else:
                 label = Label(frame, width=30,
                               text="New Private Game created", fg="black")
@@ -400,7 +400,7 @@ class Form:
                         "Room Code: " + str(room_code)), fg="black")
         elif lobby_type == "public":
             self.current_page = "public_lobby"
-            label = Label(frame, width=30, text=("Game " + str(room_code)))
+            label = Label(frame, width=30, text=("Game " + str(game_id)))
             room_label = Label(frame, width=30, text="", fg="black")
         elif lobby_type == "private":
             self.current_page = "private_lobby"

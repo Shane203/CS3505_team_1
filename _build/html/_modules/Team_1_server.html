@@ -84,7 +84,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">colours</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_game</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;disconnected&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># the index of which player&#39;s turn it is.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_players</span>
@@ -161,8 +161,9 @@
 <span class="sd">        :type jsonmsg: dict.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Forwarding: &quot;</span><span class="p">,</span><span class="n">string</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_players</span><span class="p">()):</span>
-            <span class="c1"># Condition accepts True and None(won) players.</span>
+            <span class="c1"># If player is connected or finished, forward to them.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_game</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;disconnected&quot;</span><span class="p">:</span></div>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
 
@@ -176,7 +177,8 @@
 <span class="sd">        :type index: int.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> sent to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+</div>
         <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
 
 <div class="viewcode-block" id="Game.start_game"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Game.start_game">[docs]</a>    <span class="k">def</span> <span class="nf">start_game</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -189,10 +191,10 @@
                  <span class="p">{</span><span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()},</span>
                  <span class="p">{</span><span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()},</span>
                  <span class="p">{</span><span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()}]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*Starting Game*&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_num_press_start</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_num_press_start</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sent start to &quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">token</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;turn_token&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 
@@ -252,19 +254,15 @@
         <span class="n">client_colour</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">num_of_players</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;is full?&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_full</span><span class="p">())</span>
-            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>  <span class="c1"># Loop until all players have pressed start</span>
-                <span class="k">continue</span>
-            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">start_game</span><span class="p">()</span>
+            <span class="n">sleep</span> <span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">start_game</span><span class="p">()</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">jsonmsg</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>  <span class="c1"># Get data from client</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received: &quot;</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;}&quot;</span>
                         <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -277,14 +275,11 @@
                             <span class="n">genie_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roll_genie</span><span class="p">()</span>
                             <span class="n">jsonmsg</span> <span class="o">=</span> <span class="p">{</span>
                                 <span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;colour&quot;</span><span class="p">],</span> <span class="s2">&quot;dicenum&quot;</span><span class="p">:</span> <span class="n">num</span><span class="p">,</span> <span class="s2">&quot;genie_result&quot;</span><span class="p">:</span> <span class="n">genie_status</span><span class="p">}</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
                         <span class="k">elif</span> <span class="s2">&quot;turn_over&quot;</span> <span class="ow">in</span> <span class="n">msg</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">next_player</span><span class="p">()</span>
                             <span class="n">jsonmsg</span> <span class="o">=</span> <span class="p">{</span>
                                 <span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">],</span> <span class="s2">&quot;turn_token&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;iT is now the turn of   &quot;</span><span class="p">,</span>
-                                  <span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">])</span>
-                        <span class="c1"># If the JSON message is Sendout or Movement, simply forward it unchanged to all other clients.</span>
+                        <span class="c1"># If the JSON message is for chat or movement, simply forward to all clients.</span>
                         <span class="k">elif</span> <span class="s2">&quot;movement&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
                             <span class="n">jsonmsg</span> <span class="o">=</span> <span class="n">msg</span>
                         <span class="k">elif</span> <span class="s2">&quot;chat_msg&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
@@ -306,12 +301,11 @@
             <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">next_player</span><span class="p">()</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;colour&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">colours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">],</span> <span class="s2">&quot;turn_token&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Player left, so we moved the token on!&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Games"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games">[docs]</a><span class="k">class</span> <span class="nc">Games</span><span class="p">:</span>
+<div class="viewcode-block" id="Lobby"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby">[docs]</a><span class="k">class</span> <span class="nc">Lobby</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class that acts as a lobby for a collection of games.</span>
 
 <span class="sd">    The class allows clients to connect and join or create games.</span>
@@ -323,8 +317,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="n">server_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">gethostname</span><span class="p">()),</span> <span class="n">port_number</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">server_addr</span><span class="p">)</span>  <span class="c1"># Bind Socket to the host and port</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** Server starting on IP ADDRESS: </span><span class="si">%s</span><span class="s1"> ***&#39;</span> <span class="o">%</span> <span class="n">server_addr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<div class="viewcode-block" id="Games.listen"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.listen">[docs]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.listen"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.listen">[docs]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;listens for incoming connections and passes them to a new thread.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;***Waiting for connections***&quot;</span><span class="p">)</span>
@@ -336,7 +331,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error! The signal has been interrupted.&quot;</span><span class="p">)</span></div>
                 <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Games.create_new_game"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.create_new_game">[docs]</a>    <span class="k">def</span> <span class="nf">create_new_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.create_new_game"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.create_new_game">[docs]</a>    <span class="k">def</span> <span class="nf">create_new_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a Game instance.</span>
 
 <span class="sd">        :param code: The room code of the game.</span>
@@ -348,7 +343,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">all_games</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">game</span><span class="p">)</span></div>
         <span class="k">return</span> <span class="n">game</span>
 
-<div class="viewcode-block" id="Games.check_if_game_started"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.check_if_game_started">[docs]</a>    <span class="k">def</span> <span class="nf">check_if_game_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_code</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.check_if_game_started"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.check_if_game_started">[docs]</a>    <span class="k">def</span> <span class="nf">check_if_game_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_code</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return True if game with ID &quot;game_id&quot; has started.</span>
 
 <span class="sd">        :param room_code: The room id.</span>
@@ -359,7 +354,7 @@
                 <span class="k">return</span> <span class="n">game</span><span class="o">.</span><span class="n">is_full</span><span class="p">()</span></div>
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Games.get_game_by_id"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.get_game_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_game_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.get_game_by_id"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.get_game_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_game_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns game with ID &quot;game_id&quot;</span>
 
 <span class="sd">        :param game_id: The game ID</span>
@@ -370,7 +365,7 @@
                 <span class="k">return</span> <span class="n">game</span></div>
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Games.get_public_games_ids"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.get_public_games_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_public_games_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.get_public_games_ids"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.get_public_games_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_public_games_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return list of public game ID&#39;s.&quot;&quot;&quot;</span>
         <span class="n">id_array</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">game</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_games</span><span class="p">:</span>
@@ -378,7 +373,7 @@
                 <span class="n">id_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">game_id</span><span class="p">())</span></div>
         <span class="k">return</span> <span class="n">id_array</span>
 
-<div class="viewcode-block" id="Games.find_num_of_players_by_id"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.find_num_of_players_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">find_num_of_players_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.find_num_of_players_by_id"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.find_num_of_players_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">find_num_of_players_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return number of players in a game.</span>
 
 <span class="sd">        :param game_id: The Game&#39;s ID.</span>
@@ -389,7 +384,7 @@
                 <span class="k">return</span> <span class="n">game</span><span class="o">.</span><span class="n">num_of_players</span><span class="p">()</span></div>
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Games.join_game_connection"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Games.join_game_connection">[docs]</a>    <span class="k">def</span> <span class="nf">join_game_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+<div class="viewcode-block" id="Lobby.join_game_connection"><a class="viewcode-back" href="../RSTFile/Team_1_server.html#Team_1_server.Lobby.join_game_connection">[docs]</a>    <span class="k">def</span> <span class="nf">join_game_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Handles a connection for a client.</span>
 
 <span class="sd">        :param connection: The connection to the client.</span>
@@ -399,13 +394,12 @@
                 <span class="n">data</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>  <span class="c1"># Get data from client</span>
                 <span class="c1"># decode and create dict from data</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received: &quot;</span><span class="p">,</span><span class="n">msg</span><span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;create_game&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>  <span class="c1"># it should followed with name</span>
                     <span class="n">this_game</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_new_game</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;create_game&quot;</span><span class="p">])</span>
                     <span class="n">jsonmsg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;player_number&quot;</span><span class="p">:</span> <span class="n">this_game</span><span class="o">.</span><span class="n">num_of_players</span><span class="p">(</span>
                     <span class="p">),</span> <span class="s2">&quot;game_id&quot;</span><span class="p">:</span> <span class="n">this_game</span><span class="o">.</span><span class="n">game_id</span><span class="p">(),</span> <span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">this_game</span><span class="o">.</span><span class="n">room_code</span><span class="p">()}</span>
                     <span class="n">string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jsonmsg</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
                     <span class="n">connection</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
                     <span class="k">continue</span>
                 <span class="k">elif</span> <span class="s2">&quot;show_game_list&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
@@ -418,24 +412,18 @@
                         <span class="n">public_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">is_public_game</span><span class="p">())</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;game_id&quot;</span><span class="p">:</span> <span class="n">id_array</span><span class="p">,</span> <span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="n">num_array</span><span class="p">,</span>
                             <span class="s2">&quot;is_public&quot;</span><span class="p">:</span> <span class="n">public_array</span><span class="p">}</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                     <span class="n">connection</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
                 <span class="k">elif</span> <span class="s2">&quot;check_game&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;game_id&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_game&quot;</span><span class="p">],</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_if_game_started</span><span class="p">(</span>
                         <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_game&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_game&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_enter_lobby</span> <span class="o">==</span> <span class="mi">4</span><span class="p">),</span>
                             <span class="s2">&quot;player_number&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_game&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_enter_lobby</span><span class="p">}</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;check &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_if_game_started</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_game&quot;</span><span class="p">]))</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;num_lobby&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_game&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_enter_lobby</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data &quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                     <span class="n">connection</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
                 <span class="k">elif</span> <span class="s2">&quot;check_room_code&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
                     <span class="n">exists</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="k">for</span> <span class="n">game</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_games</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">room_code</span><span class="p">()</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;check_room_code&quot;</span><span class="p">]:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
                             <span class="n">exists</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;exists&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">game</span><span class="o">.</span><span class="n">room_code</span><span class="p">(),</span>
                                     <span class="s2">&quot;num_of_players&quot;</span><span class="p">:</span> <span class="n">game</span><span class="o">.</span><span class="n">player_num_enter_lobby</span><span class="p">,</span> <span class="s2">&quot;game_id&quot;</span><span class="p">:</span> <span class="n">game</span><span class="o">.</span><span class="n">game_id</span><span class="p">()}</span>
@@ -463,12 +451,20 @@
                     <span class="k">elif</span> <span class="p">(</span><span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_press_start</span> <span class="o">==</span> <span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_enter_lobby</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_enter_lobby</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
                         <span class="n">cur_game</span><span class="o">.</span><span class="n">_max_players</span> <span class="o">=</span> <span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_press_start</span>
                 <span class="k">elif</span> <span class="s2">&quot;start_game&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_press_start</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span> <span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_press_start</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span> <span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_enter_lobby</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span> <span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">_max_players</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span> <span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">player_num_press_start</span>
+                    <span class="n">last</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">cur_game</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span> <span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span>
+                    <span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_press_start</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_press_start</span> <span class="o">==</span> <span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_enter_lobby</span><span class="p">:</span>
+                        <span class="n">last</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">cur_game</span><span class="o">.</span><span class="n">_max_players</span> <span class="o">=</span> <span class="n">cur_game</span><span class="o">.</span><span class="n">player_num_press_start</span>
+                    <span class="k">while</span> <span class="ow">not</span> <span class="n">cur_game</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
+                        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                        <span class="k">continue</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">_thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_game_by_id</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;game_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">connection_handler</span><span class="p">,</span>
+                        <span class="n">_thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">cur_game</span><span class="o">.</span><span class="n">connection_handler</span><span class="p">,</span>
                                                  <span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]))</span>
+                        <span class="k">if</span> <span class="n">last</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">all_games</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">cur_game</span><span class="p">)</span>
                         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                             <span class="k">continue</span>
                         <span class="c1"># Starts a new thread for each connection.</span>
@@ -487,8 +483,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">games</span> <span class="o">=</span> <span class="n">Games</span><span class="p">(</span><span class="mi">10001</span><span class="p">)</span>  <span class="c1"># Creates instance of class</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;here&quot;</span><span class="p">)</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">Lobby</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>  <span class="c1"># Creates instance of class</span>
         <span class="n">games</span><span class="o">.</span><span class="n">listen</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OS Error: Port number already in use or another server process may be running&quot;</span><span class="p">)</span>
