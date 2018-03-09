@@ -291,7 +291,7 @@ class Board:
             pygame.draw.circle(SCREEN, colours[i], (circle_2x, circle_1y),
                                radius, 0)
             pygame.draw.circle(SCREEN, BLACK, (circle_2x, circle_1y), radius, 1)
-            
+
             # Draw the bottom left circle.
             pygame.draw.circle(SCREEN, colours[i], (circle_1x, circle_2y),
                                radius, 0)
