@@ -20,20 +20,16 @@ class TestClient(unittest.TestCase):
         self.assertEqual(self.ludo.time_limited, 15)
         self.assertTrue(self.ludo.p.empty())
 
-    def test_setup(self):
-        self.ludo.setup()
-        self.assertTrue(pygame.event.get_blocked(pygame.MOUSEMOTION))
-        self.assertTrue(pygame.event.get_blocked(pygame.KEYUP))
-        self.assertTrue(pygame.event.get_blocked(pygame.MOUSEBUTTONUP))
-        self.assertEqual(self.ludo.connection, self.ludo.board.connection)
-
     def test_show_start_screen(self):
         self.assertIsNone(self.ludo.connection.my_player)
         screen_thread = threading.Thread(target=self.ludo.show_start_screen)
         screen_thread.start()
         self.ludo.connection.my_player = 1
-        screen_thread.join()
         self.assertIsNotNone(self.ludo.connection.my_player)
+        while screen_thread.is_alive():
+            pass
+        screen_thread.join()
+        pygame.quit()
 
 
 if __name__ == '__main__':
