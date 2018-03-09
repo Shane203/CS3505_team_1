@@ -171,16 +171,11 @@ class Form:
         Checks which type of game was selected by the client.
         """
         if self.player_number is not None:
-            self.connection.send_check_if_game_is_started(int(self.game_id))
-            # decodes received data.
-            data = self.connection.sock.recv(4096).decode()
-            msg = json.loads(data)
-            if msg["result"] is not None:
+            if int(self.player_number) == 4:
                 self.public_room_is_full()
             else:
-                self.player_number = int(msg["player_number"]) + 1
                 self.connection.send_join_lobby_message(self.game_id)
-                self.lobby("public", "", self.player_number, self.game_id)
+                self.lobby("public", "", int(self.player_number)+1, self.game_id)
 
     def public_room_is_full(self):
         """
@@ -419,9 +414,9 @@ class Form:
         in_lobby = Label(frame, width=30, text=("In Lobby: %s/4" % (str(player_number))),
                          fg="black")  # take in number of players in that game
         start_game = Button(frame, width=30, text="Start Game",
-                            command=lambda: self.check_conflict(name_entry.get(), int(game_id)))
+                            command=lambda: self.start_game(name_entry.get(), int(game_id)))
 
-        update = Button(frame, width=30, text="Updating Message",
+        update = Button(frame, width=30, text="Update Lobby Number",
                         command=lambda: self.update(lobby_type, room_code, game_id))
 
         # Drawing each widget on to the frame

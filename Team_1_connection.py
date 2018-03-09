@@ -32,7 +32,7 @@ class Connection:
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
         # Sets values for host- the current domain name and port number 10000.
-        self.server_address = ('54.172.246.147', 10000)
+        self.server_address = (gethostbyname(gethostname()), 10000)
         # The IP Address of the current machine.
         self.ip_addr = gethostbyname(gethostname())
         print('Connecting to server at %s - Port %s' % self.server_address)
@@ -63,80 +63,85 @@ class Connection:
         colors = ["red", "green", "yellow", "blue"]
         while True:
             data = self.sock.recv(4096).decode()  # decodes received data.
-            msg = json.loads(data)
-            # Tell the time out function to reset the time.
-            if "chat_msg" not in msg:
-                self.q.put("already push a button")
-            # Start implies it is the first message of the game.
-            # The message comes in the form {"start":True,"colour":<colour>}
-            if "start" in msg:
-                names = msg["names"]
-                self.my_player = Player(msg["colour"],
-                                        names[colors.index(msg["colour"])],
-                                        self.ALL_PIECES, names)
-                self.board.my_player = self.my_player
-            # This tells all games which player's turn it is.
-            # Messages come of the form {"turn_token":True,"Colour":<colour>}.
-            if "turn_token" in msg:
-                # If msg["Colour"] is client's colour, then it is their turn.
-                if msg["colour"] == self.my_player.colour:
-                    self.board.PLAYER_FIELD.set_msg("MY TURN")
-                    self.my_player.turn_token = True
-                    self.my_player.diceroll_token = True
-                else:
-                    self.board.PLAYER_FIELD.set_msg(
-                        self.my_player.names[colors.index(msg[
-                                                        "colour"])] + "'s turn")
-                self.current_player = msg["colour"]
-                self.board.current_player = msg["colour"]
-            # This message is a response to pressing the "ROLL" button.
-            # It comes in the form {"dicenum":<between 1-6>,"Colour":<colour>}
-            if "dicenum" in msg:
-                roll = msg["dicenum"]
-                #  This is for the biased dice roll
-                if roll > 5:
-                    roll = 6
-                self.my_player.roll = roll  # Assigned value of dice roll
-                # genie_status is either "take", "return" or None
-                genie_status = msg["genie_result"]
-                if genie_status == "take" and self.board.genie_owner is None:
-                    # If you roll to take the genie and no one currently has it
-                    SCREEN.blit(GENIE_BIG, (950, 50))
-                    self.board.genie_owner = msg["colour"]  # Take the genie
-                    for num in range((LOW_RANGES[msg["colour"]]),
-                                     (LOW_RANGES[msg["colour"]]) + 4):
-                        self.ALL_PIECES[num].genie = True
-                elif genie_status == "return" and \
-                        self.board.genie_owner == msg["colour"]:
-                    # If you roll to give back the genie and you own it
-                    SCREEN.blit(LAMP_BIG, (950, 50))
-                    # The genie goes back to the centre
-                    self.board.genie_owner = None
-                    for num in range((LOW_RANGES[msg["colour"]]),
-                                     (LOW_RANGES[msg["colour"]]) + 4):
-                        self.ALL_PIECES[num].genie = False
-                self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
-                self.board.dice_object.roll_dice_gif(900, 230)
-                # If the dicenum is for this player, then react accordingly.
-                if msg["colour"] == self.my_player.colour:
-                    self.pieces_playable()
-            # This message is broadcasted if a player moves a piece.
-            # As the player moves it's own pieces, they only react to other
-            if "movement" in msg and msg["colour"] != self.my_player.colour:
-                # It comes in the form {"Movement":<piecenum>,
-                # "Moveforward":<number-of-steps-to-move>,"colour":<colour>}
-                # player's movements.
-                steps = msg["steps_forward"]
-                num = msg["movement"]
-                self.board.move_piece(num, steps)
-                if self.my_player.roll == 6:
-                    self.my_player.diceroll_token = True
-            if "finished" in msg and msg["colour"] != self.my_player.colour:
-                self.win_condition()
-            if "chat_msg" in msg:
-                self.chat.new_message(msg)
-            if "disconnected" in msg:
-                self.board.disconnect_function(msg["colour"])
+            print ("Received: ", data)
+            data = data.split ("}")
+            for msg in data:
+                if len (msg) > 1:
+                    msg += "}"
+                    msg = json.loads(msg)
+                    # Tell the time out function to reset the time.
+                    if "chat_msg" not in msg:
+                        self.q.put("already push a button")
+                    # Start implies it is the first message of the game.
+                    # The message comes in the form {"start":True,"colour":<colour>}
+                    if "start" in msg:
+                        names = msg["names"]
+                        self.my_player = Player(msg["colour"],
+                                                names[colors.index(msg["colour"])],
+                                                self.ALL_PIECES, names)
+                        self.board.my_player = self.my_player
+                    # This tells all games which player's turn it is.
+                    # Messages come of the form {"turn_token":True,"Colour":<colour>}.
+                    if "turn_token" in msg:
+                        # If msg["Colour"] is client's colour, then it is their turn.
+                        if msg["colour"] == self.my_player.colour:
+                            self.board.PLAYER_FIELD.set_msg("MY TURN")
+                            self.my_player.turn_token = True
+                            self.my_player.diceroll_token = True
+                        else:
+                            self.board.PLAYER_FIELD.set_msg(
+                                self.my_player.names[colors.index(msg[
+                                                                "colour"])] + "'s turn")
+                        self.current_player = msg["colour"]
+                        self.board.current_player = msg["colour"]
+                    # This message is a response to pressing the "ROLL" button.
+                    # It comes in the form {"dicenum":<between 1-6>,"Colour":<colour>}
+                    if "dicenum" in msg:
+                        roll = msg["dicenum"]
+                        #  This is for the biased dice roll
+                        if roll > 5:
+                            roll = 6
+                        self.my_player.roll = roll  # Assigned value of dice roll
+                        # genie_status is either "take", "return" or None
+                        genie_status = msg["genie_result"]
+                        if genie_status == "take" and self.board.genie_owner is None:
+                            # If you roll to take the genie and no one currently has it
+                            SCREEN.blit(GENIE_BIG, (950, 50))
+                            self.board.genie_owner = msg["colour"]  # Take the genie
+                            for num in range((LOW_RANGES[msg["colour"]]),
+                                             (LOW_RANGES[msg["colour"]]) + 4):
+                                self.ALL_PIECES[num].genie = True
+                        elif genie_status == "return" and \
+                                self.board.genie_owner == msg["colour"]:
+                            # If you roll to give back the genie and you own it
+                            SCREEN.blit(LAMP_BIG, (950, 50))
+                            # The genie goes back to the centre
+                            self.board.genie_owner = None
+                            for num in range((LOW_RANGES[msg["colour"]]),
+                                             (LOW_RANGES[msg["colour"]]) + 4):
+                                self.ALL_PIECES[num].genie = False
+                        self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
+                        self.board.dice_object.roll_dice_gif(900, 230)
+                        # If the dicenum is for this player, then react accordingly.
+                        if msg["colour"] == self.my_player.colour:
+                            self.pieces_playable()
+                    # This message is broadcasted if a player moves a piece.
+                    # As the player moves it's own pieces, they only react to other
+                    if "movement" in msg and msg["colour"] != self.my_player.colour:
+                        # It comes in the form {"Movement":<piecenum>,
+                        # "Moveforward":<number-of-steps-to-move>,"colour":<colour>}
+                        # player's movements.
+                        steps = msg["steps_forward"]
+                        num = msg["movement"]
+                        self.board.move_piece(num, steps)
+                        if self.my_player.roll == 6:
+                            self.my_player.diceroll_token = True
+                    if "finished" in msg and msg["colour"] != self.my_player.colour:
+                        self.win_condition()
+                    if "chat_msg" in msg:
+                        self.chat.new_message(msg)
+                    if "disconnected" in msg:
+                        self.board.disconnect_function(msg["colour"])
 
     def time_out(self):
         """

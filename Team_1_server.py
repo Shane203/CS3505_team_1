@@ -140,6 +140,7 @@ class Game:
         """
         string = json.dumps(jsonmsg)
         print("%s sent to %s" % (string,self.colours[index]))
+
         self.clients()[index].sendall(string.encode())
 
     def start_game(self):
@@ -153,9 +154,9 @@ class Game:
                  {"colour": "yellow", "start": True, "names": self.names()},
                  {"colour": "blue", "start": True, "names": self.names()}]
         print("*Starting Game*")
+        print(self.player_num_press_start)
         for i in range(self.player_num_press_start):
             self.sendto(start[i], i)
-        sleep(1)
         token = {"colour": self.colours[0], "turn_token": True}
         self.forward(token)
 
@@ -215,10 +216,9 @@ class Game:
         client_colour, index = self.add(connection)
         try:
             self._names[self.num_of_players()-1] = name
-            while not self.is_full():  # Loop until all players have pressed start
-                continue
-            sleep(1)
-            self.start_game()
+            sleep (1.5)
+            if index ==0:
+                self.start_game()
             while True:
                 jsonmsg = None
                 data = connection.recv(4096).decode()  # Get data from client
@@ -412,12 +412,20 @@ class Lobby:
                     elif (cur_game.player_num_press_start == cur_game.player_num_enter_lobby) and (cur_game.player_num_enter_lobby != 0):
                         cur_game._max_players = cur_game.player_num_press_start
                 elif "start_game" in msg:
-                    self.get_game_by_id(msg["game_id"]).player_num_press_start += 1
-                    if self.get_game_by_id (msg["game_id"]).player_num_press_start == self.get_game_by_id (msg["game_id"]).player_num_enter_lobby:
-                        self.get_game_by_id (msg["game_id"])._max_players = self.get_game_by_id (msg["game_id"]).player_num_press_start
+                    last = False
+                    cur_game = self.get_game_by_id (msg["game_id"])
+                    cur_game.player_num_press_start += 1
+                    if cur_game.player_num_press_start == cur_game.player_num_enter_lobby:
+                        last = True
+                        cur_game._max_players = cur_game.player_num_press_start
+                    while not cur_game.is_full():
+                        sleep(2)
+                        continue
                     try:
-                        _thread.start_new_thread(self.get_game_by_id(msg["game_id"]).connection_handler,
+                        _thread.start_new_thread(cur_game.connection_handler,
                                                  (connection, msg["name"]))
+                        if last:
+                            self.all_games.remove(cur_game)
                         while True:
                             continue
                         # Starts a new thread for each connection.
