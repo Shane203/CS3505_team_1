@@ -104,10 +104,8 @@
             <span class="c1"># Plays the sound for the dice roll</span>
             <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">ROLL_DICE</span><span class="p">)</span>
             <span class="c1"># Sends the &#39;msg&#39; to the server.</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-            <span class="c1"># Generates the roll dice animation.</span></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">roll_dice_gif</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">230</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Dice.check_for_bias"><a class="viewcode-back" href="../RSTFile/Team_1_dice.html#Team_1_dice.Dice.check_for_bias">[docs]</a>    <span class="k">def</span> <span class="nf">check_for_bias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks for bias in the player&#39;s pieces. This happens if the player</span>
@@ -123,14 +121,14 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="Dice.roll_dice_gif"><a class="viewcode-back" href="../RSTFile/Team_1_dice.html#Team_1_dice.Dice.roll_dice_gif">[docs]</a>    <span class="k">def</span> <span class="nf">roll_dice_gif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Displays a rolling dice animation when the &#39;ROLL&#39; button is pressed </span>
+        <span class="sd">&quot;&quot;&quot;Displays a rolling dice animation when the &#39;ROLL&#39; button is pressed</span>
 <span class="sd">        and before the resulting dice image is displayed.</span>
-<span class="sd">         </span>
+
 <span class="sd">        :param x: x coordinate of image to be displayed in animation.</span>
 <span class="sd">        :param y: y coordinate of image to be displayed in animation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
-        <span class="n">tick</span> <span class="o">=</span> <span class="mi">35</span>
+        <span class="n">tick</span> <span class="o">=</span> <span class="mi">20</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="c1"># Turned to a string to create the images for the animation.</span>
         <span class="c1"># eg. &quot;1.gif&quot;, &quot;2.gif&quot;.</span>

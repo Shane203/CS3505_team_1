@@ -43,16 +43,16 @@
 <span class="kn">from</span> <span class="nn">tkinter</span> <span class="k">import</span> <span class="o">*</span>
 
 
-<div class="viewcode-block" id="TestClient"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestClient">[docs]</a><span class="k">class</span> <span class="nc">TestClient</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-<div class="viewcode-block" id="TestClient.setUp"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestClient.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestChat"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestChat">[docs]</a><span class="k">class</span> <span class="nc">TestChat</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestChat.setUp"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestChat.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">gethostname</span><span class="p">()),</span> <span class="mi">10001</span><span class="p">))</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">chat</span> <span class="o">=</span> <span class="n">ChatBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TestClient.tearDown"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestClient.tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+<div class="viewcode-block" id="TestChat.tearDown"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestChat.tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<div class="viewcode-block" id="TestClient.test_start"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestClient.test_start">[docs]</a>    <span class="k">def</span> <span class="nf">test_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestChat.test_start"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestChat.test_start">[docs]</a>    <span class="k">def</span> <span class="nf">test_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Team_1&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -61,13 +61,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span> <span class="n">Tk</span><span class="p">)</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">recvd</span><span class="p">,</span> <span class="n">Tk</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TestClient.test_new_message"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestClient.test_new_message">[docs]</a>    <span class="k">def</span> <span class="nf">test_new_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestChat.test_new_message"><a class="viewcode-back" href="../RSTFile/Team_1_test_chat.html#Team_1_test_chat.TestChat.test_new_message">[docs]</a>    <span class="k">def</span> <span class="nf">test_new_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Team_1&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">txt</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="n">txt</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">new_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="n">txt</span><span class="p">}</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">new_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

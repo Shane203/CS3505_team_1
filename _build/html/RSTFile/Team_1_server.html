@@ -269,8 +269,8 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="Team_1_server.Games">
-<em class="property">class </em><code class="descclassname">Team_1_server.</code><code class="descname">Games</code><span class="sig-paren">(</span><em>port_number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby">
+<em class="property">class </em><code class="descclassname">Team_1_server.</code><code class="descname">Lobby</code><span class="sig-paren">(</span><em>port_number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class that acts as a lobby for a collection of games.</p>
 <p>The class allows clients to connect and join or create games.</p>
@@ -283,8 +283,8 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </tbody>
 </table>
 <dl class="method">
-<dt id="Team_1_server.Games.check_if_game_started">
-<code class="descname">check_if_game_started</code><span class="sig-paren">(</span><em>room_code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.check_if_game_started"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.check_if_game_started" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.check_if_game_started">
+<code class="descname">check_if_game_started</code><span class="sig-paren">(</span><em>room_code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.check_if_game_started"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.check_if_game_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if game with ID “game_id” has started.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -297,8 +297,8 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Team_1_server.Games.create_new_game">
-<code class="descname">create_new_game</code><span class="sig-paren">(</span><em>code=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.create_new_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.create_new_game" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.create_new_game">
+<code class="descname">create_new_game</code><span class="sig-paren">(</span><em>code=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.create_new_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.create_new_game" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Game instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -315,8 +315,8 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Team_1_server.Games.find_num_of_players_by_id">
-<code class="descname">find_num_of_players_by_id</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.find_num_of_players_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.find_num_of_players_by_id" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.find_num_of_players_by_id">
+<code class="descname">find_num_of_players_by_id</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.find_num_of_players_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.find_num_of_players_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return number of players in a game.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -329,8 +329,8 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Team_1_server.Games.get_game_by_id">
-<code class="descname">get_game_by_id</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.get_game_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.get_game_by_id" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.get_game_by_id">
+<code class="descname">get_game_by_id</code><span class="sig-paren">(</span><em>game_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.get_game_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.get_game_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns game with ID “game_id”</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -343,14 +343,14 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Team_1_server.Games.get_public_games_ids">
-<code class="descname">get_public_games_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.get_public_games_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.get_public_games_ids" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.get_public_games_ids">
+<code class="descname">get_public_games_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.get_public_games_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.get_public_games_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of public game ID’s.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Team_1_server.Games.join_game_connection">
-<code class="descname">join_game_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.join_game_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.join_game_connection" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.join_game_connection">
+<code class="descname">join_game_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.join_game_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.join_game_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles a connection for a client.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -363,8 +363,8 @@ Higher percentage of rolling &gt;5 (considered a 6).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Team_1_server.Games.listen">
-<code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Games.listen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Games.listen" title="Permalink to this definition">¶</a></dt>
+<dt id="Team_1_server.Lobby.listen">
+<code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_server.html#Lobby.listen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_server.Lobby.listen" title="Permalink to this definition">¶</a></dt>
 <dd><p>listens for incoming connections and passes them to a new thread.</p>
 </dd></dl>
 
