@@ -1,5 +1,5 @@
 # Team 1
-from socket import socket, AF_INET, SOCK_STREAM
+from socket import socket, AF_INET, SOCK_STREAM, gethostbyname, gethostname
 from Team_1_constants import ROLL_TO_IMG, LOW_RANGES, GENIE_BIG, LAMP_BIG, SCREEN
 from random import randint
 import json
@@ -108,18 +108,12 @@ class Connection:
                             # If you roll to take the genie and no one currently has it
                             SCREEN.blit(GENIE_BIG, (950, 50))
                             self.board.genie_owner = msg["colour"]  # Take the genie
-                            for num in range((LOW_RANGES[msg["colour"]]),
-                                             (LOW_RANGES[msg["colour"]]) + 4):
-                                self.ALL_PIECES[num].genie = True
                         elif genie_status == "return" and \
                                 self.board.genie_owner == msg["colour"]:
                             # If you roll to give back the genie and you own it
                             SCREEN.blit(LAMP_BIG, (950, 50))
                             # The genie goes back to the centre
                             self.board.genie_owner = None
-                            for num in range((LOW_RANGES[msg["colour"]]),
-                                             (LOW_RANGES[msg["colour"]]) + 4):
-                                self.ALL_PIECES[num].genie = False
                         self.current_dice = ROLL_TO_IMG[roll]  # updates the dice image.
                         self.board.dice_object.roll_dice_gif(900, 230)
                         # If the dicenum is for this player, then react accordingly.

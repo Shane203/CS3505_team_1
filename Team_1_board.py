@@ -331,11 +331,14 @@ class Board:
             not_equal_colour = moving_piece.colour != piece.colour
             safe_start = moving_piece.get_position() == moving_piece.start
             if equal_pos and not_equal_colour and not safe_start:
-                if piece.genie:
+                # If player of opposing piece, piece that your piece is landing
+                # on, has genie your piece is killed instead
+                if piece.colour == self.genie_owner:
                     self.death_function(moving_piece)
                     self.check_many_pieces(piece)
                     break
                 if not piece.check_safe_point():
+                    self.connection.my_player.special_move = True
                     self.death_function(piece)
                     self.check_many_pieces(moving_piece)
                     break
@@ -376,7 +379,6 @@ class Board:
             self.c.tick(10)
         piece.set_position(None)
         piece.set_steps_from_start(0)
-        self.connection.my_player.special_move = True
 
     def disconnect_function(self, colour):
         """
