@@ -1,0 +1,160 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Team_1_chat module &#8212; Team One 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Team_1_client module" href="Team_1_client.html" />
+    <link rel="prev" title="Team_1_box_and_button module" href="Team_1_box_and_button.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_client.html" title="Team_1_client module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_box_and_button.html" title="Team_1_box_and_button module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Team_1_chat">
+<span id="team-1-chat-module"></span><h1>Team_1_chat module<a class="headerlink" href="#module-Team_1_chat" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Team_1_chat.ChatBox">
+<em class="property">class </em><code class="descclassname">Team_1_chat.</code><code class="descname">ChatBox</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_chat.html#ChatBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_chat.ChatBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Creates a chat object/window.
+It allows multiple player to chat with each other if they wish to.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sock</strong> (<em>python socket</em>) – This is the socket through which messages will be
+sent/received.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Team_1_chat.ChatBox.new_message">
+<code class="descname">new_message</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_chat.html#ChatBox.new_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_chat.ChatBox.new_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>When a message is recieved this will show it in the chat window</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> (<em>String.</em>) – New message recieved from other player</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_chat.ChatBox.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_chat.html#ChatBox.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_chat.ChatBox.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>sends a json message to server when you press “Return” key to send a message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Team_1_chat.ChatBox.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Team_1_chat.html#ChatBox.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Team_1_chat.ChatBox.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a tkinter window where a person can send/recieve messages from others</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>String.</em>) – Name of player (self)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Team_1_box_and_button.html"
+                        title="previous chapter">Team_1_box_and_button module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Team_1_client.html"
+                        title="next chapter">Team_1_client module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/RSTFile/Team_1_chat.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Team_1_client.html" title="Team_1_client module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Team_1_box_and_button.html" title="Team_1_box_and_button module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Team One 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS3505_team_1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Team One.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+    </div>
+  </body>
+</html>
