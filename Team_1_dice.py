@@ -91,7 +91,7 @@ class Dice(object):
         :param y: y coordinate of image to be displayed in animation.
         """
         c = pygame.time.Clock()
-        tick = 35
+        tick = 20
         i = 1
         # Turned to a string to create the images for the animation.
         # eg. "1.gif", "2.gif".
