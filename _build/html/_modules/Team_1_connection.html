@@ -134,7 +134,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">current_player</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;colour&quot;</span><span class="p">]</span>
                     <span class="c1"># This message is a response to pressing the &quot;ROLL&quot; button.</span>
                     <span class="c1"># It comes in the form {&quot;dicenum&quot;:&lt;between 1-6&gt;,&quot;Colour&quot;:&lt;colour&gt;}</span>
-                    <span class="k">if</span> <span class="s2">&quot;dicenum&quot;</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;dicenum&quot;</span> <span class="ow">in</span> <span class="n">msg</span> <span class="ow">and</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;colour&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_player</span><span class="o">.</span><span class="n">colour</span><span class="p">:</span>
                         <span class="n">roll</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;dicenum&quot;</span><span class="p">]</span>
                         <span class="c1">#  This is for the biased dice roll</span>
                         <span class="k">if</span> <span class="n">roll</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
