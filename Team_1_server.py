@@ -279,6 +279,7 @@ class Lobby:
         self.sock = socket(AF_INET, SOCK_STREAM)
         server_addr = (gethostbyname(gethostname()), port_number)
         self.sock.bind(server_addr)  # Bind Socket to the host and port
+        print('*** Server starting on %s port %s ***' % server_addr)
 
     def listen(self):
         """listens for incoming connections and passes them to a new thread."""
