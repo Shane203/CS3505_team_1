@@ -617,10 +617,11 @@ class Form:
         """
         file = open(self.filename, "r")
         data = file.read()
+        Label(self.root, text=file.read()).pack()
         self.root = Tk()
         self.root.geometry('+%d+%d' % (100, 100))
         self.root.title("Rules")
-        w = Label(self.root, text=data, fg="black", bg="red")
+        w = Label(self.root, text=data, fg="black", bg="lightblue")
         w.pack()
         self.root.mainloop()
 

@@ -1,0 +1,30 @@
+LUDO RULES
+                   
+To enter a piece into play from its pool to its starting square, a player must roll a 6. 
+If the player has no pieces yet in play and rolls other than a 6, the turn passes to the 
+next player. Once a player has one or more pieces in play, he selects a piece and moves 
+it forwards along the track the number of squares indicated by the die. Players must 
+always move a piece according to the die value rolled. Passes are not allowed; 
+if no move is possible, the turn moves to the next player.
+
+When a 6 is rolled, the player may choose to advance a piece already in play, or may 
+enter another piece from the pool to its starting square. Rolling a 6 earns the player an
+additional roll in that turn. If the bonus roll results in a 6 again, the player earns an 
+additional bonus roll. If the third roll is also a 6, the player may make one last move 
+and then the turn immediately passes to the next player.
+
+If the advance of a piece ends on a square occupied by an opponent's piece, the opponent 
+piece is returned to its owner's pool, unless the opponent has control of the Genie which
+is detailed below. The returned piece can be re-entered into play only when the owner rolls 
+a 6. A player's home column squares are always safe, however, since no opponent may enter 
+them.
+
+The Genie starts in the center of the board, not owned by anyone. Every time a player rolls
+the dice they have a chance of taking the Genie from the center. Once a player owns the Genie
+it can't be taken by another until it has been returned to the center, which also 
+has a chance of happening every time the player who owns it rolls the dice. The Genie 
+protects all the pieces of the player who controls it. If you control the Genie and a player's
+piece lands on yours, instead of your piece being sent back to your pool, theirs is sent back.
+Be careful when someone has the Genie!
+
+Have Fun!
