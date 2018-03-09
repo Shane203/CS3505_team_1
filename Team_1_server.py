@@ -267,7 +267,7 @@ class Game:
                 print("Player left, so we moved the token on!")
 
 
-class Games:
+class Lobby:
     """Class that acts as a lobby for a collection of games.
 
     The class allows clients to connect and join or create games.
@@ -436,7 +436,7 @@ if __name__ == "__main__":
     """
 
     try:
-        games = Games(10000)  # Creates instance of class
+        games = Lobby(10000)  # Creates instance of class
         games.listen()
     except OSError:
         print("OS Error: Port number already in use or another server process may be running")
