@@ -16,15 +16,18 @@ class TestBoard(unittest.TestCase):
         self.starting_point = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
         self.cs = ["red", "green", "yellow", "blue"]
         self.colour_to_img = {"red": RED_PIECE, "green": GREEN_PIECE, "yellow": YELLOW_PIECE, "blue": BLUE_PIECE}
-        self.all_pieces = [Piece(self.cs[c], num, self.colour_to_img[self.cs[c]], self.starting_point[self.cs[c]])
-                           for c in range(4) for num in range(1, 5)]
-        self.player = Player("red", "Team_1", self.all_pieces, ["a", "b", "c", "d"])
+        self.all_pieces = [
+            Piece(self.cs[c], num, self.colour_to_img[self.cs[c]],
+                  self.starting_point[self.cs[c]])
+            for c in range(4) for num in range(1, 5)]
+        self.player = Player("red", "Team_1", self.all_pieces,
+                             ["a", "b", "c", "d"])
         self.board = Board(self.player, self.all_pieces, self.colour_to_img)
         s.create_dicts()
 
     def tearDown(self):
         pygame.display.quit()
-        
+
     def test_initial_values(self):
         self.assertEqual(self.board.home_coords, [])
         self.assertEqual(self.board.my_player, self.player)
@@ -49,7 +52,8 @@ class TestBoard(unittest.TestCase):
             self.board.move_piece(i, 1)
             moving_piece = self.board.ALL_PIECES[i]
             self.fake_move_piece(i, moving_piece)
-            self.assertEqual(moving_piece.get_position(), moving_piece.start + 1)
+            self.assertEqual(moving_piece.get_position(),
+                             moving_piece.start + 1)
 
     def fake_move_piece(self, piece_num, moving_piece):
         if moving_piece.get_position() == 50 and piece_num < 4:
@@ -65,13 +69,14 @@ class TestBoard(unittest.TestCase):
         elif 7 < piece_num < 16 and moving_piece.get_position() < 0:
             moving_piece.set_position(moving_piece.get_position() + 1)
         else:
-            moving_piece.set_position((moving_piece.get_position()+1) % 52)
+            moving_piece.set_position((moving_piece.get_position() + 1) % 52)
 
     def test_draw_pieces(self):
         self.board.current_player = self.player.colour
         for i in range(16):
             moving_piece = self.board.ALL_PIECES[i]
-            self.assertEqual(moving_piece.image, self.colour_to_img[moving_piece.colour])
+            self.assertEqual(moving_piece.image,
+                             self.colour_to_img[moving_piece.colour])
             self.assertEqual(moving_piece.image.get_width(), 64)
             if moving_piece.colour == self.board.current_player and not moving_piece.movable:
                 temp = moving_piece.image
@@ -81,7 +86,8 @@ class TestBoard(unittest.TestCase):
 
     def test_disconnect_function(self):
         colour_list = ["red", "green", "yellow", "blue"]
-        self.connection = Connection(self.board, self.player, None, self.all_pieces)
+        self.connection = Connection(self.board, self.player, None,
+                                     self.all_pieces)
         self.board.add_connection(self.connection)
         self.board.draw_board(0)
         for colour in colour_list:
@@ -89,11 +95,12 @@ class TestBoard(unittest.TestCase):
             lo = self.board.get_low_range(colour)
             for i in range(lo, lo + 4):
                 piece = self.board.ALL_PIECES[i]
-                self.assertEqual(piece.image, self.board.COLOUR_TO_IMG[piece.colour])
+                self.assertEqual(piece.image,
+                                 self.board.COLOUR_TO_IMG[piece.colour])
                 self.assertIsNone(piece.movable)
                 self.assertIsNone(piece.get_position())
                 self.assertEqual(piece.get_steps_from_start(), 0)
-            
+
     def test_get_low_range(self):
         self.assertEqual(self.board.get_low_range("red"), 0)
         self.assertEqual(self.board.get_low_range("green"), 4)
