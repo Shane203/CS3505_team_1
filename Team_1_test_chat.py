@@ -5,7 +5,7 @@ from socket import *
 from tkinter import *
 
 
-class TestClient(unittest.TestCase):
+class TestChat(unittest.TestCase):
     def setUp(self):
         self.sock = socket(AF_INET, SOCK_STREAM)
         self.sock.connect((gethostbyname(gethostname()), 10001))

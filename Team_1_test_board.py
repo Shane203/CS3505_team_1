@@ -11,7 +11,7 @@ from Team_1_connection import Connection
 import Team_1_setup as s
 
 
-class TestClient(unittest.TestCase):
+class TestBoard(unittest.TestCase):
     def setUp(self):
         self.starting_point = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
         self.cs = ["red", "green", "yellow", "blue"]
@@ -21,6 +21,9 @@ class TestClient(unittest.TestCase):
         self.player = Player("red", "Team_1", self.all_pieces, ["a", "b", "c", "d"])
         self.board = Board(self.player, self.all_pieces, self.colour_to_img)
         s.create_dicts()
+
+    def tearDown(self):
+        pygame.display.quit()
         
     def test_initial_values(self):
         self.assertEqual(self.board.home_coords, [])
@@ -33,15 +36,6 @@ class TestClient(unittest.TestCase):
         self.assertIsNone(self.board.current_player)
         self.assertIsInstance(self.board.ALL_PIECES, list)
         self.assertIsInstance(self.board.COLOUR_TO_IMG, dict)
-
-    def test_add_connection(self):
-        self.conn = "connect"
-        self.dice_object = Dice(self.conn)
-        self.ROLL_BUTTON = Button("ROLL", 900, 430, 200, 30, GREEN, 0, BRIGHTGREEN, self.dice_object)
-        self.current_player = self.player.colour
-        self.assertIsInstance(self.dice_object, Dice)
-        self.assertIsInstance(self.ROLL_BUTTON, Button)
-        self.assertEqual(self.current_player, "red")
 
     def test_move_piece_from_home(self):
         for i in range(16):
@@ -84,18 +78,6 @@ class TestClient(unittest.TestCase):
                 moving_piece.image = ORANGE_PIECE_32
                 self.assertEqual(moving_piece.image.get_width(), 32)
                 moving_piece.image = temp
-
-    def test_death_function(self):
-        self.connection = Connection(self.board, self.player, None, self.all_pieces)
-        self.board.add_connection(self.connection)
-        self.board.draw_board(0)
-        moving_piece = self.board.ALL_PIECES[0]
-        moving_piece.set_position(10)
-        moving_piece.set_steps_from_start(10)
-        self.board.death_function(moving_piece)
-        self.assertIsNone(moving_piece.get_position())
-        self.assertEqual(moving_piece.get_steps_from_start(), 0)
-        self.assertTrue(self.board.connection.my_player.special_move)
 
     def test_disconnect_function(self):
         colour_list = ["red", "green", "yellow", "blue"]

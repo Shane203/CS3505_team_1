@@ -6,7 +6,7 @@ import pygame
 from Team_1_player import Player
 
 
-class TestClient(unittest.TestCase):
+class TestPiece(unittest.TestCase):
     def setUp(self):
         self.starting_point = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
         self.cs = ["red", "green", "yellow", "blue"]

@@ -5,7 +5,7 @@ import Team_1_constants as c
 from Team_1_piece import Piece
 
 
-class TestClient(unittest.TestCase):
+class TestPlayer(unittest.TestCase):
     def setUp(self):
         self.starting_point = {"red": 0, "green": 13, "yellow": 26, "blue": 39}
         self.cs = ["red", "green", "yellow", "blue"]

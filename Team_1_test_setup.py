@@ -5,7 +5,7 @@ import pygame
 import Team_1_setup as s
 
 
-class TestClient(unittest.TestCase):
+class TestSetup(unittest.TestCase):
     def setUp(self):
         pass
         
