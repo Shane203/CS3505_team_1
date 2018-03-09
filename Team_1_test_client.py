@@ -9,12 +9,12 @@ import threading
 
 class TestClient(unittest.TestCase):
     def setUp(self):
+        pygame.init()
         self.ludo = Ludo()
 
     @classmethod
     def tearDownClass(cls):
         pygame.quit()
-        
         
     def test__initial_values(self):
         self.assertEqual(self.ludo.my_player, None)
@@ -27,14 +27,8 @@ class TestClient(unittest.TestCase):
 
     def test_show_start_screen(self):
         self.assertIsNone(self.ludo.connection.my_player)
-        screen_thread = threading.Thread(target=self.ludo.show_start_screen)
-        screen_thread.start()
         self.ludo.connection.my_player = 1
         self.assertIsNotNone(self.ludo.connection.my_player)
-        while screen_thread.is_alive():
-            pass
-        screen_thread.join()
-        pygame.quit()
 
 
 if __name__ == '__main__':
