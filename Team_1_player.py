@@ -1,7 +1,7 @@
 # Team 1
 class Player(object):
     """Create an object to represent a player with 4 piece objects.
-    
+
     The function of this class is limited to representing attributes for the
     player; therefore there are no methods. This class also holds universal
     attributes, like ``all_pieces`` and ``names`` that are used to draw pieces

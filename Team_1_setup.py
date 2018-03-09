@@ -16,7 +16,7 @@ coOrds = dict()
 
 def create_dicts():
     """Fills the coOrds dictionary with the co-ordinates of each block on the
-        board. Each block has a key value.     
+        board. Each block has a key value.
     """
     lst = [[51, 0, 1, 2, 3, 4, 18, 19, 20, 21, 22, 23],
            [50, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, 24],
