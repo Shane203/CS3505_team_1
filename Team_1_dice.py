@@ -63,8 +63,6 @@ class Dice(object):
             # Constructs a msg to send to the server.
             msg = {"colour": self.connection.my_player.colour,
                    "roll": True, "bias": bias}
-            # Plays the sound for the dice roll
-            pygame.mixer.Sound.play(ROLL_DICE)
             # Sends the 'msg' to the server.
             data = json.dumps(msg)
             self.connection.sock.sendall(data.encode())
@@ -89,6 +87,8 @@ class Dice(object):
         :param x: x coordinate of image to be displayed in animation.
         :param y: y coordinate of image to be displayed in animation.
         """
+        # Plays the sound for the dice roll
+        pygame.mixer.Sound.play(ROLL_DICE)
         c = pygame.time.Clock()
         tick = 20
         i = 1
