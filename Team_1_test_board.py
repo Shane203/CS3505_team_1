@@ -24,10 +24,11 @@ class TestBoard(unittest.TestCase):
                              ["a", "b", "c", "d"])
         self.board = Board(self.player, self.all_pieces, self.colour_to_img)
         s.create_dicts()
-
-    def tearDown(self):
-        pygame.display.quit()
-
+        
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
+        
     def test_initial_values(self):
         self.assertEqual(self.board.home_coords, [])
         self.assertEqual(self.board.my_player, self.player)

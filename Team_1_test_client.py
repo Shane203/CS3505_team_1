@@ -10,6 +10,11 @@ import threading
 class TestClient(unittest.TestCase):
     def setUp(self):
         self.ludo = Ludo()
+
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
+        
         
     def test__initial_values(self):
         self.assertEqual(self.ludo.my_player, None)

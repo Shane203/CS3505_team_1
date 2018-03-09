@@ -29,7 +29,6 @@ class TestChat(unittest.TestCase):
         txt = "hello"
         msg = {"Name": name, "msg": txt}
         self.chat.new_message(msg)
-        print("end")
 
 
 if __name__ == '__main__':

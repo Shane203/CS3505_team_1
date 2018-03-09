@@ -15,6 +15,10 @@ class TestPiece(unittest.TestCase):
         self.all_pieces = [Piece(self.cs[c], num, self.colour_to_img[self.cs[c]], self.starting_point[self.cs[c]])
                            for c in range(4) for num in range(1, 5)]
         self.piece = self.all_pieces[0]
+        
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
 
     def set_player(self):
         self.player = Player("red", "Team_1", self.all_pieces, ["a", "b", "c", "d"])

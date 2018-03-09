@@ -3,7 +3,7 @@ import unittest
 from Team_1_player import Player
 import Team_1_constants as c
 from Team_1_piece import Piece
-
+import pygame
 
 class TestPlayer(unittest.TestCase):
     def setUp(self):
@@ -14,6 +14,10 @@ class TestPlayer(unittest.TestCase):
         self.all_pieces = [Piece(self.cs[c], num, self.colour_to_img[self.cs[c]], self.starting_point[self.cs[c]])
                            for c in range(4) for num in range(1, 5)]
         self.player = Player("red", "Team_1", self.all_pieces, ["a", "b", "c", "d"])
+
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
         
     def test_initial_values(self):
         self.assertEqual(self.player.colour, "red")

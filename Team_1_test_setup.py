@@ -8,6 +8,10 @@ import Team_1_setup as s
 class TestSetup(unittest.TestCase):
     def setUp(self):
         pass
+
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
         
     def test_imports(self):
         from Team_1_constants import BOX_SIZE, INDENT_BOARD
@@ -20,6 +24,7 @@ class TestSetup(unittest.TestCase):
         pygame.display.set_icon(pygame.image.load('images/desktop-backgrounds-30.jpg'))
 
     def test_dict(self):
+        self.assertEqual(len(s.coOrds), 0)
         s.create_dicts()
         self.assertNotEqual(len(s.coOrds), 0)
 

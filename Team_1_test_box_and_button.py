@@ -4,6 +4,10 @@ from Team_1_box_and_button import *
 
 
 class TestBoxAndButton(unittest.TestCase):
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
+        
     def test_box_initialisation_without_s(self):
         self.box1 = Box("hello", 10, 100, 20, 30, 'red')
         self.assertEqual("hello", self.box1._msg)
