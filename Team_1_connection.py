@@ -1,5 +1,5 @@
 # Team 1
-from socket import socket, AF_INET, SOCK_STREAM, gethostbyname, gethostname
+from socket import socket, AF_INET, SOCK_STREAM
 from Team_1_constants import ROLL_TO_IMG, LOW_RANGES, GENIE_BIG, LAMP_BIG, SCREEN
 from random import randint
 import json
@@ -32,7 +32,7 @@ class Connection:
     def __init__(self, board, my_player, current, all_pieces):
         self.sock = socket(AF_INET, SOCK_STREAM)  # Creates a TCP server socket.
         # Sets values for host- the current domain name and port number 10000.
-        self.server_address = (gethostbyname(gethostname()), 10000)
+        self.server_address = ('54.172.246.147', 10000)
         # The IP Address of the current machine.
         self.ip_addr = gethostbyname(gethostname())
         print('Connecting to server at %s - Port %s' % self.server_address)
