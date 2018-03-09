@@ -96,7 +96,7 @@ class Connection:
                         self.board.current_player = msg["colour"]
                     # This message is a response to pressing the "ROLL" button.
                     # It comes in the form {"dicenum":<between 1-6>,"Colour":<colour>}
-                    if "dicenum" in msg:
+                    if "dicenum" in msg and msg["colour"] != self.my_player.colour:
                         roll = msg["dicenum"]
                         #  This is for the biased dice roll
                         if roll > 5:

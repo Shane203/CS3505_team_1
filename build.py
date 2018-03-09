@@ -9,6 +9,7 @@ opts = {
    'includes':['Team_1_board', 'Team_1_box_and_button', 'Team_1_chat', 'Team_1_connection', 'Team_1_constants', 'Team_1_dice', 'Team_1_form',
                'Team_1_piece', 'Team_1_player', 'Team_1_server', 'Team_1_setup'
               ],
+   "dist_dir": "Ludo",
  } 
 } 
 
